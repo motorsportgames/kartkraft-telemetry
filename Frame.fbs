@@ -1,0 +1,74 @@
+namespace KartKraft;
+
+/// Useful generic color struct 
+struct Color {
+  r:byte;
+  g:byte;
+  b:byte;
+}
+
+enum VehicleState:byte {
+    Unknown = 0,
+    Pits = 1,
+    Outlap = 2,
+    Racing = 3,
+    Retired = 4
+}
+
+/// Motion data of local player for driving hardware motion simulators
+table Motion {
+    version:byte = 1;
+    pitch:float; 
+    roll:float; 
+    yaw:float; 
+    accelerationX:float;    //Forwards/Surge in vehicle's local space
+    accelerationY:float;    //Right/Sway in vehicle's local space
+    accelerationZ:float;    //Up/Heave in vehicle's local space
+    traction:float;
+}
+
+/// Dash data for displaying state of current local/followed player
+table Dashboard {
+    version:byte = 1;
+    speed:float;
+    rpm:float; 
+    steer:float;
+    throttle:float;
+    brake:float;
+    gear:byte; 
+    pos:byte;
+    bestLap:float;
+}
+
+/// Basic vehicle data for live timing. e.g. trackmap
+table Vehicle {
+    version:byte = 1;
+    state:VehicleState;
+    posX:float;
+    posY:float;
+    posZ:float;
+    yaw:float;
+    sessionPos:int;
+    color:Color;
+    normalisedTrackPos:float;
+}
+
+/// Session data
+table Session {
+    version:byte = 1;
+    totalTime:int;
+    timeLeft:int;
+    totalLaps:int;
+    vehicles:[Vehicle];
+}
+
+/// Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
+table Frame {
+    version:byte = 1;
+    timestamp:float;
+    motion:Motion;
+    dash:Dashboard;
+    session:Session;
+}
+
+root_type Frame;
