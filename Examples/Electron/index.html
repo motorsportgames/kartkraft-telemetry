@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" type="text/css" href="css/epoch.min.css">
+  <head>
+    <meta charset="UTF-8">
+    <title>KartKraft Telemetry Example</title>
+  </head>
+<body style="-webkit-app-region: drag;"> <!-- border: 2px solid black; border-radius: 25px;"-->
+    <canvas id="myChart"></canvas>
+    <script>
+      require('chart.js');
+      require('chartjs-plugin-streaming')
+      require('./renderer.js')
+    </script>
+  </body>
+</html>
