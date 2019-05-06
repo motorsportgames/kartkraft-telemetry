@@ -1,10 +1,9 @@
 # KartKraft Electron Dashboard App Example
 
-# Install dependencies
-npm install
-# Run the app
-npm start
-```
+## Install dependencies
+`npm install`
+## Run the app
+`npm start`
 
 ## Resources for Learning Electron
 
