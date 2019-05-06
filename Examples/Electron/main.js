@@ -1,7 +1,7 @@
 var flatbuffers = require('./js/flatbuffers.js').flatbuffers;
 var KartKraft = require('./js/Frame_generated.js').KartKraft;
 const { app, BrowserWindow } = require("electron");
-var PORT = 5005;
+var PORT = 5000;
 var HOST = "127.0.0.1";
 var dgram = require("dgram");
 var server = dgram.createSocket("udp4");
