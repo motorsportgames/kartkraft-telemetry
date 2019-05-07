@@ -20,57 +20,50 @@ class Vehicle(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # Vehicle
-    def Version(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 1
-
-    # Vehicle
     def State(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
     # Vehicle
     def PosX(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Vehicle
     def PosY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Vehicle
     def PosZ(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Vehicle
     def Yaw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Vehicle
     def SessionPos(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # Vehicle
     def Color(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             x = o + self._tab.Pos
             from .Color import Color
@@ -81,19 +74,18 @@ class Vehicle(object):
 
     # Vehicle
     def NormalisedTrackPos(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-def VehicleStart(builder): builder.StartObject(9)
-def VehicleAddVersion(builder, version): builder.PrependInt8Slot(0, version, 1)
-def VehicleAddState(builder, state): builder.PrependInt8Slot(1, state, 0)
-def VehicleAddPosX(builder, posX): builder.PrependFloat32Slot(2, posX, 0.0)
-def VehicleAddPosY(builder, posY): builder.PrependFloat32Slot(3, posY, 0.0)
-def VehicleAddPosZ(builder, posZ): builder.PrependFloat32Slot(4, posZ, 0.0)
-def VehicleAddYaw(builder, yaw): builder.PrependFloat32Slot(5, yaw, 0.0)
-def VehicleAddSessionPos(builder, sessionPos): builder.PrependInt32Slot(6, sessionPos, 0)
-def VehicleAddColor(builder, color): builder.PrependStructSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(color), 0)
-def VehicleAddNormalisedTrackPos(builder, normalisedTrackPos): builder.PrependFloat32Slot(8, normalisedTrackPos, 0.0)
+def VehicleStart(builder): builder.StartObject(8)
+def VehicleAddState(builder, state): builder.PrependInt8Slot(0, state, 0)
+def VehicleAddPosX(builder, posX): builder.PrependFloat32Slot(1, posX, 0.0)
+def VehicleAddPosY(builder, posY): builder.PrependFloat32Slot(2, posY, 0.0)
+def VehicleAddPosZ(builder, posZ): builder.PrependFloat32Slot(3, posZ, 0.0)
+def VehicleAddYaw(builder, yaw): builder.PrependFloat32Slot(4, yaw, 0.0)
+def VehicleAddSessionPos(builder, sessionPos): builder.PrependInt32Slot(5, sessionPos, 0)
+def VehicleAddColor(builder, color): builder.PrependStructSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(color), 0)
+def VehicleAddNormalisedTrackPos(builder, normalisedTrackPos): builder.PrependFloat32Slot(7, normalisedTrackPos, 0.0)
 def VehicleEnd(builder): return builder.EndObject()

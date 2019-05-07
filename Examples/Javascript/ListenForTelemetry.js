@@ -39,7 +39,7 @@ server.on("message", function(message, remote) {
         motion.accelerationX(),
         motion.accelerationY(),
         motion.accelerationZ(),
-        motion.traction()
+        motion.tractionLoss()
       );
     }
 

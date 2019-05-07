@@ -71,7 +71,7 @@ int main()
 						motion->accelerationX(), 
 						motion->accelerationY(), 
 						motion->accelerationZ(), 
-						motion->traction());
+						motion->tractionLoss());
 				}
 
 				//Handle dashboard data

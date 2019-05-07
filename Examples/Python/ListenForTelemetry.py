@@ -24,7 +24,7 @@ while True:
         session = frame.Session()
         if (motion):
             print("    motion data ", motion.Pitch(), motion.Roll(), motion.Yaw(
-            ), motion.AccelerationX(), motion.AccelerationY(), motion.AccelerationZ(), motion.Traction())
+            ), motion.AccelerationX(), motion.AccelerationY(), motion.AccelerationZ(), motion.TractionLoss())
         if (dash):
             print("    dash data ", dash.Rpm(), dash.Speed())
         if (session):

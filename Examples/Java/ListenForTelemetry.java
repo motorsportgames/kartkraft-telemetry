@@ -39,7 +39,7 @@ public class ListenForTelemetry {
                 if (motion != null) {
                     System.out.println("    motion: " + motion.pitch() + " " + motion.roll() + " " + motion.yaw() + " "
                             + motion.accelerationX() + " " + motion.accelerationY() + " " + motion.accelerationZ() + " "
-                            + motion.traction());
+                            + motion.tractionLoss());
                 }
 
                 // Handle dashboard data
