@@ -169,7 +169,7 @@ KartKraft.Motion.prototype.accelerationZ = function() {
 /**
  * @returns {number}
  */
-KartKraft.Motion.prototype.traction = function() {
+KartKraft.Motion.prototype.tractionLoss = function() {
   var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
@@ -231,10 +231,10 @@ KartKraft.Motion.addAccelerationZ = function(builder, accelerationZ) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} traction
+ * @param {number} tractionLoss
  */
-KartKraft.Motion.addTraction = function(builder, traction) {
-  builder.addFieldFloat32(6, traction, 0.0);
+KartKraft.Motion.addTractionLoss = function(builder, tractionLoss) {
+  builder.addFieldFloat32(6, tractionLoss, 0.0);
 };
 
 /**

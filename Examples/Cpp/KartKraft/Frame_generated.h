@@ -95,7 +95,7 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_ACCELERATIONX = 10,
     VT_ACCELERATIONY = 12,
     VT_ACCELERATIONZ = 14,
-    VT_TRACTION = 16
+    VT_TRACTIONLOSS = 16
   };
   float pitch() const {
     return GetField<float>(VT_PITCH, 0.0f);
@@ -115,8 +115,8 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   float accelerationZ() const {
     return GetField<float>(VT_ACCELERATIONZ, 0.0f);
   }
-  float traction() const {
-    return GetField<float>(VT_TRACTION, 0.0f);
+  float tractionLoss() const {
+    return GetField<float>(VT_TRACTIONLOSS, 0.0f);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -126,7 +126,7 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<float>(verifier, VT_ACCELERATIONX) &&
            VerifyField<float>(verifier, VT_ACCELERATIONY) &&
            VerifyField<float>(verifier, VT_ACCELERATIONZ) &&
-           VerifyField<float>(verifier, VT_TRACTION) &&
+           VerifyField<float>(verifier, VT_TRACTIONLOSS) &&
            verifier.EndTable();
   }
 };
@@ -152,8 +152,8 @@ struct MotionBuilder {
   void add_accelerationZ(float accelerationZ) {
     fbb_.AddElement<float>(Motion::VT_ACCELERATIONZ, accelerationZ, 0.0f);
   }
-  void add_traction(float traction) {
-    fbb_.AddElement<float>(Motion::VT_TRACTION, traction, 0.0f);
+  void add_tractionLoss(float tractionLoss) {
+    fbb_.AddElement<float>(Motion::VT_TRACTIONLOSS, tractionLoss, 0.0f);
   }
   explicit MotionBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -175,9 +175,9 @@ inline flatbuffers::Offset<Motion> CreateMotion(
     float accelerationX = 0.0f,
     float accelerationY = 0.0f,
     float accelerationZ = 0.0f,
-    float traction = 0.0f) {
+    float tractionLoss = 0.0f) {
   MotionBuilder builder_(_fbb);
-  builder_.add_traction(traction);
+  builder_.add_tractionLoss(tractionLoss);
   builder_.add_accelerationZ(accelerationZ);
   builder_.add_accelerationY(accelerationY);
   builder_.add_accelerationX(accelerationX);

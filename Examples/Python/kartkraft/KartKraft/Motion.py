@@ -62,7 +62,7 @@ class Motion(object):
         return 0.0
 
     # Motion
-    def Traction(self):
+    def TractionLoss(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
@@ -75,5 +75,5 @@ def MotionAddYaw(builder, yaw): builder.PrependFloat32Slot(2, yaw, 0.0)
 def MotionAddAccelerationX(builder, accelerationX): builder.PrependFloat32Slot(3, accelerationX, 0.0)
 def MotionAddAccelerationY(builder, accelerationY): builder.PrependFloat32Slot(4, accelerationY, 0.0)
 def MotionAddAccelerationZ(builder, accelerationZ): builder.PrependFloat32Slot(5, accelerationZ, 0.0)
-def MotionAddTraction(builder, traction): builder.PrependFloat32Slot(6, traction, 0.0)
+def MotionAddTractionLoss(builder, tractionLoss): builder.PrependFloat32Slot(6, tractionLoss, 0.0)
 def MotionEnd(builder): return builder.EndObject()

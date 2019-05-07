@@ -23,7 +23,7 @@ public final class Motion extends Table {
   public float accelerationX() { int o = __offset(10); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float accelerationY() { int o = __offset(12); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float accelerationZ() { int o = __offset(14); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float traction() { int o = __offset(16); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float tractionLoss() { int o = __offset(16); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
 
   public static int createMotion(FlatBufferBuilder builder,
       float pitch,
@@ -32,9 +32,9 @@ public final class Motion extends Table {
       float accelerationX,
       float accelerationY,
       float accelerationZ,
-      float traction) {
+      float tractionLoss) {
     builder.startObject(7);
-    Motion.addTraction(builder, traction);
+    Motion.addTractionLoss(builder, tractionLoss);
     Motion.addAccelerationZ(builder, accelerationZ);
     Motion.addAccelerationY(builder, accelerationY);
     Motion.addAccelerationX(builder, accelerationX);
@@ -51,7 +51,7 @@ public final class Motion extends Table {
   public static void addAccelerationX(FlatBufferBuilder builder, float accelerationX) { builder.addFloat(3, accelerationX, 0.0f); }
   public static void addAccelerationY(FlatBufferBuilder builder, float accelerationY) { builder.addFloat(4, accelerationY, 0.0f); }
   public static void addAccelerationZ(FlatBufferBuilder builder, float accelerationZ) { builder.addFloat(5, accelerationZ, 0.0f); }
-  public static void addTraction(FlatBufferBuilder builder, float traction) { builder.addFloat(6, traction, 0.0f); }
+  public static void addTractionLoss(FlatBufferBuilder builder, float tractionLoss) { builder.addFloat(6, tractionLoss, 0.0f); }
   public static int endMotion(FlatBufferBuilder builder) {
     int o = builder.endObject();
     return o;

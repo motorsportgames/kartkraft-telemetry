@@ -23,7 +23,7 @@ table Motion {
     accelerationX:float;    //Forwards/Surge in vehicle's local space   (meters/sec/sec)
     accelerationY:float;    //Right/Sway in vehicle's local space (meters/sec/sec)
     accelerationZ:float;    //Up/Heave in vehicle's local space (meters/sec/sec)
-    traction:float;
+    tractionLoss:float;     //Nothing here yet
 }
 
 /// Dash data for displaying state of current local/followed player
