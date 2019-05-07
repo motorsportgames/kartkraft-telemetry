@@ -2,8 +2,6 @@
 
 KartKraft outputs UDP packets for motion rig control, telemetry dashboards and game session data. This repository contains example code to help you get up and running fast.
 
----
-
 ## Simple Examples
 
 We include everything you need to write your own plugin in a variety of languages. Check out the examples to see how easy it is, and how to structure your code.
@@ -35,13 +33,9 @@ We include everything you need to write your own plugin in a variety of language
 - `ListenForTelemetry.js` : A simple `Node.js` telemetry receiver example.
 - To write your own app/plugin, you'll need all code contained in the `flatbuffers` and `kartkraft` folders.
 
----
-
 ## Example Electron Telemetry Chart App
 
 We provide a [basic realtime telemetry charting app](https://github.com/black-delta/kartkraft-telemetry/tree/master/Examples/Electron) written using the Electron framework in javascript. Feel free to fork this and use as the basis of your own simple app.
-
----
 
 ## Flatbuffer Schema
 
