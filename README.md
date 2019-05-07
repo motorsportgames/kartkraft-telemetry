@@ -19,9 +19,8 @@ We include everything you need to write your own plugin in a variety of language
 
 ### CSharp
 
-- `DotNetWindows.csproj` : A .net framework 3.5 example suitable for Windows/Unity.
-- `DotNetCore.csproj` : A .net core 2.0 example for (Win/Mac/Linux)
-- To write your own app/plugin, you'll need all code contained in the `Common/KartKraft` folder, and the appropriate dll: `FlatBuffers.dll` for Windows Framework, `FlatBuffersCore.dll` for .net Core.
+- `ListenForTelemetry.sln` : A .NET framework 3.5 example suitable for Windows/Unity. All code is also compatible with .NET Core should you wish to use it in Linux/Mac/Windows applications.
+- To write your own app/plugin, you'll need all code contained in the `Flatbuffers` and `KartKraft` folders.
 
 ### Java
 
