@@ -121,16 +121,8 @@ KartKraft.Motion.getRootAsMotion = function(bb, obj) {
 /**
  * @returns {number}
  */
-KartKraft.Motion.prototype.version = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt8(this.bb_pos + offset) : 1;
-};
-
-/**
- * @returns {number}
- */
 KartKraft.Motion.prototype.pitch = function() {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -138,7 +130,7 @@ KartKraft.Motion.prototype.pitch = function() {
  * @returns {number}
  */
 KartKraft.Motion.prototype.roll = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -146,7 +138,7 @@ KartKraft.Motion.prototype.roll = function() {
  * @returns {number}
  */
 KartKraft.Motion.prototype.yaw = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -154,7 +146,7 @@ KartKraft.Motion.prototype.yaw = function() {
  * @returns {number}
  */
 KartKraft.Motion.prototype.accelerationX = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -162,7 +154,7 @@ KartKraft.Motion.prototype.accelerationX = function() {
  * @returns {number}
  */
 KartKraft.Motion.prototype.accelerationY = function() {
-  var offset = this.bb.__offset(this.bb_pos, 14);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -170,7 +162,7 @@ KartKraft.Motion.prototype.accelerationY = function() {
  * @returns {number}
  */
 KartKraft.Motion.prototype.accelerationZ = function() {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -178,7 +170,7 @@ KartKraft.Motion.prototype.accelerationZ = function() {
  * @returns {number}
  */
 KartKraft.Motion.prototype.traction = function() {
-  var offset = this.bb.__offset(this.bb_pos, 18);
+  var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -186,15 +178,7 @@ KartKraft.Motion.prototype.traction = function() {
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Motion.startMotion = function(builder) {
-  builder.startObject(8);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} version
- */
-KartKraft.Motion.addVersion = function(builder, version) {
-  builder.addFieldInt8(0, version, 1);
+  builder.startObject(7);
 };
 
 /**
@@ -202,7 +186,7 @@ KartKraft.Motion.addVersion = function(builder, version) {
  * @param {number} pitch
  */
 KartKraft.Motion.addPitch = function(builder, pitch) {
-  builder.addFieldFloat32(1, pitch, 0.0);
+  builder.addFieldFloat32(0, pitch, 0.0);
 };
 
 /**
@@ -210,7 +194,7 @@ KartKraft.Motion.addPitch = function(builder, pitch) {
  * @param {number} roll
  */
 KartKraft.Motion.addRoll = function(builder, roll) {
-  builder.addFieldFloat32(2, roll, 0.0);
+  builder.addFieldFloat32(1, roll, 0.0);
 };
 
 /**
@@ -218,7 +202,7 @@ KartKraft.Motion.addRoll = function(builder, roll) {
  * @param {number} yaw
  */
 KartKraft.Motion.addYaw = function(builder, yaw) {
-  builder.addFieldFloat32(3, yaw, 0.0);
+  builder.addFieldFloat32(2, yaw, 0.0);
 };
 
 /**
@@ -226,7 +210,7 @@ KartKraft.Motion.addYaw = function(builder, yaw) {
  * @param {number} accelerationX
  */
 KartKraft.Motion.addAccelerationX = function(builder, accelerationX) {
-  builder.addFieldFloat32(4, accelerationX, 0.0);
+  builder.addFieldFloat32(3, accelerationX, 0.0);
 };
 
 /**
@@ -234,7 +218,7 @@ KartKraft.Motion.addAccelerationX = function(builder, accelerationX) {
  * @param {number} accelerationY
  */
 KartKraft.Motion.addAccelerationY = function(builder, accelerationY) {
-  builder.addFieldFloat32(5, accelerationY, 0.0);
+  builder.addFieldFloat32(4, accelerationY, 0.0);
 };
 
 /**
@@ -242,7 +226,7 @@ KartKraft.Motion.addAccelerationY = function(builder, accelerationY) {
  * @param {number} accelerationZ
  */
 KartKraft.Motion.addAccelerationZ = function(builder, accelerationZ) {
-  builder.addFieldFloat32(6, accelerationZ, 0.0);
+  builder.addFieldFloat32(5, accelerationZ, 0.0);
 };
 
 /**
@@ -250,7 +234,7 @@ KartKraft.Motion.addAccelerationZ = function(builder, accelerationZ) {
  * @param {number} traction
  */
 KartKraft.Motion.addTraction = function(builder, traction) {
-  builder.addFieldFloat32(7, traction, 0.0);
+  builder.addFieldFloat32(6, traction, 0.0);
 };
 
 /**
@@ -302,16 +286,8 @@ KartKraft.Dashboard.getRootAsDashboard = function(bb, obj) {
 /**
  * @returns {number}
  */
-KartKraft.Dashboard.prototype.version = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt8(this.bb_pos + offset) : 1;
-};
-
-/**
- * @returns {number}
- */
 KartKraft.Dashboard.prototype.speed = function() {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -319,7 +295,7 @@ KartKraft.Dashboard.prototype.speed = function() {
  * @returns {number}
  */
 KartKraft.Dashboard.prototype.rpm = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -327,7 +303,7 @@ KartKraft.Dashboard.prototype.rpm = function() {
  * @returns {number}
  */
 KartKraft.Dashboard.prototype.steer = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -335,7 +311,7 @@ KartKraft.Dashboard.prototype.steer = function() {
  * @returns {number}
  */
 KartKraft.Dashboard.prototype.throttle = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -343,7 +319,7 @@ KartKraft.Dashboard.prototype.throttle = function() {
  * @returns {number}
  */
 KartKraft.Dashboard.prototype.brake = function() {
-  var offset = this.bb.__offset(this.bb_pos, 14);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -351,7 +327,7 @@ KartKraft.Dashboard.prototype.brake = function() {
  * @returns {number}
  */
 KartKraft.Dashboard.prototype.gear = function() {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readInt8(this.bb_pos + offset) : 0;
 };
 
@@ -359,7 +335,7 @@ KartKraft.Dashboard.prototype.gear = function() {
  * @returns {number}
  */
 KartKraft.Dashboard.prototype.pos = function() {
-  var offset = this.bb.__offset(this.bb_pos, 18);
+  var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? this.bb.readInt8(this.bb_pos + offset) : 0;
 };
 
@@ -367,7 +343,7 @@ KartKraft.Dashboard.prototype.pos = function() {
  * @returns {number}
  */
 KartKraft.Dashboard.prototype.bestLap = function() {
-  var offset = this.bb.__offset(this.bb_pos, 20);
+  var offset = this.bb.__offset(this.bb_pos, 18);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -375,15 +351,7 @@ KartKraft.Dashboard.prototype.bestLap = function() {
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Dashboard.startDashboard = function(builder) {
-  builder.startObject(9);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} version
- */
-KartKraft.Dashboard.addVersion = function(builder, version) {
-  builder.addFieldInt8(0, version, 1);
+  builder.startObject(8);
 };
 
 /**
@@ -391,7 +359,7 @@ KartKraft.Dashboard.addVersion = function(builder, version) {
  * @param {number} speed
  */
 KartKraft.Dashboard.addSpeed = function(builder, speed) {
-  builder.addFieldFloat32(1, speed, 0.0);
+  builder.addFieldFloat32(0, speed, 0.0);
 };
 
 /**
@@ -399,7 +367,7 @@ KartKraft.Dashboard.addSpeed = function(builder, speed) {
  * @param {number} rpm
  */
 KartKraft.Dashboard.addRpm = function(builder, rpm) {
-  builder.addFieldFloat32(2, rpm, 0.0);
+  builder.addFieldFloat32(1, rpm, 0.0);
 };
 
 /**
@@ -407,7 +375,7 @@ KartKraft.Dashboard.addRpm = function(builder, rpm) {
  * @param {number} steer
  */
 KartKraft.Dashboard.addSteer = function(builder, steer) {
-  builder.addFieldFloat32(3, steer, 0.0);
+  builder.addFieldFloat32(2, steer, 0.0);
 };
 
 /**
@@ -415,7 +383,7 @@ KartKraft.Dashboard.addSteer = function(builder, steer) {
  * @param {number} throttle
  */
 KartKraft.Dashboard.addThrottle = function(builder, throttle) {
-  builder.addFieldFloat32(4, throttle, 0.0);
+  builder.addFieldFloat32(3, throttle, 0.0);
 };
 
 /**
@@ -423,7 +391,7 @@ KartKraft.Dashboard.addThrottle = function(builder, throttle) {
  * @param {number} brake
  */
 KartKraft.Dashboard.addBrake = function(builder, brake) {
-  builder.addFieldFloat32(5, brake, 0.0);
+  builder.addFieldFloat32(4, brake, 0.0);
 };
 
 /**
@@ -431,7 +399,7 @@ KartKraft.Dashboard.addBrake = function(builder, brake) {
  * @param {number} gear
  */
 KartKraft.Dashboard.addGear = function(builder, gear) {
-  builder.addFieldInt8(6, gear, 0);
+  builder.addFieldInt8(5, gear, 0);
 };
 
 /**
@@ -439,7 +407,7 @@ KartKraft.Dashboard.addGear = function(builder, gear) {
  * @param {number} pos
  */
 KartKraft.Dashboard.addPos = function(builder, pos) {
-  builder.addFieldInt8(7, pos, 0);
+  builder.addFieldInt8(6, pos, 0);
 };
 
 /**
@@ -447,7 +415,7 @@ KartKraft.Dashboard.addPos = function(builder, pos) {
  * @param {number} bestLap
  */
 KartKraft.Dashboard.addBestLap = function(builder, bestLap) {
-  builder.addFieldFloat32(8, bestLap, 0.0);
+  builder.addFieldFloat32(7, bestLap, 0.0);
 };
 
 /**
@@ -497,18 +465,10 @@ KartKraft.Vehicle.getRootAsVehicle = function(bb, obj) {
 };
 
 /**
- * @returns {number}
- */
-KartKraft.Vehicle.prototype.version = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt8(this.bb_pos + offset) : 1;
-};
-
-/**
  * @returns {KartKraft.VehicleState}
  */
 KartKraft.Vehicle.prototype.state = function() {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? /** @type {KartKraft.VehicleState} */ (this.bb.readInt8(this.bb_pos + offset)) : KartKraft.VehicleState.Unknown;
 };
 
@@ -516,7 +476,7 @@ KartKraft.Vehicle.prototype.state = function() {
  * @returns {number}
  */
 KartKraft.Vehicle.prototype.posX = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -524,7 +484,7 @@ KartKraft.Vehicle.prototype.posX = function() {
  * @returns {number}
  */
 KartKraft.Vehicle.prototype.posY = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -532,7 +492,7 @@ KartKraft.Vehicle.prototype.posY = function() {
  * @returns {number}
  */
 KartKraft.Vehicle.prototype.posZ = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -540,7 +500,7 @@ KartKraft.Vehicle.prototype.posZ = function() {
  * @returns {number}
  */
 KartKraft.Vehicle.prototype.yaw = function() {
-  var offset = this.bb.__offset(this.bb_pos, 14);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -548,7 +508,7 @@ KartKraft.Vehicle.prototype.yaw = function() {
  * @returns {number}
  */
 KartKraft.Vehicle.prototype.sessionPos = function() {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
 };
 
@@ -557,7 +517,7 @@ KartKraft.Vehicle.prototype.sessionPos = function() {
  * @returns {KartKraft.Color|null}
  */
 KartKraft.Vehicle.prototype.color = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 18);
+  var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? (obj || new KartKraft.Color).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -565,7 +525,7 @@ KartKraft.Vehicle.prototype.color = function(obj) {
  * @returns {number}
  */
 KartKraft.Vehicle.prototype.normalisedTrackPos = function() {
-  var offset = this.bb.__offset(this.bb_pos, 20);
+  var offset = this.bb.__offset(this.bb_pos, 18);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -573,15 +533,7 @@ KartKraft.Vehicle.prototype.normalisedTrackPos = function() {
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Vehicle.startVehicle = function(builder) {
-  builder.startObject(9);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} version
- */
-KartKraft.Vehicle.addVersion = function(builder, version) {
-  builder.addFieldInt8(0, version, 1);
+  builder.startObject(8);
 };
 
 /**
@@ -589,7 +541,7 @@ KartKraft.Vehicle.addVersion = function(builder, version) {
  * @param {KartKraft.VehicleState} state
  */
 KartKraft.Vehicle.addState = function(builder, state) {
-  builder.addFieldInt8(1, state, KartKraft.VehicleState.Unknown);
+  builder.addFieldInt8(0, state, KartKraft.VehicleState.Unknown);
 };
 
 /**
@@ -597,7 +549,7 @@ KartKraft.Vehicle.addState = function(builder, state) {
  * @param {number} posX
  */
 KartKraft.Vehicle.addPosX = function(builder, posX) {
-  builder.addFieldFloat32(2, posX, 0.0);
+  builder.addFieldFloat32(1, posX, 0.0);
 };
 
 /**
@@ -605,7 +557,7 @@ KartKraft.Vehicle.addPosX = function(builder, posX) {
  * @param {number} posY
  */
 KartKraft.Vehicle.addPosY = function(builder, posY) {
-  builder.addFieldFloat32(3, posY, 0.0);
+  builder.addFieldFloat32(2, posY, 0.0);
 };
 
 /**
@@ -613,7 +565,7 @@ KartKraft.Vehicle.addPosY = function(builder, posY) {
  * @param {number} posZ
  */
 KartKraft.Vehicle.addPosZ = function(builder, posZ) {
-  builder.addFieldFloat32(4, posZ, 0.0);
+  builder.addFieldFloat32(3, posZ, 0.0);
 };
 
 /**
@@ -621,7 +573,7 @@ KartKraft.Vehicle.addPosZ = function(builder, posZ) {
  * @param {number} yaw
  */
 KartKraft.Vehicle.addYaw = function(builder, yaw) {
-  builder.addFieldFloat32(5, yaw, 0.0);
+  builder.addFieldFloat32(4, yaw, 0.0);
 };
 
 /**
@@ -629,7 +581,7 @@ KartKraft.Vehicle.addYaw = function(builder, yaw) {
  * @param {number} sessionPos
  */
 KartKraft.Vehicle.addSessionPos = function(builder, sessionPos) {
-  builder.addFieldInt32(6, sessionPos, 0);
+  builder.addFieldInt32(5, sessionPos, 0);
 };
 
 /**
@@ -637,7 +589,7 @@ KartKraft.Vehicle.addSessionPos = function(builder, sessionPos) {
  * @param {flatbuffers.Offset} colorOffset
  */
 KartKraft.Vehicle.addColor = function(builder, colorOffset) {
-  builder.addFieldStruct(7, colorOffset, 0);
+  builder.addFieldStruct(6, colorOffset, 0);
 };
 
 /**
@@ -645,7 +597,7 @@ KartKraft.Vehicle.addColor = function(builder, colorOffset) {
  * @param {number} normalisedTrackPos
  */
 KartKraft.Vehicle.addNormalisedTrackPos = function(builder, normalisedTrackPos) {
-  builder.addFieldFloat32(8, normalisedTrackPos, 0.0);
+  builder.addFieldFloat32(7, normalisedTrackPos, 0.0);
 };
 
 /**
@@ -697,16 +649,8 @@ KartKraft.Session.getRootAsSession = function(bb, obj) {
 /**
  * @returns {number}
  */
-KartKraft.Session.prototype.version = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt8(this.bb_pos + offset) : 1;
-};
-
-/**
- * @returns {number}
- */
 KartKraft.Session.prototype.totalTime = function() {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
 };
 
@@ -714,7 +658,7 @@ KartKraft.Session.prototype.totalTime = function() {
  * @returns {number}
  */
 KartKraft.Session.prototype.timeLeft = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
 };
 
@@ -722,7 +666,7 @@ KartKraft.Session.prototype.timeLeft = function() {
  * @returns {number}
  */
 KartKraft.Session.prototype.totalLaps = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
 };
 
@@ -732,7 +676,7 @@ KartKraft.Session.prototype.totalLaps = function() {
  * @returns {KartKraft.Vehicle}
  */
 KartKraft.Session.prototype.vehicles = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? (obj || new KartKraft.Vehicle).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -740,7 +684,7 @@ KartKraft.Session.prototype.vehicles = function(index, obj) {
  * @returns {number}
  */
 KartKraft.Session.prototype.vehiclesLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -748,15 +692,7 @@ KartKraft.Session.prototype.vehiclesLength = function() {
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Session.startSession = function(builder) {
-  builder.startObject(5);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} version
- */
-KartKraft.Session.addVersion = function(builder, version) {
-  builder.addFieldInt8(0, version, 1);
+  builder.startObject(4);
 };
 
 /**
@@ -764,7 +700,7 @@ KartKraft.Session.addVersion = function(builder, version) {
  * @param {number} totalTime
  */
 KartKraft.Session.addTotalTime = function(builder, totalTime) {
-  builder.addFieldInt32(1, totalTime, 0);
+  builder.addFieldInt32(0, totalTime, 0);
 };
 
 /**
@@ -772,7 +708,7 @@ KartKraft.Session.addTotalTime = function(builder, totalTime) {
  * @param {number} timeLeft
  */
 KartKraft.Session.addTimeLeft = function(builder, timeLeft) {
-  builder.addFieldInt32(2, timeLeft, 0);
+  builder.addFieldInt32(1, timeLeft, 0);
 };
 
 /**
@@ -780,7 +716,7 @@ KartKraft.Session.addTimeLeft = function(builder, timeLeft) {
  * @param {number} totalLaps
  */
 KartKraft.Session.addTotalLaps = function(builder, totalLaps) {
-  builder.addFieldInt32(3, totalLaps, 0);
+  builder.addFieldInt32(2, totalLaps, 0);
 };
 
 /**
@@ -788,7 +724,7 @@ KartKraft.Session.addTotalLaps = function(builder, totalLaps) {
  * @param {flatbuffers.Offset} vehiclesOffset
  */
 KartKraft.Session.addVehicles = function(builder, vehiclesOffset) {
-  builder.addFieldOffset(4, vehiclesOffset, 0);
+  builder.addFieldOffset(3, vehiclesOffset, 0);
 };
 
 /**
@@ -861,16 +797,8 @@ KartKraft.Frame.getRootAsFrame = function(bb, obj) {
 /**
  * @returns {number}
  */
-KartKraft.Frame.prototype.version = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt8(this.bb_pos + offset) : 1;
-};
-
-/**
- * @returns {number}
- */
 KartKraft.Frame.prototype.timestamp = function() {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -879,7 +807,7 @@ KartKraft.Frame.prototype.timestamp = function() {
  * @returns {KartKraft.Motion|null}
  */
 KartKraft.Frame.prototype.motion = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? (obj || new KartKraft.Motion).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
@@ -888,7 +816,7 @@ KartKraft.Frame.prototype.motion = function(obj) {
  * @returns {KartKraft.Dashboard|null}
  */
 KartKraft.Frame.prototype.dash = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? (obj || new KartKraft.Dashboard).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
@@ -897,7 +825,7 @@ KartKraft.Frame.prototype.dash = function(obj) {
  * @returns {KartKraft.Session|null}
  */
 KartKraft.Frame.prototype.session = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? (obj || new KartKraft.Session).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
@@ -905,15 +833,7 @@ KartKraft.Frame.prototype.session = function(obj) {
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Frame.startFrame = function(builder) {
-  builder.startObject(5);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} version
- */
-KartKraft.Frame.addVersion = function(builder, version) {
-  builder.addFieldInt8(0, version, 1);
+  builder.startObject(4);
 };
 
 /**
@@ -921,7 +841,7 @@ KartKraft.Frame.addVersion = function(builder, version) {
  * @param {number} timestamp
  */
 KartKraft.Frame.addTimestamp = function(builder, timestamp) {
-  builder.addFieldFloat32(1, timestamp, 0.0);
+  builder.addFieldFloat32(0, timestamp, 0.0);
 };
 
 /**
@@ -929,7 +849,7 @@ KartKraft.Frame.addTimestamp = function(builder, timestamp) {
  * @param {flatbuffers.Offset} motionOffset
  */
 KartKraft.Frame.addMotion = function(builder, motionOffset) {
-  builder.addFieldOffset(2, motionOffset, 0);
+  builder.addFieldOffset(1, motionOffset, 0);
 };
 
 /**
@@ -937,7 +857,7 @@ KartKraft.Frame.addMotion = function(builder, motionOffset) {
  * @param {flatbuffers.Offset} dashOffset
  */
 KartKraft.Frame.addDash = function(builder, dashOffset) {
-  builder.addFieldOffset(3, dashOffset, 0);
+  builder.addFieldOffset(2, dashOffset, 0);
 };
 
 /**
@@ -945,7 +865,7 @@ KartKraft.Frame.addDash = function(builder, dashOffset) {
  * @param {flatbuffers.Offset} sessionOffset
  */
 KartKraft.Frame.addSession = function(builder, sessionOffset) {
-  builder.addFieldOffset(4, sessionOffset, 0);
+  builder.addFieldOffset(3, sessionOffset, 0);
 };
 
 /**

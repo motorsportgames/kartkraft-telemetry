@@ -18,18 +18,16 @@ public struct Dashboard : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
   public Dashboard __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public sbyte Version { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)1; } }
-  public float Speed { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float Rpm { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float Steer { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float Throttle { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float Brake { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public sbyte Gear { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
-  public sbyte Pos { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
-  public float BestLap { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float Speed { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float Rpm { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float Steer { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float Throttle { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float Brake { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public sbyte Gear { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
+  public sbyte Pos { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
+  public float BestLap { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
 
   public static Offset<Dashboard> CreateDashboard(FlatBufferBuilder builder,
-      sbyte version = 1,
       float speed = 0.0f,
       float rpm = 0.0f,
       float steer = 0.0f,
@@ -38,7 +36,7 @@ public struct Dashboard : IFlatbufferObject
       sbyte gear = 0,
       sbyte pos = 0,
       float bestLap = 0.0f) {
-    builder.StartObject(9);
+    builder.StartObject(8);
     Dashboard.AddBestLap(builder, bestLap);
     Dashboard.AddBrake(builder, brake);
     Dashboard.AddThrottle(builder, throttle);
@@ -47,20 +45,18 @@ public struct Dashboard : IFlatbufferObject
     Dashboard.AddSpeed(builder, speed);
     Dashboard.AddPos(builder, pos);
     Dashboard.AddGear(builder, gear);
-    Dashboard.AddVersion(builder, version);
     return Dashboard.EndDashboard(builder);
   }
 
-  public static void StartDashboard(FlatBufferBuilder builder) { builder.StartObject(9); }
-  public static void AddVersion(FlatBufferBuilder builder, sbyte version) { builder.AddSbyte(0, version, 1); }
-  public static void AddSpeed(FlatBufferBuilder builder, float speed) { builder.AddFloat(1, speed, 0.0f); }
-  public static void AddRpm(FlatBufferBuilder builder, float rpm) { builder.AddFloat(2, rpm, 0.0f); }
-  public static void AddSteer(FlatBufferBuilder builder, float steer) { builder.AddFloat(3, steer, 0.0f); }
-  public static void AddThrottle(FlatBufferBuilder builder, float throttle) { builder.AddFloat(4, throttle, 0.0f); }
-  public static void AddBrake(FlatBufferBuilder builder, float brake) { builder.AddFloat(5, brake, 0.0f); }
-  public static void AddGear(FlatBufferBuilder builder, sbyte gear) { builder.AddSbyte(6, gear, 0); }
-  public static void AddPos(FlatBufferBuilder builder, sbyte pos) { builder.AddSbyte(7, pos, 0); }
-  public static void AddBestLap(FlatBufferBuilder builder, float bestLap) { builder.AddFloat(8, bestLap, 0.0f); }
+  public static void StartDashboard(FlatBufferBuilder builder) { builder.StartObject(8); }
+  public static void AddSpeed(FlatBufferBuilder builder, float speed) { builder.AddFloat(0, speed, 0.0f); }
+  public static void AddRpm(FlatBufferBuilder builder, float rpm) { builder.AddFloat(1, rpm, 0.0f); }
+  public static void AddSteer(FlatBufferBuilder builder, float steer) { builder.AddFloat(2, steer, 0.0f); }
+  public static void AddThrottle(FlatBufferBuilder builder, float throttle) { builder.AddFloat(3, throttle, 0.0f); }
+  public static void AddBrake(FlatBufferBuilder builder, float brake) { builder.AddFloat(4, brake, 0.0f); }
+  public static void AddGear(FlatBufferBuilder builder, sbyte gear) { builder.AddSbyte(5, gear, 0); }
+  public static void AddPos(FlatBufferBuilder builder, sbyte pos) { builder.AddSbyte(6, pos, 0); }
+  public static void AddBestLap(FlatBufferBuilder builder, float bestLap) { builder.AddFloat(7, bestLap, 0.0f); }
   public static Offset<Dashboard> EndDashboard(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<Dashboard>(o);

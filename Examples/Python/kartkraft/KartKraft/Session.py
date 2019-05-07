@@ -20,36 +20,29 @@ class Session(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # Session
-    def Version(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 1
-
-    # Session
     def TotalTime(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # Session
     def TimeLeft(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # Session
     def TotalLaps(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # Session
     def Vehicles(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -62,16 +55,15 @@ class Session(object):
 
     # Session
     def VehiclesLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
-def SessionStart(builder): builder.StartObject(5)
-def SessionAddVersion(builder, version): builder.PrependInt8Slot(0, version, 1)
-def SessionAddTotalTime(builder, totalTime): builder.PrependInt32Slot(1, totalTime, 0)
-def SessionAddTimeLeft(builder, timeLeft): builder.PrependInt32Slot(2, timeLeft, 0)
-def SessionAddTotalLaps(builder, totalLaps): builder.PrependInt32Slot(3, totalLaps, 0)
-def SessionAddVehicles(builder, vehicles): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(vehicles), 0)
+def SessionStart(builder): builder.StartObject(4)
+def SessionAddTotalTime(builder, totalTime): builder.PrependInt32Slot(0, totalTime, 0)
+def SessionAddTimeLeft(builder, timeLeft): builder.PrependInt32Slot(1, timeLeft, 0)
+def SessionAddTotalLaps(builder, totalLaps): builder.PrependInt32Slot(2, totalLaps, 0)
+def SessionAddVehicles(builder, vehicles): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(vehicles), 0)
 def SessionStartVehiclesVector(builder, numElems): return builder.StartVector(4, numElems, 4)
 def SessionEnd(builder): return builder.EndObject()

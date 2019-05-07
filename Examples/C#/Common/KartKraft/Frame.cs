@@ -18,33 +18,29 @@ public struct Frame : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
   public Frame __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public sbyte Version { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)1; } }
-  public float Timestamp { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public Motion? Motion { get { int o = __p.__offset(8); return o != 0 ? (Motion?)(new Motion()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public Dashboard? Dash { get { int o = __p.__offset(10); return o != 0 ? (Dashboard?)(new Dashboard()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public Session? Session { get { int o = __p.__offset(12); return o != 0 ? (Session?)(new Session()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public float Timestamp { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public Motion? Motion { get { int o = __p.__offset(6); return o != 0 ? (Motion?)(new Motion()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public Dashboard? Dash { get { int o = __p.__offset(8); return o != 0 ? (Dashboard?)(new Dashboard()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public Session? Session { get { int o = __p.__offset(10); return o != 0 ? (Session?)(new Session()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<Frame> CreateFrame(FlatBufferBuilder builder,
-      sbyte version = 1,
       float timestamp = 0.0f,
       Offset<Motion> motionOffset = default(Offset<Motion>),
       Offset<Dashboard> dashOffset = default(Offset<Dashboard>),
       Offset<Session> sessionOffset = default(Offset<Session>)) {
-    builder.StartObject(5);
+    builder.StartObject(4);
     Frame.AddSession(builder, sessionOffset);
     Frame.AddDash(builder, dashOffset);
     Frame.AddMotion(builder, motionOffset);
     Frame.AddTimestamp(builder, timestamp);
-    Frame.AddVersion(builder, version);
     return Frame.EndFrame(builder);
   }
 
-  public static void StartFrame(FlatBufferBuilder builder) { builder.StartObject(5); }
-  public static void AddVersion(FlatBufferBuilder builder, sbyte version) { builder.AddSbyte(0, version, 1); }
-  public static void AddTimestamp(FlatBufferBuilder builder, float timestamp) { builder.AddFloat(1, timestamp, 0.0f); }
-  public static void AddMotion(FlatBufferBuilder builder, Offset<Motion> motionOffset) { builder.AddOffset(2, motionOffset.Value, 0); }
-  public static void AddDash(FlatBufferBuilder builder, Offset<Dashboard> dashOffset) { builder.AddOffset(3, dashOffset.Value, 0); }
-  public static void AddSession(FlatBufferBuilder builder, Offset<Session> sessionOffset) { builder.AddOffset(4, sessionOffset.Value, 0); }
+  public static void StartFrame(FlatBufferBuilder builder) { builder.StartObject(4); }
+  public static void AddTimestamp(FlatBufferBuilder builder, float timestamp) { builder.AddFloat(0, timestamp, 0.0f); }
+  public static void AddMotion(FlatBufferBuilder builder, Offset<Motion> motionOffset) { builder.AddOffset(1, motionOffset.Value, 0); }
+  public static void AddDash(FlatBufferBuilder builder, Offset<Dashboard> dashOffset) { builder.AddOffset(2, dashOffset.Value, 0); }
+  public static void AddSession(FlatBufferBuilder builder, Offset<Session> sessionOffset) { builder.AddOffset(3, sessionOffset.Value, 0); }
   public static Offset<Frame> EndFrame(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<Frame>(o);

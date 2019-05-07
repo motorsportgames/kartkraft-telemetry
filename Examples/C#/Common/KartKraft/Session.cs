@@ -18,34 +18,30 @@ public struct Session : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
   public Session __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public sbyte Version { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)1; } }
-  public int TotalTime { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int TimeLeft { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int TotalLaps { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public Vehicle? Vehicles(int j) { int o = __p.__offset(12); return o != 0 ? (Vehicle?)(new Vehicle()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int VehiclesLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public int TotalTime { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int TimeLeft { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int TotalLaps { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public Vehicle? Vehicles(int j) { int o = __p.__offset(10); return o != 0 ? (Vehicle?)(new Vehicle()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int VehiclesLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<Session> CreateSession(FlatBufferBuilder builder,
-      sbyte version = 1,
       int totalTime = 0,
       int timeLeft = 0,
       int totalLaps = 0,
       VectorOffset vehiclesOffset = default(VectorOffset)) {
-    builder.StartObject(5);
+    builder.StartObject(4);
     Session.AddVehicles(builder, vehiclesOffset);
     Session.AddTotalLaps(builder, totalLaps);
     Session.AddTimeLeft(builder, timeLeft);
     Session.AddTotalTime(builder, totalTime);
-    Session.AddVersion(builder, version);
     return Session.EndSession(builder);
   }
 
-  public static void StartSession(FlatBufferBuilder builder) { builder.StartObject(5); }
-  public static void AddVersion(FlatBufferBuilder builder, sbyte version) { builder.AddSbyte(0, version, 1); }
-  public static void AddTotalTime(FlatBufferBuilder builder, int totalTime) { builder.AddInt(1, totalTime, 0); }
-  public static void AddTimeLeft(FlatBufferBuilder builder, int timeLeft) { builder.AddInt(2, timeLeft, 0); }
-  public static void AddTotalLaps(FlatBufferBuilder builder, int totalLaps) { builder.AddInt(3, totalLaps, 0); }
-  public static void AddVehicles(FlatBufferBuilder builder, VectorOffset vehiclesOffset) { builder.AddOffset(4, vehiclesOffset.Value, 0); }
+  public static void StartSession(FlatBufferBuilder builder) { builder.StartObject(4); }
+  public static void AddTotalTime(FlatBufferBuilder builder, int totalTime) { builder.AddInt(0, totalTime, 0); }
+  public static void AddTimeLeft(FlatBufferBuilder builder, int timeLeft) { builder.AddInt(1, timeLeft, 0); }
+  public static void AddTotalLaps(FlatBufferBuilder builder, int totalLaps) { builder.AddInt(2, totalLaps, 0); }
+  public static void AddVehicles(FlatBufferBuilder builder, VectorOffset vehiclesOffset) { builder.AddOffset(3, vehiclesOffset.Value, 0); }
   public static VectorOffset CreateVehiclesVector(FlatBufferBuilder builder, Offset<Vehicle>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateVehiclesVectorBlock(FlatBufferBuilder builder, Offset<Vehicle>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static void StartVehiclesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }

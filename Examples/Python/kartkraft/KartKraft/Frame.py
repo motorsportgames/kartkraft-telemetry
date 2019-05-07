@@ -20,22 +20,15 @@ class Frame(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # Frame
-    def Version(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 1
-
-    # Frame
     def Timestamp(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Frame
     def Motion(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from .Motion import Motion
@@ -46,7 +39,7 @@ class Frame(object):
 
     # Frame
     def Dash(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from .Dashboard import Dashboard
@@ -57,7 +50,7 @@ class Frame(object):
 
     # Frame
     def Session(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from .Session import Session
@@ -66,10 +59,9 @@ class Frame(object):
             return obj
         return None
 
-def FrameStart(builder): builder.StartObject(5)
-def FrameAddVersion(builder, version): builder.PrependInt8Slot(0, version, 1)
-def FrameAddTimestamp(builder, timestamp): builder.PrependFloat32Slot(1, timestamp, 0.0)
-def FrameAddMotion(builder, motion): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(motion), 0)
-def FrameAddDash(builder, dash): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(dash), 0)
-def FrameAddSession(builder, session): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(session), 0)
+def FrameStart(builder): builder.StartObject(4)
+def FrameAddTimestamp(builder, timestamp): builder.PrependFloat32Slot(0, timestamp, 0.0)
+def FrameAddMotion(builder, motion): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(motion), 0)
+def FrameAddDash(builder, dash): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(dash), 0)
+def FrameAddSession(builder, session): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(session), 0)
 def FrameEnd(builder): return builder.EndObject()

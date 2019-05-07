@@ -20,68 +20,60 @@ class Motion(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # Motion
-    def Version(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 1
-
-    # Motion
     def Pitch(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Motion
     def Roll(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Motion
     def Yaw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Motion
     def AccelerationX(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Motion
     def AccelerationY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Motion
     def AccelerationZ(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Motion
     def Traction(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-def MotionStart(builder): builder.StartObject(8)
-def MotionAddVersion(builder, version): builder.PrependInt8Slot(0, version, 1)
-def MotionAddPitch(builder, pitch): builder.PrependFloat32Slot(1, pitch, 0.0)
-def MotionAddRoll(builder, roll): builder.PrependFloat32Slot(2, roll, 0.0)
-def MotionAddYaw(builder, yaw): builder.PrependFloat32Slot(3, yaw, 0.0)
-def MotionAddAccelerationX(builder, accelerationX): builder.PrependFloat32Slot(4, accelerationX, 0.0)
-def MotionAddAccelerationY(builder, accelerationY): builder.PrependFloat32Slot(5, accelerationY, 0.0)
-def MotionAddAccelerationZ(builder, accelerationZ): builder.PrependFloat32Slot(6, accelerationZ, 0.0)
-def MotionAddTraction(builder, traction): builder.PrependFloat32Slot(7, traction, 0.0)
+def MotionStart(builder): builder.StartObject(7)
+def MotionAddPitch(builder, pitch): builder.PrependFloat32Slot(0, pitch, 0.0)
+def MotionAddRoll(builder, roll): builder.PrependFloat32Slot(1, roll, 0.0)
+def MotionAddYaw(builder, yaw): builder.PrependFloat32Slot(2, yaw, 0.0)
+def MotionAddAccelerationX(builder, accelerationX): builder.PrependFloat32Slot(3, accelerationX, 0.0)
+def MotionAddAccelerationY(builder, accelerationY): builder.PrependFloat32Slot(4, accelerationY, 0.0)
+def MotionAddAccelerationZ(builder, accelerationZ): builder.PrependFloat32Slot(5, accelerationZ, 0.0)
+def MotionAddTraction(builder, traction): builder.PrependFloat32Slot(6, traction, 0.0)
 def MotionEnd(builder): return builder.EndObject()

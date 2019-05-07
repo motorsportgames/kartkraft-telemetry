@@ -18,17 +18,15 @@ public struct Motion : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
   public Motion __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public sbyte Version { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)1; } }
-  public float Pitch { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float Roll { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float Yaw { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float AccelerationX { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float AccelerationY { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float AccelerationZ { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float Traction { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float Pitch { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float Roll { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float Yaw { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float AccelerationX { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float AccelerationY { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float AccelerationZ { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float Traction { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
 
   public static Offset<Motion> CreateMotion(FlatBufferBuilder builder,
-      sbyte version = 1,
       float pitch = 0.0f,
       float roll = 0.0f,
       float yaw = 0.0f,
@@ -36,7 +34,7 @@ public struct Motion : IFlatbufferObject
       float accelerationY = 0.0f,
       float accelerationZ = 0.0f,
       float traction = 0.0f) {
-    builder.StartObject(8);
+    builder.StartObject(7);
     Motion.AddTraction(builder, traction);
     Motion.AddAccelerationZ(builder, accelerationZ);
     Motion.AddAccelerationY(builder, accelerationY);
@@ -44,19 +42,17 @@ public struct Motion : IFlatbufferObject
     Motion.AddYaw(builder, yaw);
     Motion.AddRoll(builder, roll);
     Motion.AddPitch(builder, pitch);
-    Motion.AddVersion(builder, version);
     return Motion.EndMotion(builder);
   }
 
-  public static void StartMotion(FlatBufferBuilder builder) { builder.StartObject(8); }
-  public static void AddVersion(FlatBufferBuilder builder, sbyte version) { builder.AddSbyte(0, version, 1); }
-  public static void AddPitch(FlatBufferBuilder builder, float pitch) { builder.AddFloat(1, pitch, 0.0f); }
-  public static void AddRoll(FlatBufferBuilder builder, float roll) { builder.AddFloat(2, roll, 0.0f); }
-  public static void AddYaw(FlatBufferBuilder builder, float yaw) { builder.AddFloat(3, yaw, 0.0f); }
-  public static void AddAccelerationX(FlatBufferBuilder builder, float accelerationX) { builder.AddFloat(4, accelerationX, 0.0f); }
-  public static void AddAccelerationY(FlatBufferBuilder builder, float accelerationY) { builder.AddFloat(5, accelerationY, 0.0f); }
-  public static void AddAccelerationZ(FlatBufferBuilder builder, float accelerationZ) { builder.AddFloat(6, accelerationZ, 0.0f); }
-  public static void AddTraction(FlatBufferBuilder builder, float traction) { builder.AddFloat(7, traction, 0.0f); }
+  public static void StartMotion(FlatBufferBuilder builder) { builder.StartObject(7); }
+  public static void AddPitch(FlatBufferBuilder builder, float pitch) { builder.AddFloat(0, pitch, 0.0f); }
+  public static void AddRoll(FlatBufferBuilder builder, float roll) { builder.AddFloat(1, roll, 0.0f); }
+  public static void AddYaw(FlatBufferBuilder builder, float yaw) { builder.AddFloat(2, yaw, 0.0f); }
+  public static void AddAccelerationX(FlatBufferBuilder builder, float accelerationX) { builder.AddFloat(3, accelerationX, 0.0f); }
+  public static void AddAccelerationY(FlatBufferBuilder builder, float accelerationY) { builder.AddFloat(4, accelerationY, 0.0f); }
+  public static void AddAccelerationZ(FlatBufferBuilder builder, float accelerationZ) { builder.AddFloat(5, accelerationZ, 0.0f); }
+  public static void AddTraction(FlatBufferBuilder builder, float traction) { builder.AddFloat(6, traction, 0.0f); }
   public static Offset<Motion> EndMotion(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<Motion>(o);

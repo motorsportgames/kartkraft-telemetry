@@ -20,76 +20,68 @@ class Dashboard(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # Dashboard
-    def Version(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
-        return 1
-
-    # Dashboard
     def Speed(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Dashboard
     def Rpm(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Dashboard
     def Steer(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Dashboard
     def Throttle(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Dashboard
     def Brake(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # Dashboard
     def Gear(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
     # Dashboard
     def Pos(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
     # Dashboard
     def BestLap(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-def DashboardStart(builder): builder.StartObject(9)
-def DashboardAddVersion(builder, version): builder.PrependInt8Slot(0, version, 1)
-def DashboardAddSpeed(builder, speed): builder.PrependFloat32Slot(1, speed, 0.0)
-def DashboardAddRpm(builder, rpm): builder.PrependFloat32Slot(2, rpm, 0.0)
-def DashboardAddSteer(builder, steer): builder.PrependFloat32Slot(3, steer, 0.0)
-def DashboardAddThrottle(builder, throttle): builder.PrependFloat32Slot(4, throttle, 0.0)
-def DashboardAddBrake(builder, brake): builder.PrependFloat32Slot(5, brake, 0.0)
-def DashboardAddGear(builder, gear): builder.PrependInt8Slot(6, gear, 0)
-def DashboardAddPos(builder, pos): builder.PrependInt8Slot(7, pos, 0)
-def DashboardAddBestLap(builder, bestLap): builder.PrependFloat32Slot(8, bestLap, 0.0)
+def DashboardStart(builder): builder.StartObject(8)
+def DashboardAddSpeed(builder, speed): builder.PrependFloat32Slot(0, speed, 0.0)
+def DashboardAddRpm(builder, rpm): builder.PrependFloat32Slot(1, rpm, 0.0)
+def DashboardAddSteer(builder, steer): builder.PrependFloat32Slot(2, steer, 0.0)
+def DashboardAddThrottle(builder, throttle): builder.PrependFloat32Slot(3, throttle, 0.0)
+def DashboardAddBrake(builder, brake): builder.PrependFloat32Slot(4, brake, 0.0)
+def DashboardAddGear(builder, gear): builder.PrependInt8Slot(5, gear, 0)
+def DashboardAddPos(builder, pos): builder.PrependInt8Slot(6, pos, 0)
+def DashboardAddBestLap(builder, bestLap): builder.PrependFloat32Slot(7, bestLap, 0.0)
 def DashboardEnd(builder): return builder.EndObject()
