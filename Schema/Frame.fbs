@@ -17,25 +17,25 @@ enum VehicleState:byte {
 
 /// Motion data of local player for driving hardware motion simulators
 table Motion {
-    pitch:float; 
-    roll:float; 
-    yaw:float; 
-    accelerationX:float;    //Forwards/Surge in vehicle's local space
-    accelerationY:float;    //Right/Sway in vehicle's local space
-    accelerationZ:float;    //Up/Heave in vehicle's local space
+    pitch:float;            //Degrees -180 -> 180
+    roll:float;             //Degrees -180 -> 180
+    yaw:float;              //Degrees -180 -> 180
+    accelerationX:float;    //Forwards/Surge in vehicle's local space   (meters/sec/sec)
+    accelerationY:float;    //Right/Sway in vehicle's local space (meters/sec/sec)
+    accelerationZ:float;    //Up/Heave in vehicle's local space (meters/sec/sec)
     traction:float;
 }
 
 /// Dash data for displaying state of current local/followed player
-table Dashboard {
-    speed:float;
-    rpm:float; 
-    steer:float;
-    throttle:float;
-    brake:float;
-    gear:byte; 
-    pos:byte;
-    bestLap:float;
+table Dashboard {   
+    speed:float;            //Meters/sec
+    rpm:float;              //Revolutions per minute
+    steer:float;            //Degrees. -90.0 -> 90.0 for most Karts
+    throttle:float;         //0.0 -> 1.0
+    brake:float;            //0.0 -> 1.0
+    gear:byte;              //0 is neutral, -1 is reverse
+    pos:byte;               //Pos in current session. 1 is 1st, 2 is 2nd etc.
+    bestLap:float;          //Seconds
 }
 
 /// Basic vehicle data for live timing. e.g. trackmap
