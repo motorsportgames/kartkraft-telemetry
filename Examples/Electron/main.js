@@ -1,25 +1,24 @@
-var flatbuffers = require('./js/flatbuffers.js').flatbuffers;
-var KartKraft = require('./js/Frame_generated.js').KartKraft;
+var flatbuffers = require("./js/flatbuffers.js").flatbuffers;
+var KartKraft = require("./js/Frame_generated.js").KartKraft;
 const { app, BrowserWindow } = require("electron");
 var PORT = 5000;
 var HOST = "127.0.0.1";
 var dgram = require("dgram");
 var server = dgram.createSocket("udp4");
-const {ipcMain} = require('electron')
+const { ipcMain } = require("electron");
 
-console.log("After server created");
+//Helper function to log output to both the developer window (e.g. terminal) and the renderer (app/browser devtools)
+function logToConsoleAndStdOut(msg) {
+  console.log(msg);
+  window.webContents.send("debug-message", msg);
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let window;
 
 function createWindow() {
-
-  console.log("Creating window");
-
   //app.dock.hide()
-
-
 
   // Create the browser window.
   window = new BrowserWindow({
@@ -28,26 +27,22 @@ function createWindow() {
     transparent: true,
     frame: false,
     transparent: true,
-    backgroundColor: '#80000000',
+    backgroundColor: "#80000000",
     webPreferences: {
       nodeIntegration: true
     }
   });
 
-  window.setAlwaysOnTop(true, 'floating')
-  window.setVisibleOnAllWorkspaces(true)
-  window.setFullScreenable(false)
-  //app.dock.show()
-
-  console.log("Loading HTML");
+  window.setAlwaysOnTop(true, "floating");
+  window.setVisibleOnAllWorkspaces(true);
+  window.setFullScreenable(false);
 
   // and load the index.html of the app.
   window.loadFile("index.html");
-  window.webContents.on('did-finish-load', () => {
-
+  window.webContents.on("did-finish-load", () => {
     //Bind socket after window is loaded
     server.bind(PORT, HOST);
-  })
+  });
 
   //mainWindow.
   // Open the DevTools.
@@ -67,17 +62,15 @@ server.on("listening", function() {
   var address = server.address();
   var msg = "UDP Server listening on " + address.address + ":" + address.port;
 
-  console.log(msg);
-  window.webContents.send('debug-message', msg)
+  logToConsoleAndStdOut(msg);
 });
 
 // Called when a packet is received
 server.on("message", function(message, remote) {
-
- // var msg = "Received some telemetry!";
+  // var msg = "Received some telemetry!";
   //console.log(msg);
 
-  var buf = new flatbuffers.ByteBuffer(message);  //new
+  var buf = new flatbuffers.ByteBuffer(message); //new
   var frame = KartKraft.Frame.getRootAsFrame(buf);
   if (frame) {
     //Get motion/data/session objects from the frame
@@ -86,7 +79,16 @@ server.on("message", function(message, remote) {
     session = frame.session();
 
     if (dash) {
-      window.webContents.send('frame', {timestamp: frame.timestamp(), values: [dash.speed(), dash.rpm(), dash.throttle(), dash.brake(), dash.steer()]});
+      window.webContents.send("frame", {
+        timestamp: frame.timestamp(),
+        values: [
+          dash.speed(),
+          dash.rpm(),
+          dash.throttle(),
+          dash.brake(),
+          dash.steer()
+        ]
+      });
     }
   }
 });
@@ -98,7 +100,6 @@ app.on("ready", createWindow);
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function() {
-
   server.close();
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
@@ -110,4 +111,3 @@ app.on("activate", function() {
   // dock icon is clicked and there are no other windows open.
   if (window === null) createWindow();
 });
-
