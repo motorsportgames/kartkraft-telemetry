@@ -6,11 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A80EC76A-7EEC-4F84-AF02-C23A5D785793}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DotNetWindows</RootNamespace>
-    <AssemblyName>DotNetWindows</AssemblyName>
+    <RootNamespace>ListenForTelemetry</RootNamespace>
+    <AssemblyName>ListenForTelemetry</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,11 +32,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>TelemetryExample.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FlatBuffers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\FlatBuffers.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,34 +44,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\KartKraft\Color.cs">
-      <Link>KartKraft\Color.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\KartKraft\Dashboard.cs">
-      <Link>KartKraft\Dashboard.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\KartKraft\Frame.cs">
-      <Link>KartKraft\Frame.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\KartKraft\Motion.cs">
-      <Link>KartKraft\Motion.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\KartKraft\Session.cs">
-      <Link>KartKraft\Session.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\KartKraft\Vehicle.cs">
-      <Link>KartKraft\Vehicle.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\KartKraft\VehicleState.cs">
-      <Link>KartKraft\VehicleState.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Program.cs">
-      <Link>Program.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Flatbuffers\ByteBuffer.cs" />
+    <Compile Include="Flatbuffers\ByteBufferUtil.cs" />
+    <Compile Include="Flatbuffers\FlatBufferBuilder.cs" />
+    <Compile Include="Flatbuffers\FlatBufferConstants.cs" />
+    <Compile Include="Flatbuffers\IFlatbufferObject.cs" />
+    <Compile Include="Flatbuffers\Offset.cs" />
+    <Compile Include="Flatbuffers\Struct.cs" />
+    <Compile Include="Flatbuffers\Table.cs" />
+    <Compile Include="KartKraft\Color.cs" />
+    <Compile Include="KartKraft\Dashboard.cs" />
+    <Compile Include="KartKraft\Frame.cs" />
+    <Compile Include="KartKraft\Motion.cs" />
+    <Compile Include="KartKraft\Session.cs" />
+    <Compile Include="KartKraft\Vehicle.cs" />
+    <Compile Include="KartKraft\VehicleState.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="FlatBuffers.dll" />
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
