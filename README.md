@@ -37,17 +37,17 @@ We include everything you need to write your own plugin in a variety of language
 
 We provide a [basic realtime telemetry charting app](https://github.com/black-delta/kartkraft-telemetry/tree/master/Examples/Electron) written using the Electron framework in javascript. Feel free to fork this and use as the basis of your own simple app.
 
-## Flatbuffer Schema
+## Schema
 
 We utilize a technology called Flatbuffers to formally define the format of UDP packets. This format will evolve over time, adding new features without breaking backwards compatibility. The current schema is defined in [Frame.fbs](https://github.com/black-delta/kartkraft-telemetry/blob/master/Schema/Frame.fbs)
 
-Benefits of using this library include:
+Benefits of using Flatbuffers include:
 
 - Automatic serialization/deserialization code, meaning plugins don't need to write any code to decode packets manually.
 - Reading data from received packets can be performed without memory allocation, allowing for high performance code and higher frequency packet sending.
 - Forwards/backwards compatibility: Fields can be deprecated and new or missing fields will not crash existing serialization code.
 - Support for multiple languages. If your favorite language isn't included in the list below, let us know and we may be able to add it.
-- The format of udp packets is specified in a formalized, testable way. (See Frame.fbs)
+- The format of UDP packets is specified in a formalized, testable way. (See Frame.fbs)
 
 For reference, we are currently using this release of Flatbuffers to generate the code in this repository.
 https://github.com/google/flatbuffers/releases/tag/v1.10.0
