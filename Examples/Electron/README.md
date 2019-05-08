@@ -1,9 +1,14 @@
 # KartKraft Electron Dashboard App Example
 
 ## Install dependencies
+
 `npm install`
+
 ## Run the app
+
 `npm start`
+
+Important: Requires Node.js v10.15.3. Does not yet support Node.js v12. To check your current version, type `node -v` at your command prompt. See [https://nodejs.org](https://nodejs.org) for more info.
 
 ## Resources for Learning Electron
 
