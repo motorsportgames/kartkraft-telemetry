@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Flatbuffers">
+      <UniqueIdentifier>{15deac0c-0cd4-4f0c-a19a-ba06f60572db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\KartKraft">
+      <UniqueIdentifier>{944a1a4f-bce2-4e57-a561-b4d0833f2e6e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\base.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\code_generators.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\flatbuffers.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\flatc.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\flexbuffers.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\grpc.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\hash.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\idl.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\minireflect.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\reflection.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\reflection_generated.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\registry.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\stl_emulation.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Flatbuffers\util.h">
+      <Filter>Header Files\Flatbuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\KartKraft\Frame_generated.h">
+      <Filter>Header Files\KartKraft</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListenForTelemetryVS2013.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
