@@ -4,7 +4,7 @@ const { app, BrowserWindow } = require("electron");
 var PORT = 5000;
 var HOST = "127.0.0.1";
 var dgram = require("dgram");
-var server = dgram.createSocket("udp4");
+var server = dgram.createSocket({ type : "udp4", reuseAddr : true });
 const { ipcMain } = require("electron");
 
 //Helper function to log output to both the developer window (e.g. terminal) and the renderer (app/browser devtools)
