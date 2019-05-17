@@ -50,3 +50,23 @@ Benefits of using Flatbuffers include:
 
 For reference, we are currently using this release of Flatbuffers to generate the code in this repository.
 https://github.com/google/flatbuffers/releases/tag/v1.10.0
+
+## Auto-patching KartKraft
+
+If you wish to avoid the preferences menu you can patch the telemetry setup via ini file. Using this method will also let you add as many IP address targets as you wish.
+
+You will need to edit `Game.ini` which can usually be located here:
+
+`%localappdata%\project_k\Saved\Config\WindowsNoEditor\Game.ini`
+
+#### Example ini file setup
+
+Adding the following lines to `Game.ini` will override the preferences menu, target two devices at different IP addresses, and enable standard UDP output.
+
+```
+[/Script/project_k.UDPManager]
+bConfigOverride=True
++OutputEndpoints="127.0.0.1:5000"
++OutputEndpoints="10.0.0.1:5001"
+bEnableOutputStandard=True
+```
