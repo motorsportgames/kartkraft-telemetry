@@ -14,6 +14,7 @@ import com.google.flatbuffers.*;
 public final class Frame extends Table {
   public static Frame getRootAsFrame(ByteBuffer _bb) { return getRootAsFrame(_bb, new Frame()); }
   public static Frame getRootAsFrame(ByteBuffer _bb, Frame obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static boolean FrameBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "KKFB"); }
   public void __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; }
   public Frame __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -24,13 +25,17 @@ public final class Frame extends Table {
   public Dashboard dash(Dashboard obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public Session session() { return session(new Session()); }
   public Session session(Session obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public VehicleConfig vehicleConfig() { return vehicleConfig(new VehicleConfig()); }
+  public VehicleConfig vehicleConfig(VehicleConfig obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createFrame(FlatBufferBuilder builder,
       float timestamp,
       int motionOffset,
       int dashOffset,
-      int sessionOffset) {
-    builder.startObject(4);
+      int sessionOffset,
+      int vehicleConfigOffset) {
+    builder.startObject(5);
+    Frame.addVehicleConfig(builder, vehicleConfigOffset);
     Frame.addSession(builder, sessionOffset);
     Frame.addDash(builder, dashOffset);
     Frame.addMotion(builder, motionOffset);
@@ -38,16 +43,17 @@ public final class Frame extends Table {
     return Frame.endFrame(builder);
   }
 
-  public static void startFrame(FlatBufferBuilder builder) { builder.startObject(4); }
+  public static void startFrame(FlatBufferBuilder builder) { builder.startObject(5); }
   public static void addTimestamp(FlatBufferBuilder builder, float timestamp) { builder.addFloat(0, timestamp, 0.0f); }
   public static void addMotion(FlatBufferBuilder builder, int motionOffset) { builder.addOffset(1, motionOffset, 0); }
   public static void addDash(FlatBufferBuilder builder, int dashOffset) { builder.addOffset(2, dashOffset, 0); }
   public static void addSession(FlatBufferBuilder builder, int sessionOffset) { builder.addOffset(3, sessionOffset, 0); }
+  public static void addVehicleConfig(FlatBufferBuilder builder, int vehicleConfigOffset) { builder.addOffset(4, vehicleConfigOffset, 0); }
   public static int endFrame(FlatBufferBuilder builder) {
     int o = builder.endObject();
     return o;
   }
-  public static void finishFrameBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset); }
-  public static void finishSizePrefixedFrameBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset); }
+  public static void finishFrameBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "KKFB"); }
+  public static void finishSizePrefixedFrameBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "KKFB"); }
 }
 

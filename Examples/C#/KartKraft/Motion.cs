@@ -25,6 +25,12 @@ public struct Motion : IFlatbufferObject
   public float AccelerationY { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float AccelerationZ { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float TractionLoss { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float VelocityX { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float VelocityY { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float VelocityZ { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float AngularVelocityX { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float AngularVelocityY { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float AngularVelocityZ { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
 
   public static Offset<Motion> CreateMotion(FlatBufferBuilder builder,
       float pitch = 0.0f,
@@ -33,8 +39,20 @@ public struct Motion : IFlatbufferObject
       float accelerationX = 0.0f,
       float accelerationY = 0.0f,
       float accelerationZ = 0.0f,
-      float tractionLoss = 0.0f) {
-    builder.StartObject(7);
+      float tractionLoss = 0.0f,
+      float velocityX = 0.0f,
+      float velocityY = 0.0f,
+      float velocityZ = 0.0f,
+      float angularVelocityX = 0.0f,
+      float angularVelocityY = 0.0f,
+      float angularVelocityZ = 0.0f) {
+    builder.StartObject(13);
+    Motion.AddAngularVelocityZ(builder, angularVelocityZ);
+    Motion.AddAngularVelocityY(builder, angularVelocityY);
+    Motion.AddAngularVelocityX(builder, angularVelocityX);
+    Motion.AddVelocityZ(builder, velocityZ);
+    Motion.AddVelocityY(builder, velocityY);
+    Motion.AddVelocityX(builder, velocityX);
     Motion.AddTractionLoss(builder, tractionLoss);
     Motion.AddAccelerationZ(builder, accelerationZ);
     Motion.AddAccelerationY(builder, accelerationY);
@@ -45,7 +63,7 @@ public struct Motion : IFlatbufferObject
     return Motion.EndMotion(builder);
   }
 
-  public static void StartMotion(FlatBufferBuilder builder) { builder.StartObject(7); }
+  public static void StartMotion(FlatBufferBuilder builder) { builder.StartObject(13); }
   public static void AddPitch(FlatBufferBuilder builder, float pitch) { builder.AddFloat(0, pitch, 0.0f); }
   public static void AddRoll(FlatBufferBuilder builder, float roll) { builder.AddFloat(1, roll, 0.0f); }
   public static void AddYaw(FlatBufferBuilder builder, float yaw) { builder.AddFloat(2, yaw, 0.0f); }
@@ -53,6 +71,12 @@ public struct Motion : IFlatbufferObject
   public static void AddAccelerationY(FlatBufferBuilder builder, float accelerationY) { builder.AddFloat(4, accelerationY, 0.0f); }
   public static void AddAccelerationZ(FlatBufferBuilder builder, float accelerationZ) { builder.AddFloat(5, accelerationZ, 0.0f); }
   public static void AddTractionLoss(FlatBufferBuilder builder, float tractionLoss) { builder.AddFloat(6, tractionLoss, 0.0f); }
+  public static void AddVelocityX(FlatBufferBuilder builder, float velocityX) { builder.AddFloat(7, velocityX, 0.0f); }
+  public static void AddVelocityY(FlatBufferBuilder builder, float velocityY) { builder.AddFloat(8, velocityY, 0.0f); }
+  public static void AddVelocityZ(FlatBufferBuilder builder, float velocityZ) { builder.AddFloat(9, velocityZ, 0.0f); }
+  public static void AddAngularVelocityX(FlatBufferBuilder builder, float angularVelocityX) { builder.AddFloat(10, angularVelocityX, 0.0f); }
+  public static void AddAngularVelocityY(FlatBufferBuilder builder, float angularVelocityY) { builder.AddFloat(11, angularVelocityY, 0.0f); }
+  public static void AddAngularVelocityZ(FlatBufferBuilder builder, float angularVelocityZ) { builder.AddFloat(12, angularVelocityZ, 0.0f); }
   public static Offset<Motion> EndMotion(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<Motion>(o);

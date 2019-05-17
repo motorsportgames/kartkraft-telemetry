@@ -17,7 +17,7 @@ public final class Vehicle extends Table {
   public void __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; }
   public Vehicle __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public byte state() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public int state() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   public float posX() { int o = __offset(6); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float posY() { int o = __offset(8); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float posZ() { int o = __offset(10); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
@@ -28,7 +28,7 @@ public final class Vehicle extends Table {
   public float normalisedTrackPos() { int o = __offset(18); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
 
   public static void startVehicle(FlatBufferBuilder builder) { builder.startObject(8); }
-  public static void addState(FlatBufferBuilder builder, byte state) { builder.addByte(0, state, 0); }
+  public static void addState(FlatBufferBuilder builder, int state) { builder.addByte(0, (byte)state, (byte)0); }
   public static void addPosX(FlatBufferBuilder builder, float posX) { builder.addFloat(1, posX, 0.0f); }
   public static void addPosY(FlatBufferBuilder builder, float posY) { builder.addFloat(2, posY, 0.0f); }
   public static void addPosZ(FlatBufferBuilder builder, float posZ) { builder.addFloat(3, posZ, 0.0f); }

@@ -2,10 +2,16 @@
 
 # namespace: KartKraft
 
+# /// State of vehicle
 class VehicleState(object):
-    Unknown = 0
+    Idle = 0
     Pits = 1
-    Outlap = 2
-    Racing = 3
-    Retired = 4
+    PitGrid = 2
+    Outlap = 3
+    RollingStart = 4
+    FlyingStart = 5
+    StartGrid = 6
+    Racing = 7
+    Retired = 8
+    Finished = 9
 

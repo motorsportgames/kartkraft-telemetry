@@ -58,6 +58,7 @@
     <Compile Include="KartKraft\Motion.cs" />
     <Compile Include="KartKraft\Session.cs" />
     <Compile Include="KartKraft\Vehicle.cs" />
+    <Compile Include="KartKraft\VehicleConfig.cs" />
     <Compile Include="KartKraft\VehicleState.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>

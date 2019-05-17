@@ -2,15 +2,23 @@
 
 package KartKraft;
 
+/**
+ * State of vehicle
+ */
 public final class VehicleState {
   private VehicleState() { }
-  public static final byte Unknown = 0;
+  public static final byte Idle = 0;
   public static final byte Pits = 1;
-  public static final byte Outlap = 2;
-  public static final byte Racing = 3;
-  public static final byte Retired = 4;
+  public static final byte PitGrid = 2;
+  public static final byte Outlap = 3;
+  public static final byte RollingStart = 4;
+  public static final byte FlyingStart = 5;
+  public static final byte StartGrid = 6;
+  public static final byte Racing = 7;
+  public static final byte Retired = 8;
+  public static final byte Finished = 9;
 
-  public static final String[] names = { "Unknown", "Pits", "Outlap", "Racing", "Retired", };
+  public static final String[] names = { "Idle", "Pits", "PitGrid", "Outlap", "RollingStart", "FlyingStart", "StartGrid", "Racing", "Retired", "Finished", };
 
   public static String name(int e) { return names[e]; }
 }

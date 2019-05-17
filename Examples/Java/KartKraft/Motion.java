@@ -24,6 +24,12 @@ public final class Motion extends Table {
   public float accelerationY() { int o = __offset(12); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float accelerationZ() { int o = __offset(14); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float tractionLoss() { int o = __offset(16); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float velocityX() { int o = __offset(18); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float velocityY() { int o = __offset(20); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float velocityZ() { int o = __offset(22); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float angularVelocityX() { int o = __offset(24); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float angularVelocityY() { int o = __offset(26); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float angularVelocityZ() { int o = __offset(28); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
 
   public static int createMotion(FlatBufferBuilder builder,
       float pitch,
@@ -32,8 +38,20 @@ public final class Motion extends Table {
       float accelerationX,
       float accelerationY,
       float accelerationZ,
-      float tractionLoss) {
-    builder.startObject(7);
+      float tractionLoss,
+      float velocityX,
+      float velocityY,
+      float velocityZ,
+      float angularVelocityX,
+      float angularVelocityY,
+      float angularVelocityZ) {
+    builder.startObject(13);
+    Motion.addAngularVelocityZ(builder, angularVelocityZ);
+    Motion.addAngularVelocityY(builder, angularVelocityY);
+    Motion.addAngularVelocityX(builder, angularVelocityX);
+    Motion.addVelocityZ(builder, velocityZ);
+    Motion.addVelocityY(builder, velocityY);
+    Motion.addVelocityX(builder, velocityX);
     Motion.addTractionLoss(builder, tractionLoss);
     Motion.addAccelerationZ(builder, accelerationZ);
     Motion.addAccelerationY(builder, accelerationY);
@@ -44,7 +62,7 @@ public final class Motion extends Table {
     return Motion.endMotion(builder);
   }
 
-  public static void startMotion(FlatBufferBuilder builder) { builder.startObject(7); }
+  public static void startMotion(FlatBufferBuilder builder) { builder.startObject(13); }
   public static void addPitch(FlatBufferBuilder builder, float pitch) { builder.addFloat(0, pitch, 0.0f); }
   public static void addRoll(FlatBufferBuilder builder, float roll) { builder.addFloat(1, roll, 0.0f); }
   public static void addYaw(FlatBufferBuilder builder, float yaw) { builder.addFloat(2, yaw, 0.0f); }
@@ -52,6 +70,12 @@ public final class Motion extends Table {
   public static void addAccelerationY(FlatBufferBuilder builder, float accelerationY) { builder.addFloat(4, accelerationY, 0.0f); }
   public static void addAccelerationZ(FlatBufferBuilder builder, float accelerationZ) { builder.addFloat(5, accelerationZ, 0.0f); }
   public static void addTractionLoss(FlatBufferBuilder builder, float tractionLoss) { builder.addFloat(6, tractionLoss, 0.0f); }
+  public static void addVelocityX(FlatBufferBuilder builder, float velocityX) { builder.addFloat(7, velocityX, 0.0f); }
+  public static void addVelocityY(FlatBufferBuilder builder, float velocityY) { builder.addFloat(8, velocityY, 0.0f); }
+  public static void addVelocityZ(FlatBufferBuilder builder, float velocityZ) { builder.addFloat(9, velocityZ, 0.0f); }
+  public static void addAngularVelocityX(FlatBufferBuilder builder, float angularVelocityX) { builder.addFloat(10, angularVelocityX, 0.0f); }
+  public static void addAngularVelocityY(FlatBufferBuilder builder, float angularVelocityY) { builder.addFloat(11, angularVelocityY, 0.0f); }
+  public static void addAngularVelocityZ(FlatBufferBuilder builder, float angularVelocityZ) { builder.addFloat(12, angularVelocityZ, 0.0f); }
   public static int endMotion(FlatBufferBuilder builder) {
     int o = builder.endObject();
     return o;

@@ -18,36 +18,54 @@ struct Vehicle;
 
 struct Session;
 
+struct VehicleConfig;
+
 struct Frame;
 
+/// State of vehicle
 enum VehicleState {
-  VehicleState_Unknown = 0,
+  VehicleState_Idle = 0,
   VehicleState_Pits = 1,
-  VehicleState_Outlap = 2,
-  VehicleState_Racing = 3,
-  VehicleState_Retired = 4,
-  VehicleState_MIN = VehicleState_Unknown,
-  VehicleState_MAX = VehicleState_Retired
+  VehicleState_PitGrid = 2,
+  VehicleState_Outlap = 3,
+  VehicleState_RollingStart = 4,
+  VehicleState_FlyingStart = 5,
+  VehicleState_StartGrid = 6,
+  VehicleState_Racing = 7,
+  VehicleState_Retired = 8,
+  VehicleState_Finished = 9,
+  VehicleState_MIN = VehicleState_Idle,
+  VehicleState_MAX = VehicleState_Finished
 };
 
-inline const VehicleState (&EnumValuesVehicleState())[5] {
+inline const VehicleState (&EnumValuesVehicleState())[10] {
   static const VehicleState values[] = {
-    VehicleState_Unknown,
+    VehicleState_Idle,
     VehicleState_Pits,
+    VehicleState_PitGrid,
     VehicleState_Outlap,
+    VehicleState_RollingStart,
+    VehicleState_FlyingStart,
+    VehicleState_StartGrid,
     VehicleState_Racing,
-    VehicleState_Retired
+    VehicleState_Retired,
+    VehicleState_Finished
   };
   return values;
 }
 
 inline const char * const *EnumNamesVehicleState() {
   static const char * const names[] = {
-    "Unknown",
+    "Idle",
     "Pits",
+    "PitGrid",
     "Outlap",
+    "RollingStart",
+    "FlyingStart",
+    "StartGrid",
     "Racing",
     "Retired",
+    "Finished",
     nullptr
   };
   return names;
@@ -95,7 +113,13 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_ACCELERATIONX = 10,
     VT_ACCELERATIONY = 12,
     VT_ACCELERATIONZ = 14,
-    VT_TRACTIONLOSS = 16
+    VT_TRACTIONLOSS = 16,
+    VT_VELOCITYX = 18,
+    VT_VELOCITYY = 20,
+    VT_VELOCITYZ = 22,
+    VT_ANGULARVELOCITYX = 24,
+    VT_ANGULARVELOCITYY = 26,
+    VT_ANGULARVELOCITYZ = 28
   };
   float pitch() const {
     return GetField<float>(VT_PITCH, 0.0f);
@@ -118,6 +142,24 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   float tractionLoss() const {
     return GetField<float>(VT_TRACTIONLOSS, 0.0f);
   }
+  float velocityX() const {
+    return GetField<float>(VT_VELOCITYX, 0.0f);
+  }
+  float velocityY() const {
+    return GetField<float>(VT_VELOCITYY, 0.0f);
+  }
+  float velocityZ() const {
+    return GetField<float>(VT_VELOCITYZ, 0.0f);
+  }
+  float angularVelocityX() const {
+    return GetField<float>(VT_ANGULARVELOCITYX, 0.0f);
+  }
+  float angularVelocityY() const {
+    return GetField<float>(VT_ANGULARVELOCITYY, 0.0f);
+  }
+  float angularVelocityZ() const {
+    return GetField<float>(VT_ANGULARVELOCITYZ, 0.0f);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<float>(verifier, VT_PITCH) &&
@@ -127,6 +169,12 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<float>(verifier, VT_ACCELERATIONY) &&
            VerifyField<float>(verifier, VT_ACCELERATIONZ) &&
            VerifyField<float>(verifier, VT_TRACTIONLOSS) &&
+           VerifyField<float>(verifier, VT_VELOCITYX) &&
+           VerifyField<float>(verifier, VT_VELOCITYY) &&
+           VerifyField<float>(verifier, VT_VELOCITYZ) &&
+           VerifyField<float>(verifier, VT_ANGULARVELOCITYX) &&
+           VerifyField<float>(verifier, VT_ANGULARVELOCITYY) &&
+           VerifyField<float>(verifier, VT_ANGULARVELOCITYZ) &&
            verifier.EndTable();
   }
 };
@@ -155,6 +203,24 @@ struct MotionBuilder {
   void add_tractionLoss(float tractionLoss) {
     fbb_.AddElement<float>(Motion::VT_TRACTIONLOSS, tractionLoss, 0.0f);
   }
+  void add_velocityX(float velocityX) {
+    fbb_.AddElement<float>(Motion::VT_VELOCITYX, velocityX, 0.0f);
+  }
+  void add_velocityY(float velocityY) {
+    fbb_.AddElement<float>(Motion::VT_VELOCITYY, velocityY, 0.0f);
+  }
+  void add_velocityZ(float velocityZ) {
+    fbb_.AddElement<float>(Motion::VT_VELOCITYZ, velocityZ, 0.0f);
+  }
+  void add_angularVelocityX(float angularVelocityX) {
+    fbb_.AddElement<float>(Motion::VT_ANGULARVELOCITYX, angularVelocityX, 0.0f);
+  }
+  void add_angularVelocityY(float angularVelocityY) {
+    fbb_.AddElement<float>(Motion::VT_ANGULARVELOCITYY, angularVelocityY, 0.0f);
+  }
+  void add_angularVelocityZ(float angularVelocityZ) {
+    fbb_.AddElement<float>(Motion::VT_ANGULARVELOCITYZ, angularVelocityZ, 0.0f);
+  }
   explicit MotionBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -175,8 +241,20 @@ inline flatbuffers::Offset<Motion> CreateMotion(
     float accelerationX = 0.0f,
     float accelerationY = 0.0f,
     float accelerationZ = 0.0f,
-    float tractionLoss = 0.0f) {
+    float tractionLoss = 0.0f,
+    float velocityX = 0.0f,
+    float velocityY = 0.0f,
+    float velocityZ = 0.0f,
+    float angularVelocityX = 0.0f,
+    float angularVelocityY = 0.0f,
+    float angularVelocityZ = 0.0f) {
   MotionBuilder builder_(_fbb);
+  builder_.add_angularVelocityZ(angularVelocityZ);
+  builder_.add_angularVelocityY(angularVelocityY);
+  builder_.add_angularVelocityX(angularVelocityX);
+  builder_.add_velocityZ(velocityZ);
+  builder_.add_velocityY(velocityY);
+  builder_.add_velocityX(velocityX);
   builder_.add_tractionLoss(tractionLoss);
   builder_.add_accelerationZ(accelerationZ);
   builder_.add_accelerationY(accelerationY);
@@ -197,7 +275,10 @@ struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_BRAKE = 12,
     VT_GEAR = 14,
     VT_POS = 16,
-    VT_BESTLAP = 18
+    VT_BESTLAP = 18,
+    VT_CURRENTLAP = 20,
+    VT_LASTLAP = 22,
+    VT_LAP = 24
   };
   float speed() const {
     return GetField<float>(VT_SPEED, 0.0f);
@@ -223,6 +304,15 @@ struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   float bestLap() const {
     return GetField<float>(VT_BESTLAP, 0.0f);
   }
+  float currentLap() const {
+    return GetField<float>(VT_CURRENTLAP, 0.0f);
+  }
+  float lastLap() const {
+    return GetField<float>(VT_LASTLAP, 0.0f);
+  }
+  uint16_t lap() const {
+    return GetField<uint16_t>(VT_LAP, 0);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<float>(verifier, VT_SPEED) &&
@@ -233,6 +323,9 @@ struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_GEAR) &&
            VerifyField<int8_t>(verifier, VT_POS) &&
            VerifyField<float>(verifier, VT_BESTLAP) &&
+           VerifyField<float>(verifier, VT_CURRENTLAP) &&
+           VerifyField<float>(verifier, VT_LASTLAP) &&
+           VerifyField<uint16_t>(verifier, VT_LAP) &&
            verifier.EndTable();
   }
 };
@@ -264,6 +357,15 @@ struct DashboardBuilder {
   void add_bestLap(float bestLap) {
     fbb_.AddElement<float>(Dashboard::VT_BESTLAP, bestLap, 0.0f);
   }
+  void add_currentLap(float currentLap) {
+    fbb_.AddElement<float>(Dashboard::VT_CURRENTLAP, currentLap, 0.0f);
+  }
+  void add_lastLap(float lastLap) {
+    fbb_.AddElement<float>(Dashboard::VT_LASTLAP, lastLap, 0.0f);
+  }
+  void add_lap(uint16_t lap) {
+    fbb_.AddElement<uint16_t>(Dashboard::VT_LAP, lap, 0);
+  }
   explicit DashboardBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -285,14 +387,20 @@ inline flatbuffers::Offset<Dashboard> CreateDashboard(
     float brake = 0.0f,
     int8_t gear = 0,
     int8_t pos = 0,
-    float bestLap = 0.0f) {
+    float bestLap = 0.0f,
+    float currentLap = 0.0f,
+    float lastLap = 0.0f,
+    uint16_t lap = 0) {
   DashboardBuilder builder_(_fbb);
+  builder_.add_lastLap(lastLap);
+  builder_.add_currentLap(currentLap);
   builder_.add_bestLap(bestLap);
   builder_.add_brake(brake);
   builder_.add_throttle(throttle);
   builder_.add_steer(steer);
   builder_.add_rpm(rpm);
   builder_.add_speed(speed);
+  builder_.add_lap(lap);
   builder_.add_pos(pos);
   builder_.add_gear(gear);
   return builder_.Finish();
@@ -311,7 +419,7 @@ struct Vehicle FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_NORMALISEDTRACKPOS = 18
   };
   VehicleState state() const {
-    return static_cast<VehicleState>(GetField<int8_t>(VT_STATE, 0));
+    return static_cast<VehicleState>(GetField<uint8_t>(VT_STATE, 0));
   }
   float posX() const {
     return GetField<float>(VT_POSX, 0.0f);
@@ -336,7 +444,7 @@ struct Vehicle FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int8_t>(verifier, VT_STATE) &&
+           VerifyField<uint8_t>(verifier, VT_STATE) &&
            VerifyField<float>(verifier, VT_POSX) &&
            VerifyField<float>(verifier, VT_POSY) &&
            VerifyField<float>(verifier, VT_POSZ) &&
@@ -352,7 +460,7 @@ struct VehicleBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_state(VehicleState state) {
-    fbb_.AddElement<int8_t>(Vehicle::VT_STATE, static_cast<int8_t>(state), 0);
+    fbb_.AddElement<uint8_t>(Vehicle::VT_STATE, static_cast<uint8_t>(state), 0);
   }
   void add_posX(float posX) {
     fbb_.AddElement<float>(Vehicle::VT_POSX, posX, 0.0f);
@@ -389,7 +497,7 @@ struct VehicleBuilder {
 
 inline flatbuffers::Offset<Vehicle> CreateVehicle(
     flatbuffers::FlatBufferBuilder &_fbb,
-    VehicleState state = VehicleState_Unknown,
+    VehicleState state = VehicleState_Idle,
     float posX = 0.0f,
     float posY = 0.0f,
     float posZ = 0.0f,
@@ -496,13 +604,75 @@ inline flatbuffers::Offset<Session> CreateSessionDirect(
       vehicles ? _fbb.CreateVector<flatbuffers::Offset<Vehicle>>(*vehicles) : 0);
 }
 
+/// Data associated with a vehicle which doesn't change dynamically during a race. e.g. class, num gears, driver name etc
+struct VehicleConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_RPMLIMIT = 4,
+    VT_RPMMAX = 6,
+    VT_GEARMAX = 8
+  };
+  float rpmLimit() const {
+    return GetField<float>(VT_RPMLIMIT, 0.0f);
+  }
+  float rpmMax() const {
+    return GetField<float>(VT_RPMMAX, 0.0f);
+  }
+  int8_t gearMax() const {
+    return GetField<int8_t>(VT_GEARMAX, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<float>(verifier, VT_RPMLIMIT) &&
+           VerifyField<float>(verifier, VT_RPMMAX) &&
+           VerifyField<int8_t>(verifier, VT_GEARMAX) &&
+           verifier.EndTable();
+  }
+};
+
+struct VehicleConfigBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_rpmLimit(float rpmLimit) {
+    fbb_.AddElement<float>(VehicleConfig::VT_RPMLIMIT, rpmLimit, 0.0f);
+  }
+  void add_rpmMax(float rpmMax) {
+    fbb_.AddElement<float>(VehicleConfig::VT_RPMMAX, rpmMax, 0.0f);
+  }
+  void add_gearMax(int8_t gearMax) {
+    fbb_.AddElement<int8_t>(VehicleConfig::VT_GEARMAX, gearMax, 0);
+  }
+  explicit VehicleConfigBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  VehicleConfigBuilder &operator=(const VehicleConfigBuilder &);
+  flatbuffers::Offset<VehicleConfig> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<VehicleConfig>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<VehicleConfig> CreateVehicleConfig(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    float rpmLimit = 0.0f,
+    float rpmMax = 0.0f,
+    int8_t gearMax = 0) {
+  VehicleConfigBuilder builder_(_fbb);
+  builder_.add_rpmMax(rpmMax);
+  builder_.add_rpmLimit(rpmLimit);
+  builder_.add_gearMax(gearMax);
+  return builder_.Finish();
+}
+
 /// Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
 struct Frame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_TIMESTAMP = 4,
     VT_MOTION = 6,
     VT_DASH = 8,
-    VT_SESSION = 10
+    VT_SESSION = 10,
+    VT_VEHICLECONFIG = 12
   };
   float timestamp() const {
     return GetField<float>(VT_TIMESTAMP, 0.0f);
@@ -516,6 +686,9 @@ struct Frame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const Session *session() const {
     return GetPointer<const Session *>(VT_SESSION);
   }
+  const VehicleConfig *vehicleConfig() const {
+    return GetPointer<const VehicleConfig *>(VT_VEHICLECONFIG);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<float>(verifier, VT_TIMESTAMP) &&
@@ -525,6 +698,8 @@ struct Frame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.VerifyTable(dash()) &&
            VerifyOffset(verifier, VT_SESSION) &&
            verifier.VerifyTable(session()) &&
+           VerifyOffset(verifier, VT_VEHICLECONFIG) &&
+           verifier.VerifyTable(vehicleConfig()) &&
            verifier.EndTable();
   }
 };
@@ -544,6 +719,9 @@ struct FrameBuilder {
   void add_session(flatbuffers::Offset<Session> session) {
     fbb_.AddOffset(Frame::VT_SESSION, session);
   }
+  void add_vehicleConfig(flatbuffers::Offset<VehicleConfig> vehicleConfig) {
+    fbb_.AddOffset(Frame::VT_VEHICLECONFIG, vehicleConfig);
+  }
   explicit FrameBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -561,8 +739,10 @@ inline flatbuffers::Offset<Frame> CreateFrame(
     float timestamp = 0.0f,
     flatbuffers::Offset<Motion> motion = 0,
     flatbuffers::Offset<Dashboard> dash = 0,
-    flatbuffers::Offset<Session> session = 0) {
+    flatbuffers::Offset<Session> session = 0,
+    flatbuffers::Offset<VehicleConfig> vehicleConfig = 0) {
   FrameBuilder builder_(_fbb);
+  builder_.add_vehicleConfig(vehicleConfig);
   builder_.add_session(session);
   builder_.add_dash(dash);
   builder_.add_motion(motion);
@@ -578,26 +758,35 @@ inline const KartKraft::Frame *GetSizePrefixedFrame(const void *buf) {
   return flatbuffers::GetSizePrefixedRoot<KartKraft::Frame>(buf);
 }
 
+inline const char *FrameIdentifier() {
+  return "KKFB";
+}
+
+inline bool FrameBufferHasIdentifier(const void *buf) {
+  return flatbuffers::BufferHasIdentifier(
+      buf, FrameIdentifier());
+}
+
 inline bool VerifyFrameBuffer(
     flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<KartKraft::Frame>(nullptr);
+  return verifier.VerifyBuffer<KartKraft::Frame>(FrameIdentifier());
 }
 
 inline bool VerifySizePrefixedFrameBuffer(
     flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<KartKraft::Frame>(nullptr);
+  return verifier.VerifySizePrefixedBuffer<KartKraft::Frame>(FrameIdentifier());
 }
 
 inline void FinishFrameBuffer(
     flatbuffers::FlatBufferBuilder &fbb,
     flatbuffers::Offset<KartKraft::Frame> root) {
-  fbb.Finish(root);
+  fbb.Finish(root, FrameIdentifier());
 }
 
 inline void FinishSizePrefixedFrameBuffer(
     flatbuffers::FlatBufferBuilder &fbb,
     flatbuffers::Offset<KartKraft::Frame> root) {
-  fbb.FinishSizePrefixed(root);
+  fbb.FinishSizePrefixed(root, FrameIdentifier());
 }
 
 }  // namespace KartKraft

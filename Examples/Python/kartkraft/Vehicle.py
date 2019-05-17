@@ -23,7 +23,7 @@ class Vehicle(object):
     def State(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
     # Vehicle
@@ -80,7 +80,7 @@ class Vehicle(object):
         return 0.0
 
 def VehicleStart(builder): builder.StartObject(8)
-def VehicleAddState(builder, state): builder.PrependInt8Slot(0, state, 0)
+def VehicleAddState(builder, state): builder.PrependUint8Slot(0, state, 0)
 def VehicleAddPosX(builder, posX): builder.PrependFloat32Slot(1, posX, 0.0)
 def VehicleAddPosY(builder, posY): builder.PrependFloat32Slot(2, posY, 0.0)
 def VehicleAddPosZ(builder, posZ): builder.PrependFloat32Slot(3, posZ, 0.0)

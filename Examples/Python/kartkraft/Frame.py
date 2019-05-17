@@ -59,9 +59,21 @@ class Frame(object):
             return obj
         return None
 
-def FrameStart(builder): builder.StartObject(4)
+    # Frame
+    def VehicleConfig(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from .VehicleConfig import VehicleConfig
+            obj = VehicleConfig()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def FrameStart(builder): builder.StartObject(5)
 def FrameAddTimestamp(builder, timestamp): builder.PrependFloat32Slot(0, timestamp, 0.0)
 def FrameAddMotion(builder, motion): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(motion), 0)
 def FrameAddDash(builder, dash): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(dash), 0)
 def FrameAddSession(builder, session): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(session), 0)
+def FrameAddVehicleConfig(builder, vehicleConfig): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(vehicleConfig), 0)
 def FrameEnd(builder): return builder.EndObject()

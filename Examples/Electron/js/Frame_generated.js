@@ -7,14 +7,21 @@
 var KartKraft = KartKraft || {};
 
 /**
+ * State of vehicle
+ *
  * @enum
  */
 KartKraft.VehicleState = {
-  Unknown: 0,
+  Idle: 0,
   Pits: 1,
-  Outlap: 2,
-  Racing: 3,
-  Retired: 4
+  PitGrid: 2,
+  Outlap: 3,
+  RollingStart: 4,
+  FlyingStart: 5,
+  StartGrid: 6,
+  Racing: 7,
+  Retired: 8,
+  Finished: 9
 };
 
 /**
@@ -175,10 +182,58 @@ KartKraft.Motion.prototype.tractionLoss = function() {
 };
 
 /**
+ * @returns {number}
+ */
+KartKraft.Motion.prototype.velocityX = function() {
+  var offset = this.bb.__offset(this.bb_pos, 18);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Motion.prototype.velocityY = function() {
+  var offset = this.bb.__offset(this.bb_pos, 20);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Motion.prototype.velocityZ = function() {
+  var offset = this.bb.__offset(this.bb_pos, 22);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Motion.prototype.angularVelocityX = function() {
+  var offset = this.bb.__offset(this.bb_pos, 24);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Motion.prototype.angularVelocityY = function() {
+  var offset = this.bb.__offset(this.bb_pos, 26);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Motion.prototype.angularVelocityZ = function() {
+  var offset = this.bb.__offset(this.bb_pos, 28);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Motion.startMotion = function(builder) {
-  builder.startObject(7);
+  builder.startObject(13);
 };
 
 /**
@@ -235,6 +290,54 @@ KartKraft.Motion.addAccelerationZ = function(builder, accelerationZ) {
  */
 KartKraft.Motion.addTractionLoss = function(builder, tractionLoss) {
   builder.addFieldFloat32(6, tractionLoss, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} velocityX
+ */
+KartKraft.Motion.addVelocityX = function(builder, velocityX) {
+  builder.addFieldFloat32(7, velocityX, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} velocityY
+ */
+KartKraft.Motion.addVelocityY = function(builder, velocityY) {
+  builder.addFieldFloat32(8, velocityY, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} velocityZ
+ */
+KartKraft.Motion.addVelocityZ = function(builder, velocityZ) {
+  builder.addFieldFloat32(9, velocityZ, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} angularVelocityX
+ */
+KartKraft.Motion.addAngularVelocityX = function(builder, angularVelocityX) {
+  builder.addFieldFloat32(10, angularVelocityX, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} angularVelocityY
+ */
+KartKraft.Motion.addAngularVelocityY = function(builder, angularVelocityY) {
+  builder.addFieldFloat32(11, angularVelocityY, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} angularVelocityZ
+ */
+KartKraft.Motion.addAngularVelocityZ = function(builder, angularVelocityZ) {
+  builder.addFieldFloat32(12, angularVelocityZ, 0.0);
 };
 
 /**
@@ -348,10 +451,34 @@ KartKraft.Dashboard.prototype.bestLap = function() {
 };
 
 /**
+ * @returns {number}
+ */
+KartKraft.Dashboard.prototype.currentLap = function() {
+  var offset = this.bb.__offset(this.bb_pos, 20);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Dashboard.prototype.lastLap = function() {
+  var offset = this.bb.__offset(this.bb_pos, 22);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Dashboard.prototype.lap = function() {
+  var offset = this.bb.__offset(this.bb_pos, 24);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Dashboard.startDashboard = function(builder) {
-  builder.startObject(8);
+  builder.startObject(11);
 };
 
 /**
@@ -420,6 +547,30 @@ KartKraft.Dashboard.addBestLap = function(builder, bestLap) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {number} currentLap
+ */
+KartKraft.Dashboard.addCurrentLap = function(builder, currentLap) {
+  builder.addFieldFloat32(8, currentLap, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} lastLap
+ */
+KartKraft.Dashboard.addLastLap = function(builder, lastLap) {
+  builder.addFieldFloat32(9, lastLap, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} lap
+ */
+KartKraft.Dashboard.addLap = function(builder, lap) {
+  builder.addFieldInt16(10, lap, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
 KartKraft.Dashboard.endDashboard = function(builder) {
@@ -469,7 +620,7 @@ KartKraft.Vehicle.getRootAsVehicle = function(bb, obj) {
  */
 KartKraft.Vehicle.prototype.state = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {KartKraft.VehicleState} */ (this.bb.readInt8(this.bb_pos + offset)) : KartKraft.VehicleState.Unknown;
+  return offset ? /** @type {KartKraft.VehicleState} */ (this.bb.readUint8(this.bb_pos + offset)) : KartKraft.VehicleState.Idle;
 };
 
 /**
@@ -541,7 +692,7 @@ KartKraft.Vehicle.startVehicle = function(builder) {
  * @param {KartKraft.VehicleState} state
  */
 KartKraft.Vehicle.addState = function(builder, state) {
-  builder.addFieldInt8(0, state, KartKraft.VehicleState.Unknown);
+  builder.addFieldInt8(0, state, KartKraft.VehicleState.Idle);
 };
 
 /**
@@ -758,6 +909,107 @@ KartKraft.Session.endSession = function(builder) {
 };
 
 /**
+ * Data associated with a vehicle which doesn't change dynamically during a race. e.g. class, num gears, driver name etc
+ *
+ * @constructor
+ */
+KartKraft.VehicleConfig = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {KartKraft.VehicleConfig}
+ */
+KartKraft.VehicleConfig.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {KartKraft.VehicleConfig=} obj
+ * @returns {KartKraft.VehicleConfig}
+ */
+KartKraft.VehicleConfig.getRootAsVehicleConfig = function(bb, obj) {
+  return (obj || new KartKraft.VehicleConfig).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.VehicleConfig.prototype.rpmLimit = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.VehicleConfig.prototype.rpmMax = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.VehicleConfig.prototype.gearMax = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.readInt8(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+KartKraft.VehicleConfig.startVehicleConfig = function(builder) {
+  builder.startObject(3);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} rpmLimit
+ */
+KartKraft.VehicleConfig.addRpmLimit = function(builder, rpmLimit) {
+  builder.addFieldFloat32(0, rpmLimit, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} rpmMax
+ */
+KartKraft.VehicleConfig.addRpmMax = function(builder, rpmMax) {
+  builder.addFieldFloat32(1, rpmMax, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} gearMax
+ */
+KartKraft.VehicleConfig.addGearMax = function(builder, gearMax) {
+  builder.addFieldInt8(2, gearMax, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+KartKraft.VehicleConfig.endVehicleConfig = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
  * Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
  *
  * @constructor
@@ -792,6 +1044,14 @@ KartKraft.Frame.prototype.__init = function(i, bb) {
  */
 KartKraft.Frame.getRootAsFrame = function(bb, obj) {
   return (obj || new KartKraft.Frame).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {boolean}
+ */
+KartKraft.Frame.bufferHasIdentifier = function(bb) {
+  return bb.__has_identifier('KKFB');
 };
 
 /**
@@ -830,10 +1090,19 @@ KartKraft.Frame.prototype.session = function(obj) {
 };
 
 /**
+ * @param {KartKraft.VehicleConfig=} obj
+ * @returns {KartKraft.VehicleConfig|null}
+ */
+KartKraft.Frame.prototype.vehicleConfig = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 12);
+  return offset ? (obj || new KartKraft.VehicleConfig).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Frame.startFrame = function(builder) {
-  builder.startObject(4);
+  builder.startObject(5);
 };
 
 /**
@@ -870,6 +1139,14 @@ KartKraft.Frame.addSession = function(builder, sessionOffset) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} vehicleConfigOffset
+ */
+KartKraft.Frame.addVehicleConfig = function(builder, vehicleConfigOffset) {
+  builder.addFieldOffset(4, vehicleConfigOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
 KartKraft.Frame.endFrame = function(builder) {
@@ -882,7 +1159,7 @@ KartKraft.Frame.endFrame = function(builder) {
  * @param {flatbuffers.Offset} offset
  */
 KartKraft.Frame.finishFrameBuffer = function(builder, offset) {
-  builder.finish(offset);
+  builder.finish(offset, 'KKFB');
 };
 
 // Exports for Node.js and RequireJS

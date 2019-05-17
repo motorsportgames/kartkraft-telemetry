@@ -1,5 +1,7 @@
 namespace KartKraft;
 
+file_identifier "KKFB";
+
 /// Useful generic color struct 
 struct Color {
   r:byte;
@@ -7,13 +9,40 @@ struct Color {
   b:byte;
 }
 
-enum VehicleState:byte {
-    Unknown = 0,
-    Pits = 1,
-    Outlap = 2,
-    Racing = 3,
-    Retired = 4
+/// State of vehicle
+enum VehicleState:ubyte {
+    Idle = 0,
+    Pits = 1,      
+    PitGrid = 2,       
+    Outlap = 3,     
+    RollingStart = 4,
+    FlyingStart = 5,
+    StartGrid = 6,
+    Racing = 7,     
+    Retired = 8,
+    Finished = 9
 }
+
+// enum Surface:ubyte {
+//     None = 0,
+//     Asphalt = 1,
+//     Grass = 2,
+//     Gravel = 3,
+//     Kerb = 4
+// }
+
+// enum VehicleControl:ubyte {
+//     Human = 0,      //Human directly in control
+//     AI = 1,         //AI behaviour
+//     Playback = 2    //Replay/recording etc
+// }
+
+// enum VehicleClass:ubyte {
+//     Open = 0,               //Open class means this vehicle doesn't fit in to any other class
+//     X30 = 1,         
+//     KZ2 = 2,
+//     KA100 = 3
+// }
 
 /// Motion data of local player for driving hardware motion simulators
 table Motion {
@@ -23,19 +52,28 @@ table Motion {
     accelerationX:float;    //Forwards/Surge in vehicle's local space   (meters/sec/sec)
     accelerationY:float;    //Right/Sway in vehicle's local space (meters/sec/sec)
     accelerationZ:float;    //Up/Heave in vehicle's local space (meters/sec/sec)
-    tractionLoss:float;     //Nothing here yet
+    tractionLoss:float;     //Nothing here yet 
+    velocityX:float;        //Forward speed in vehicle's local space (meters/sec)
+    velocityY:float;        //Rightward speed in vehicle's local space (meters/sec)
+    velocityZ:float;        //Upward speed in vehicle's local space (meters/sec)
+    angularVelocityX:float; //Roll speed, i.e rotation around local forward direction (deg/sec)
+    angularVelocityY:float; //Pitch speed, i.e rotation around local right direction (deg/sec)
+    angularVelocityZ:float; //Yaw speed, i.e rotation around local up direction (deg/sec)
 }
 
 /// Dash data for displaying state of current local/followed player
 table Dashboard {   
-    speed:float;            //Meters/sec
-    rpm:float;              //Revolutions per minute
-    steer:float;            //Degrees. -90.0 -> 90.0 for most Karts
-    throttle:float;         //0.0 -> 1.0
-    brake:float;            //0.0 -> 1.0
-    gear:byte;              //0 is neutral, -1 is reverse
-    pos:byte;               //Pos in current session. 1 is 1st, 2 is 2nd etc.
-    bestLap:float;          //Seconds
+    speed:float;                    //Meters/sec
+    rpm:float;                      //Revolutions per minute
+    steer:float;                    //Degrees. -90.0 -> 90.0 for most Karts
+    throttle:float;                 //0.0 -> 1.0
+    brake:float;                    //0.0 -> 1.0
+    gear:byte;                      //0 is neutral, -1 is reverse
+    pos:byte;                       //Pos in current session. 1 is 1st, 2 is 2nd etc.
+    bestLap:float;                  //Best lap time (seconds)
+    currentLap:float;               //Current lap time (seconds)
+    lastLap:float;                  //Most recently completed lap time
+    lap:ushort;                     //Current lap number. 0 = pre-first-lap, 1 = on first lap, 2 = second lap etc
 }
 
 /// Basic vehicle data for live timing. e.g. trackmap
@@ -58,12 +96,21 @@ table Session {
     vehicles:[Vehicle];
 }
 
+/// Data associated with a vehicle which doesn't change dynamically during a race. e.g. class, num gears, driver name etc
+table VehicleConfig {
+    rpmLimit:float;         //Max rpm if a rev limiter is applied. 
+    rpmMax:float;           //Max rpm to display
+    gearMax:byte;           //Highest possible gear. Will be 1 for non-geared vehicles.
+    //#todo: chassis manufacturer, engine type, tyre manufacturer, driver name etc
+}
+
 /// Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
 table Frame {
     timestamp:float;
-    motion:Motion;
-    dash:Dashboard;
-    session:Session;
+    motion:Motion;                  //Motion data for followed vehicle
+    dash:Dashboard;                 //Dyanmic dashboard data for followed vehicle
+    session:Session;                //Data for current session
+    vehicleConfig:VehicleConfig;    //Config for followed vehicle
 }
 
 root_type Frame;
