@@ -66,7 +66,7 @@ Adding the following lines to `Game.ini` will override the preferences menu, tar
 ```
 [/Script/project_k.UDPManager]
 bConfigOverride=True
-+OutputEndpoints="127.0.0.1:5000"
-+OutputEndpoints="10.0.0.1:5001"
+OutputEndpoints="127.0.0.1:5000"
+OutputEndpoints="10.0.0.1:5001"
 bEnableOutputStandard=True
 ```
