@@ -469,7 +469,7 @@ KartKraft.Dashboard.prototype.lastLap = function() {
 /**
  * @returns {number}
  */
-KartKraft.Dashboard.prototype.lap = function() {
+KartKraft.Dashboard.prototype.lapCount = function() {
   var offset = this.bb.__offset(this.bb_pos, 24);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -563,10 +563,10 @@ KartKraft.Dashboard.addLastLap = function(builder, lastLap) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} lap
+ * @param {number} lapCount
  */
-KartKraft.Dashboard.addLap = function(builder, lap) {
-  builder.addFieldInt16(10, lap, 0);
+KartKraft.Dashboard.addLapCount = function(builder, lapCount) {
+  builder.addFieldInt16(10, lapCount, 0);
 };
 
 /**

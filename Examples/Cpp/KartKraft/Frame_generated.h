@@ -278,7 +278,7 @@ struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_BESTLAP = 18,
     VT_CURRENTLAP = 20,
     VT_LASTLAP = 22,
-    VT_LAP = 24
+    VT_LAPCOUNT = 24
   };
   float speed() const {
     return GetField<float>(VT_SPEED, 0.0f);
@@ -310,8 +310,8 @@ struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   float lastLap() const {
     return GetField<float>(VT_LASTLAP, 0.0f);
   }
-  uint16_t lap() const {
-    return GetField<uint16_t>(VT_LAP, 0);
+  uint16_t lapCount() const {
+    return GetField<uint16_t>(VT_LAPCOUNT, 0);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -325,7 +325,7 @@ struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<float>(verifier, VT_BESTLAP) &&
            VerifyField<float>(verifier, VT_CURRENTLAP) &&
            VerifyField<float>(verifier, VT_LASTLAP) &&
-           VerifyField<uint16_t>(verifier, VT_LAP) &&
+           VerifyField<uint16_t>(verifier, VT_LAPCOUNT) &&
            verifier.EndTable();
   }
 };
@@ -363,8 +363,8 @@ struct DashboardBuilder {
   void add_lastLap(float lastLap) {
     fbb_.AddElement<float>(Dashboard::VT_LASTLAP, lastLap, 0.0f);
   }
-  void add_lap(uint16_t lap) {
-    fbb_.AddElement<uint16_t>(Dashboard::VT_LAP, lap, 0);
+  void add_lapCount(uint16_t lapCount) {
+    fbb_.AddElement<uint16_t>(Dashboard::VT_LAPCOUNT, lapCount, 0);
   }
   explicit DashboardBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -390,7 +390,7 @@ inline flatbuffers::Offset<Dashboard> CreateDashboard(
     float bestLap = 0.0f,
     float currentLap = 0.0f,
     float lastLap = 0.0f,
-    uint16_t lap = 0) {
+    uint16_t lapCount = 0) {
   DashboardBuilder builder_(_fbb);
   builder_.add_lastLap(lastLap);
   builder_.add_currentLap(currentLap);
@@ -400,7 +400,7 @@ inline flatbuffers::Offset<Dashboard> CreateDashboard(
   builder_.add_steer(steer);
   builder_.add_rpm(rpm);
   builder_.add_speed(speed);
-  builder_.add_lap(lap);
+  builder_.add_lapCount(lapCount);
   builder_.add_pos(pos);
   builder_.add_gear(gear);
   return builder_.Finish();

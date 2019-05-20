@@ -27,7 +27,7 @@ public final class Dashboard extends Table {
   public float bestLap() { int o = __offset(18); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float currentLap() { int o = __offset(20); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float lastLap() { int o = __offset(22); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public int lap() { int o = __offset(24); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  public int lapCount() { int o = __offset(24); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
 
   public static int createDashboard(FlatBufferBuilder builder,
       float speed,
@@ -40,7 +40,7 @@ public final class Dashboard extends Table {
       float bestLap,
       float currentLap,
       float lastLap,
-      int lap) {
+      int lapCount) {
     builder.startObject(11);
     Dashboard.addLastLap(builder, lastLap);
     Dashboard.addCurrentLap(builder, currentLap);
@@ -50,7 +50,7 @@ public final class Dashboard extends Table {
     Dashboard.addSteer(builder, steer);
     Dashboard.addRpm(builder, rpm);
     Dashboard.addSpeed(builder, speed);
-    Dashboard.addLap(builder, lap);
+    Dashboard.addLapCount(builder, lapCount);
     Dashboard.addPos(builder, pos);
     Dashboard.addGear(builder, gear);
     return Dashboard.endDashboard(builder);
@@ -67,7 +67,7 @@ public final class Dashboard extends Table {
   public static void addBestLap(FlatBufferBuilder builder, float bestLap) { builder.addFloat(7, bestLap, 0.0f); }
   public static void addCurrentLap(FlatBufferBuilder builder, float currentLap) { builder.addFloat(8, currentLap, 0.0f); }
   public static void addLastLap(FlatBufferBuilder builder, float lastLap) { builder.addFloat(9, lastLap, 0.0f); }
-  public static void addLap(FlatBufferBuilder builder, int lap) { builder.addShort(10, (short)lap, (short)0); }
+  public static void addLapCount(FlatBufferBuilder builder, int lapCount) { builder.addShort(10, (short)lapCount, (short)0); }
   public static int endDashboard(FlatBufferBuilder builder) {
     int o = builder.endObject();
     return o;

@@ -38,7 +38,7 @@ while True:
 
         if (dash):
             print("    dash data ", dash.Rpm(), dash.Speed(), dash.Steer(), dash.Throttle(), dash.Brake(
-            ), dash.Gear(), dash.Pos(), dash.BestLap(), dash.CurrentLap(), dash.LastLap(), dash.Lap())
+            ), dash.Gear(), dash.Pos(), dash.BestLap(), dash.CurrentLap(), dash.LastLap(), dash.LapCount())
 
         if (session):
             print("    session data ",

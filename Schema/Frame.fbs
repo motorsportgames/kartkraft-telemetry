@@ -73,7 +73,7 @@ table Dashboard {
     bestLap:float;                  //Best lap time (seconds)
     currentLap:float;               //Current lap time (seconds)
     lastLap:float;                  //Most recently completed lap time
-    lap:ushort;                     //Current lap number. 0 = pre-first-lap, 1 = on first lap, 2 = second lap etc
+    lapCount:ushort;                //Current lap number. 0 = pre-first-lap, 1 = on first lap, 2 = second lap etc
 }
 
 /// Basic vehicle data for live timing. e.g. trackmap

@@ -28,7 +28,7 @@ public struct Dashboard : IFlatbufferObject
   public float BestLap { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float CurrentLap { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float LastLap { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public ushort Lap { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public ushort LapCount { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
 
   public static Offset<Dashboard> CreateDashboard(FlatBufferBuilder builder,
       float speed = 0.0f,
@@ -41,7 +41,7 @@ public struct Dashboard : IFlatbufferObject
       float bestLap = 0.0f,
       float currentLap = 0.0f,
       float lastLap = 0.0f,
-      ushort lap = 0) {
+      ushort lapCount = 0) {
     builder.StartObject(11);
     Dashboard.AddLastLap(builder, lastLap);
     Dashboard.AddCurrentLap(builder, currentLap);
@@ -51,7 +51,7 @@ public struct Dashboard : IFlatbufferObject
     Dashboard.AddSteer(builder, steer);
     Dashboard.AddRpm(builder, rpm);
     Dashboard.AddSpeed(builder, speed);
-    Dashboard.AddLap(builder, lap);
+    Dashboard.AddLapCount(builder, lapCount);
     Dashboard.AddPos(builder, pos);
     Dashboard.AddGear(builder, gear);
     return Dashboard.EndDashboard(builder);
@@ -68,7 +68,7 @@ public struct Dashboard : IFlatbufferObject
   public static void AddBestLap(FlatBufferBuilder builder, float bestLap) { builder.AddFloat(7, bestLap, 0.0f); }
   public static void AddCurrentLap(FlatBufferBuilder builder, float currentLap) { builder.AddFloat(8, currentLap, 0.0f); }
   public static void AddLastLap(FlatBufferBuilder builder, float lastLap) { builder.AddFloat(9, lastLap, 0.0f); }
-  public static void AddLap(FlatBufferBuilder builder, ushort lap) { builder.AddUshort(10, lap, 0); }
+  public static void AddLapCount(FlatBufferBuilder builder, ushort lapCount) { builder.AddUshort(10, lapCount, 0); }
   public static Offset<Dashboard> EndDashboard(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<Dashboard>(o);

@@ -90,7 +90,7 @@ class Dashboard(object):
         return 0.0
 
     # Dashboard
-    def Lap(self):
+    def LapCount(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
@@ -107,5 +107,5 @@ def DashboardAddPos(builder, pos): builder.PrependInt8Slot(6, pos, 0)
 def DashboardAddBestLap(builder, bestLap): builder.PrependFloat32Slot(7, bestLap, 0.0)
 def DashboardAddCurrentLap(builder, currentLap): builder.PrependFloat32Slot(8, currentLap, 0.0)
 def DashboardAddLastLap(builder, lastLap): builder.PrependFloat32Slot(9, lastLap, 0.0)
-def DashboardAddLap(builder, lap): builder.PrependUint16Slot(10, lap, 0)
+def DashboardAddLapCount(builder, lapCount): builder.PrependUint16Slot(10, lapCount, 0)
 def DashboardEnd(builder): return builder.EndObject()
