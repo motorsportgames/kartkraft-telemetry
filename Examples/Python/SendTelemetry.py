@@ -3,6 +3,7 @@ import flatbuffers
 import kartkraft.Frame
 import kartkraft.Motion
 import kartkraft.Dashboard
+import kartkraft.VehicleConfig
 
 UDP_IP = '127.0.0.1'
 UDP_PORT = 5000
@@ -20,18 +21,47 @@ b = flatbuffers.Builder(MAX_PACKET_SIZE)
 # Create some test motion data
 kartkraft.Motion.MotionStart(b)
 kartkraft.Motion.MotionAddPitch(b, 0.25)
+kartkraft.Motion.MotionAddRoll(b, 0.05)
+kartkraft.Motion.MotionAddYaw(b, 43.30)
+kartkraft.Motion.MotionAddAngularVelocityX(b, 0.1)
+kartkraft.Motion.MotionAddAngularVelocityY(b, -1.2)
+kartkraft.Motion.MotionAddAngularVelocityZ(b, 9.3)
+kartkraft.Motion.MotionAddVelocityX(b, 22.1)
+kartkraft.Motion.MotionAddVelocityY(b, 1.2)
+kartkraft.Motion.MotionAddVelocityY(b, 0.3)
+kartkraft.Motion.MotionAddAccelerationX(b, 3.1)
+kartkraft.Motion.MotionAddAccelerationX(b, -0.2)
+kartkraft.Motion.MotionAddAccelerationX(b, 5.3)
+kartkraft.Motion.MotionAddTractionLoss(b, -4.3)
 motion = kartkraft.Motion.MotionEnd(b)
 
 # Create some test dashboard data
 kartkraft.Dashboard.DashboardStart(b)
 kartkraft.Dashboard.DashboardAddRpm(b, 1000)
 kartkraft.Dashboard.DashboardAddSpeed(b, 12.0)
+kartkraft.Dashboard.DashboardAddGear(b, 1)
+kartkraft.Dashboard.DashboardAddThrottle(b, 0.75)
+kartkraft.Dashboard.DashboardAddBrake(b, 0.25)
+kartkraft.Dashboard.DashboardAddBestLap(b, 45.234)
+kartkraft.Dashboard.DashboardAddLastLap(b, 47.012)
+kartkraft.Dashboard.DashboardAddCurrentLap(b, 13.922)
+kartkraft.Dashboard.DashboardAddLapCount(b, 5)
+kartkraft.Dashboard.DashboardAddSteer(b, 2.3)
+kartkraft.Dashboard.DashboardAddPos(b, 3)
 dashboard = kartkraft.Dashboard.DashboardEnd(b)
+
+# Create some test vehicle config data
+kartkraft.VehicleConfig.VehicleConfigStart(b)
+kartkraft.VehicleConfig.VehicleConfigAddGearMax(b, 1)
+kartkraft.VehicleConfig.VehicleConfigAddRpmLimit(b, 15500)
+kartkraft.VehicleConfig.VehicleConfigAddRpmMax(b, 16000)
+vehicleConfig = kartkraft.VehicleConfig.VehicleConfigEnd(b)
 
 # Create frame and add the test motion and test dashboard data
 kartkraft.Frame.FrameStart(b)
 kartkraft.Frame.FrameAddMotion(b, motion)
 kartkraft.Frame.FrameAddDash(b, dashboard)
+kartkraft.Frame.FrameAddVehicleConfig(b, vehicleConfig)
 frame = kartkraft.Frame.FrameEnd(b)
 
 # Finish writing the flatbuffer and get thte data as raw bytes
