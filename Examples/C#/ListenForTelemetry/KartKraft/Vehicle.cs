@@ -18,7 +18,7 @@ public struct Vehicle : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
   public Vehicle __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public VehicleState State { get { int o = __p.__offset(4); return o != 0 ? (VehicleState)__p.bb.GetSbyte(o + __p.bb_pos) : VehicleState.Unknown; } }
+  public VehicleState State { get { int o = __p.__offset(4); return o != 0 ? (VehicleState)__p.bb.Get(o + __p.bb_pos) : VehicleState.Idle; } }
   public float PosX { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float PosY { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float PosZ { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
@@ -28,7 +28,7 @@ public struct Vehicle : IFlatbufferObject
   public float NormalisedTrackPos { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
 
   public static void StartVehicle(FlatBufferBuilder builder) { builder.StartObject(8); }
-  public static void AddState(FlatBufferBuilder builder, VehicleState state) { builder.AddSbyte(0, (sbyte)state, 0); }
+  public static void AddState(FlatBufferBuilder builder, VehicleState state) { builder.AddByte(0, (byte)state, 0); }
   public static void AddPosX(FlatBufferBuilder builder, float posX) { builder.AddFloat(1, posX, 0.0f); }
   public static void AddPosY(FlatBufferBuilder builder, float posY) { builder.AddFloat(2, posY, 0.0f); }
   public static void AddPosZ(FlatBufferBuilder builder, float posZ) { builder.AddFloat(3, posZ, 0.0f); }

@@ -41,25 +41,36 @@ namespace TelemetryExample
             //Handle Motion
             if (frame.Motion.HasValue)
             {
-                Console.WriteLine("    motion: " + frame.Motion.Value.Pitch 
-                    + " " + frame.Motion.Value.Roll 
-                    + " " + frame.Motion.Value.Yaw
-                    + " " + frame.Motion.Value.AccelerationX
-                    + " " + frame.Motion.Value.AccelerationY
-                    + " " + frame.Motion.Value.AccelerationZ);
+                Console.WriteLine("  motion data:");
+                Console.WriteLine("    angles {0} {1} {2}", frame.Motion.Value.Pitch, frame.Motion.Value.Roll, frame.Motion.Value.Yaw);
+                Console.WriteLine("    angularVel {0} {1} {2}", frame.Motion.Value.AngularVelocityX, frame.Motion.Value.AngularVelocityY, frame.Motion.Value.AngularVelocityZ);
+                Console.WriteLine("    vel {0} {1} {2}", frame.Motion.Value.VelocityX, frame.Motion.Value.VelocityY, frame.Motion.Value.VelocityZ);
+                for(int i=0; i < frame.Motion.Value.WheelsLength; i++)
+                {
+                    if (frame.Motion.Value.Wheels(i).HasValue)
+                    {
+                        KartKraft.Wheel wheel = frame.Motion.Value.Wheels(i).Value;
+                        Console.WriteLine("    wheel {0} surface {1} slipAngle {2} ", i, wheel.Surface, wheel.SlipAngle);
+                    }
+                }
+
             }
 
             //Handle Dashboard
             if (frame.Dash.HasValue)
             {
-                Console.WriteLine("    dash: " + frame.Dash.Value.Speed
-                    + " " + frame.Dash.Value.Rpm
-                    + " " + frame.Dash.Value.Steer
-                    + " " + frame.Dash.Value.Throttle
-                    + " " + frame.Dash.Value.Brake
-                    + " " + frame.Dash.Value.Gear
-                    + " " + frame.Dash.Value.Pos
-                    + " " + frame.Dash.Value.BestLap);
+                Console.WriteLine("  dash data:");
+                Console.WriteLine("    rpm {0}", frame.Dash.Value.Rpm);
+                Console.WriteLine("    speed {0}", frame.Dash.Value.Speed);
+                Console.WriteLine("    steer {0}", frame.Dash.Value.Steer);
+                Console.WriteLine("    throttle {0}", frame.Dash.Value.Throttle);
+                Console.WriteLine("    brake {0}", frame.Dash.Value.Brake);
+                Console.WriteLine("    gear {0}", frame.Dash.Value.Gear);
+                Console.WriteLine("    pos {0}", frame.Dash.Value.Pos);
+                Console.WriteLine("    best lap {0}", frame.Dash.Value.BestLap);
+                Console.WriteLine("    current lap {0}", frame.Dash.Value.CurrentLap);
+                Console.WriteLine("    last lap {0}", frame.Dash.Value.LastLap);
+                Console.WriteLine("    lap count {0}", frame.Dash.Value.LapCount);
             }
 
             //Handle Session
