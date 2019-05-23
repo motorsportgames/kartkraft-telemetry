@@ -1,9 +1,11 @@
 import socket
 import flatbuffers
+import kartkraft.Dashboard
 import kartkraft.Frame
 import kartkraft.Motion
-import kartkraft.Dashboard
+import kartkraft.Surface
 import kartkraft.VehicleConfig
+import kartkraft.Wheel
 
 UDP_IP = '127.0.0.1'
 UDP_PORT = 5000
@@ -17,6 +19,21 @@ sock = socket.socket(socket.AF_INET,  # Internet
 
 # Create flatbuffer builder object
 b = flatbuffers.Builder(MAX_PACKET_SIZE)
+
+# Create four wheels
+numWheels = 4
+wheelOffsets = []
+for x in range(numWheels):
+    kartkraft.Wheel.WheelStart(b)
+    kartkraft.Wheel.WheelAddSurface(b, kartkraft.Surface.Surface.Asphalt)
+    kartkraft.Wheel.WheelAddSlipAngle(b, x * 0.01)
+    wheelOffsets.append(kartkraft.Wheel.WheelEnd(b))
+
+# Add wheels to vector
+kartkraft.Motion.MotionStartWheelsVector(b, numWheels)
+for offset in wheelOffsets:
+    b.PrependUOffsetTRelative(offset)
+wheels = b.EndVector(numWheels)
 
 # Create some test motion data
 kartkraft.Motion.MotionStart(b)
@@ -33,6 +50,7 @@ kartkraft.Motion.MotionAddAccelerationX(b, 3.1)
 kartkraft.Motion.MotionAddAccelerationX(b, -0.2)
 kartkraft.Motion.MotionAddAccelerationX(b, 5.3)
 kartkraft.Motion.MotionAddTractionLoss(b, -4.3)
+kartkraft.Motion.MotionAddWheels(b, wheels)
 motion = kartkraft.Motion.MotionEnd(b)
 
 # Create some test dashboard data

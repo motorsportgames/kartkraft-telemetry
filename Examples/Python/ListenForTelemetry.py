@@ -6,6 +6,8 @@ import kartkraft.Motion
 UDP_IP = "127.0.0.1"
 UDP_PORT = 5000
 MAX_PACKET_SIZE = 1024
+# flatbuffers python not generating enum names yet, so let's hardcode some values for now
+SURFACE_NAMES = ["None", "Asphalt", "Grass", "Gravel", "Kerb", "Sand", "Tyre"]
 
 sock = socket.socket(socket.AF_INET,  # Internet
                      socket.SOCK_DGRAM)  # UDP
@@ -30,20 +32,40 @@ while True:
         print("time ", time)
 
         if (motion):
-            print("    motion data ", motion.Pitch(), motion.Roll(), motion.Yaw(),
-                  motion.AccelerationX(), motion.AccelerationY(), motion.AccelerationZ(),
-                  motion.TractionLoss(),
-                  motion.VelocityX(), motion.VelocityY(), motion.VelocityZ(),
-                  motion.AngularVelocityX(), motion.AngularVelocityY(), motion.AngularVelocityZ())
+            print("  motion data:")
+            print("    angles ", motion.Pitch(),
+                  motion.Roll(), motion.Yaw())
+            print("    angularVel ", motion.AngularVelocityX(),
+                  motion.AngularVelocityY(), motion.AngularVelocityZ())
+            print("    vel ", motion.VelocityX(),
+                  motion.VelocityY(), motion.VelocityZ())
+            print("    accel ", motion.AccelerationX(),
+                  motion.AccelerationY(), motion.AccelerationZ())
+            print("    tractionLoss ", motion.TractionLoss())
+            for i in range(motion.WheelsLength()):
+                print("    wheel ", i, ": surface ", SURFACE_NAMES[motion.Wheels(
+                    i).Surface()], " slipAngle ", motion.Wheels(i).SlipAngle())
 
         if (dash):
-            print("    dash data ", dash.Rpm(), dash.Speed(), dash.Steer(), dash.Throttle(), dash.Brake(
-            ), dash.Gear(), dash.Pos(), dash.BestLap(), dash.CurrentLap(), dash.LastLap(), dash.LapCount())
+            print("  dash data:")
+            print("    rpm ", dash.Rpm())
+            print("    speed ", dash.Speed())
+            print("    steer ", dash.Steer())
+            print("    throttle ", dash.Throttle())
+            print("    brake ", dash.Brake())
+            print("    gear ", dash.Gear())
+            print("    pos ", dash.Pos())
+            print("    best lap ", dash.BestLap())
+            print("    current lap ", dash.CurrentLap())
+            print("    last lap ", dash.LastLap())
+            print("    lap count ", dash.LapCount())
 
         if (session):
-            print("    session data ",
+            print("  session data ",
                   session.TotalTime(), session.TotalTime())
 
         if (vehicleConfig):
-            print("    vehicleConfig data ",
-                  vehicleConfig.RpmLimit(), vehicleConfig.RpmMax(), vehicleConfig.GearMax())
+            print("  vehicleConfig data:")
+            print("    rpm limit", vehicleConfig.RpmLimit())
+            print("    rpm max", vehicleConfig.RpmMax())
+            print("    gear max", vehicleConfig.GearMax())

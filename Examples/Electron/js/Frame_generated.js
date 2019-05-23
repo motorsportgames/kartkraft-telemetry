@@ -25,6 +25,19 @@ KartKraft.VehicleState = {
 };
 
 /**
+ * @enum
+ */
+KartKraft.Surface = {
+  None: 0,
+  Asphalt: 1,
+  Grass: 2,
+  Gravel: 3,
+  Kerb: 4,
+  Sand: 5,
+  Tyre: 6
+};
+
+/**
  * Useful generic color struct 
  *
  * @constructor
@@ -86,6 +99,89 @@ KartKraft.Color.createColor = function(builder, r, g, b) {
   builder.writeInt8(g);
   builder.writeInt8(r);
   return builder.offset();
+};
+
+/**
+ * @constructor
+ */
+KartKraft.Wheel = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {KartKraft.Wheel}
+ */
+KartKraft.Wheel.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {KartKraft.Wheel=} obj
+ * @returns {KartKraft.Wheel}
+ */
+KartKraft.Wheel.getRootAsWheel = function(bb, obj) {
+  return (obj || new KartKraft.Wheel).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {KartKraft.Surface}
+ */
+KartKraft.Wheel.prototype.surface = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? /** @type {KartKraft.Surface} */ (this.bb.readUint8(this.bb_pos + offset)) : KartKraft.Surface.None;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Wheel.prototype.slipAngle = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+KartKraft.Wheel.startWheel = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {KartKraft.Surface} surface
+ */
+KartKraft.Wheel.addSurface = function(builder, surface) {
+  builder.addFieldInt8(0, surface, KartKraft.Surface.None);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} slipAngle
+ */
+KartKraft.Wheel.addSlipAngle = function(builder, slipAngle) {
+  builder.addFieldFloat32(1, slipAngle, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+KartKraft.Wheel.endWheel = function(builder) {
+  var offset = builder.endObject();
+  return offset;
 };
 
 /**
@@ -230,10 +326,28 @@ KartKraft.Motion.prototype.angularVelocityZ = function() {
 };
 
 /**
+ * @param {number} index
+ * @param {KartKraft.Wheel=} obj
+ * @returns {KartKraft.Wheel}
+ */
+KartKraft.Motion.prototype.wheels = function(index, obj) {
+  var offset = this.bb.__offset(this.bb_pos, 30);
+  return offset ? (obj || new KartKraft.Wheel).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Motion.prototype.wheelsLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 30);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Motion.startMotion = function(builder) {
-  builder.startObject(13);
+  builder.startObject(14);
 };
 
 /**
@@ -338,6 +452,35 @@ KartKraft.Motion.addAngularVelocityY = function(builder, angularVelocityY) {
  */
 KartKraft.Motion.addAngularVelocityZ = function(builder, angularVelocityZ) {
   builder.addFieldFloat32(12, angularVelocityZ, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} wheelsOffset
+ */
+KartKraft.Motion.addWheels = function(builder, wheelsOffset) {
+  builder.addFieldOffset(13, wheelsOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<flatbuffers.Offset>} data
+ * @returns {flatbuffers.Offset}
+ */
+KartKraft.Motion.createWheelsVector = function(builder, data) {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+KartKraft.Motion.startWheelsVector = function(builder, numElems) {
+  builder.startVector(4, numElems, 4);
 };
 
 /**

@@ -10,6 +10,8 @@ namespace KartKraft {
 
 struct Color;
 
+struct Wheel;
+
 struct Motion;
 
 struct Dashboard;
@@ -76,6 +78,50 @@ inline const char *EnumNameVehicleState(VehicleState e) {
   return EnumNamesVehicleState()[index];
 }
 
+enum Surface {
+  Surface_None = 0,
+  Surface_Asphalt = 1,
+  Surface_Grass = 2,
+  Surface_Gravel = 3,
+  Surface_Kerb = 4,
+  Surface_Sand = 5,
+  Surface_Tyre = 6,
+  Surface_MIN = Surface_None,
+  Surface_MAX = Surface_Tyre
+};
+
+inline const Surface (&EnumValuesSurface())[7] {
+  static const Surface values[] = {
+    Surface_None,
+    Surface_Asphalt,
+    Surface_Grass,
+    Surface_Gravel,
+    Surface_Kerb,
+    Surface_Sand,
+    Surface_Tyre
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesSurface() {
+  static const char * const names[] = {
+    "None",
+    "Asphalt",
+    "Grass",
+    "Gravel",
+    "Kerb",
+    "Sand",
+    "Tyre",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameSurface(Surface e) {
+  const size_t index = static_cast<int>(e);
+  return EnumNamesSurface()[index];
+}
+
 /// Useful generic color struct 
 FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(1) Color FLATBUFFERS_FINAL_CLASS {
  private:
@@ -104,6 +150,56 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(1) Color FLATBUFFERS_FINAL_CLASS {
 };
 FLATBUFFERS_STRUCT_END(Color, 3);
 
+struct Wheel FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_SURFACE = 4,
+    VT_SLIPANGLE = 6
+  };
+  Surface surface() const {
+    return static_cast<Surface>(GetField<uint8_t>(VT_SURFACE, 0));
+  }
+  float slipAngle() const {
+    return GetField<float>(VT_SLIPANGLE, 0.0f);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_SURFACE) &&
+           VerifyField<float>(verifier, VT_SLIPANGLE) &&
+           verifier.EndTable();
+  }
+};
+
+struct WheelBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_surface(Surface surface) {
+    fbb_.AddElement<uint8_t>(Wheel::VT_SURFACE, static_cast<uint8_t>(surface), 0);
+  }
+  void add_slipAngle(float slipAngle) {
+    fbb_.AddElement<float>(Wheel::VT_SLIPANGLE, slipAngle, 0.0f);
+  }
+  explicit WheelBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  WheelBuilder &operator=(const WheelBuilder &);
+  flatbuffers::Offset<Wheel> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<Wheel>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<Wheel> CreateWheel(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    Surface surface = Surface_None,
+    float slipAngle = 0.0f) {
+  WheelBuilder builder_(_fbb);
+  builder_.add_slipAngle(slipAngle);
+  builder_.add_surface(surface);
+  return builder_.Finish();
+}
+
 /// Motion data of local player for driving hardware motion simulators
 struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
@@ -119,7 +215,8 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_VELOCITYZ = 22,
     VT_ANGULARVELOCITYX = 24,
     VT_ANGULARVELOCITYY = 26,
-    VT_ANGULARVELOCITYZ = 28
+    VT_ANGULARVELOCITYZ = 28,
+    VT_WHEELS = 30
   };
   float pitch() const {
     return GetField<float>(VT_PITCH, 0.0f);
@@ -160,6 +257,9 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   float angularVelocityZ() const {
     return GetField<float>(VT_ANGULARVELOCITYZ, 0.0f);
   }
+  const flatbuffers::Vector<flatbuffers::Offset<Wheel>> *wheels() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<Wheel>> *>(VT_WHEELS);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<float>(verifier, VT_PITCH) &&
@@ -175,6 +275,9 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<float>(verifier, VT_ANGULARVELOCITYX) &&
            VerifyField<float>(verifier, VT_ANGULARVELOCITYY) &&
            VerifyField<float>(verifier, VT_ANGULARVELOCITYZ) &&
+           VerifyOffset(verifier, VT_WHEELS) &&
+           verifier.VerifyVector(wheels()) &&
+           verifier.VerifyVectorOfTables(wheels()) &&
            verifier.EndTable();
   }
 };
@@ -221,6 +324,9 @@ struct MotionBuilder {
   void add_angularVelocityZ(float angularVelocityZ) {
     fbb_.AddElement<float>(Motion::VT_ANGULARVELOCITYZ, angularVelocityZ, 0.0f);
   }
+  void add_wheels(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Wheel>>> wheels) {
+    fbb_.AddOffset(Motion::VT_WHEELS, wheels);
+  }
   explicit MotionBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -247,8 +353,10 @@ inline flatbuffers::Offset<Motion> CreateMotion(
     float velocityZ = 0.0f,
     float angularVelocityX = 0.0f,
     float angularVelocityY = 0.0f,
-    float angularVelocityZ = 0.0f) {
+    float angularVelocityZ = 0.0f,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Wheel>>> wheels = 0) {
   MotionBuilder builder_(_fbb);
+  builder_.add_wheels(wheels);
   builder_.add_angularVelocityZ(angularVelocityZ);
   builder_.add_angularVelocityY(angularVelocityY);
   builder_.add_angularVelocityX(angularVelocityX);
@@ -263,6 +371,40 @@ inline flatbuffers::Offset<Motion> CreateMotion(
   builder_.add_roll(roll);
   builder_.add_pitch(pitch);
   return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Motion> CreateMotionDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    float pitch = 0.0f,
+    float roll = 0.0f,
+    float yaw = 0.0f,
+    float accelerationX = 0.0f,
+    float accelerationY = 0.0f,
+    float accelerationZ = 0.0f,
+    float tractionLoss = 0.0f,
+    float velocityX = 0.0f,
+    float velocityY = 0.0f,
+    float velocityZ = 0.0f,
+    float angularVelocityX = 0.0f,
+    float angularVelocityY = 0.0f,
+    float angularVelocityZ = 0.0f,
+    const std::vector<flatbuffers::Offset<Wheel>> *wheels = nullptr) {
+  return KartKraft::CreateMotion(
+      _fbb,
+      pitch,
+      roll,
+      yaw,
+      accelerationX,
+      accelerationY,
+      accelerationZ,
+      tractionLoss,
+      velocityX,
+      velocityY,
+      velocityZ,
+      angularVelocityX,
+      angularVelocityY,
+      angularVelocityZ,
+      wheels ? _fbb.CreateVector<flatbuffers::Offset<Wheel>>(*wheels) : 0);
 }
 
 /// Dash data for displaying state of current local/followed player

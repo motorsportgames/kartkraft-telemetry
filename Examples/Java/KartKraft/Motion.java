@@ -30,6 +30,9 @@ public final class Motion extends Table {
   public float angularVelocityX() { int o = __offset(24); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float angularVelocityY() { int o = __offset(26); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float angularVelocityZ() { int o = __offset(28); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public Wheel wheels(int j) { return wheels(new Wheel(), j); }
+  public Wheel wheels(Wheel obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int wheelsLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
 
   public static int createMotion(FlatBufferBuilder builder,
       float pitch,
@@ -44,8 +47,10 @@ public final class Motion extends Table {
       float velocityZ,
       float angularVelocityX,
       float angularVelocityY,
-      float angularVelocityZ) {
-    builder.startObject(13);
+      float angularVelocityZ,
+      int wheelsOffset) {
+    builder.startObject(14);
+    Motion.addWheels(builder, wheelsOffset);
     Motion.addAngularVelocityZ(builder, angularVelocityZ);
     Motion.addAngularVelocityY(builder, angularVelocityY);
     Motion.addAngularVelocityX(builder, angularVelocityX);
@@ -62,7 +67,7 @@ public final class Motion extends Table {
     return Motion.endMotion(builder);
   }
 
-  public static void startMotion(FlatBufferBuilder builder) { builder.startObject(13); }
+  public static void startMotion(FlatBufferBuilder builder) { builder.startObject(14); }
   public static void addPitch(FlatBufferBuilder builder, float pitch) { builder.addFloat(0, pitch, 0.0f); }
   public static void addRoll(FlatBufferBuilder builder, float roll) { builder.addFloat(1, roll, 0.0f); }
   public static void addYaw(FlatBufferBuilder builder, float yaw) { builder.addFloat(2, yaw, 0.0f); }
@@ -76,6 +81,9 @@ public final class Motion extends Table {
   public static void addAngularVelocityX(FlatBufferBuilder builder, float angularVelocityX) { builder.addFloat(10, angularVelocityX, 0.0f); }
   public static void addAngularVelocityY(FlatBufferBuilder builder, float angularVelocityY) { builder.addFloat(11, angularVelocityY, 0.0f); }
   public static void addAngularVelocityZ(FlatBufferBuilder builder, float angularVelocityZ) { builder.addFloat(12, angularVelocityZ, 0.0f); }
+  public static void addWheels(FlatBufferBuilder builder, int wheelsOffset) { builder.addOffset(13, wheelsOffset, 0); }
+  public static int createWheelsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startWheelsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endMotion(FlatBufferBuilder builder) {
     int o = builder.endObject();
     return o;
