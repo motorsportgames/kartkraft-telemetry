@@ -86,7 +86,7 @@ server.on("message", function(message, remote) {
           dash.rpm(),
           dash.throttle(),
           dash.brake(),
-          motion.tractionLoss()
+          dash.steer()
         ]
       });
     }
