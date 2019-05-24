@@ -27,14 +27,18 @@ public final class Frame extends Table {
   public Session session(Session obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public VehicleConfig vehicleConfig() { return vehicleConfig(new VehicleConfig()); }
   public VehicleConfig vehicleConfig(VehicleConfig obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public TrackConfig trackConfig() { return trackConfig(new TrackConfig()); }
+  public TrackConfig trackConfig(TrackConfig obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createFrame(FlatBufferBuilder builder,
       float timestamp,
       int motionOffset,
       int dashOffset,
       int sessionOffset,
-      int vehicleConfigOffset) {
-    builder.startObject(5);
+      int vehicleConfigOffset,
+      int trackConfigOffset) {
+    builder.startObject(6);
+    Frame.addTrackConfig(builder, trackConfigOffset);
     Frame.addVehicleConfig(builder, vehicleConfigOffset);
     Frame.addSession(builder, sessionOffset);
     Frame.addDash(builder, dashOffset);
@@ -43,12 +47,13 @@ public final class Frame extends Table {
     return Frame.endFrame(builder);
   }
 
-  public static void startFrame(FlatBufferBuilder builder) { builder.startObject(5); }
+  public static void startFrame(FlatBufferBuilder builder) { builder.startObject(6); }
   public static void addTimestamp(FlatBufferBuilder builder, float timestamp) { builder.addFloat(0, timestamp, 0.0f); }
   public static void addMotion(FlatBufferBuilder builder, int motionOffset) { builder.addOffset(1, motionOffset, 0); }
   public static void addDash(FlatBufferBuilder builder, int dashOffset) { builder.addOffset(2, dashOffset, 0); }
   public static void addSession(FlatBufferBuilder builder, int sessionOffset) { builder.addOffset(3, sessionOffset, 0); }
   public static void addVehicleConfig(FlatBufferBuilder builder, int vehicleConfigOffset) { builder.addOffset(4, vehicleConfigOffset, 0); }
+  public static void addTrackConfig(FlatBufferBuilder builder, int trackConfigOffset) { builder.addOffset(5, trackConfigOffset, 0); }
   public static int endFrame(FlatBufferBuilder builder) {
     int o = builder.endObject();
     return o;

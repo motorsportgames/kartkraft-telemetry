@@ -96,7 +96,14 @@ class Dashboard(object):
             return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
-def DashboardStart(builder): builder.StartObject(11)
+    # Dashboard
+    def SectorCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+def DashboardStart(builder): builder.StartObject(12)
 def DashboardAddSpeed(builder, speed): builder.PrependFloat32Slot(0, speed, 0.0)
 def DashboardAddRpm(builder, rpm): builder.PrependFloat32Slot(1, rpm, 0.0)
 def DashboardAddSteer(builder, steer): builder.PrependFloat32Slot(2, steer, 0.0)
@@ -108,4 +115,5 @@ def DashboardAddBestLap(builder, bestLap): builder.PrependFloat32Slot(7, bestLap
 def DashboardAddCurrentLap(builder, currentLap): builder.PrependFloat32Slot(8, currentLap, 0.0)
 def DashboardAddLastLap(builder, lastLap): builder.PrependFloat32Slot(9, lastLap, 0.0)
 def DashboardAddLapCount(builder, lapCount): builder.PrependUint16Slot(10, lapCount, 0)
+def DashboardAddSectorCount(builder, sectorCount): builder.PrependUint16Slot(11, sectorCount, 0)
 def DashboardEnd(builder): return builder.EndObject()

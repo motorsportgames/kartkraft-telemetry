@@ -130,7 +130,28 @@ class Motion(object):
             return self._tab.VectorLen(o)
         return 0
 
-def MotionStart(builder): builder.StartObject(14)
+    # Motion
+    def WorldVelocityX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Motion
+    def WorldVelocityY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Motion
+    def WorldVelocityZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+def MotionStart(builder): builder.StartObject(17)
 def MotionAddPitch(builder, pitch): builder.PrependFloat32Slot(0, pitch, 0.0)
 def MotionAddRoll(builder, roll): builder.PrependFloat32Slot(1, roll, 0.0)
 def MotionAddYaw(builder, yaw): builder.PrependFloat32Slot(2, yaw, 0.0)
@@ -146,4 +167,7 @@ def MotionAddAngularVelocityY(builder, angularVelocityY): builder.PrependFloat32
 def MotionAddAngularVelocityZ(builder, angularVelocityZ): builder.PrependFloat32Slot(12, angularVelocityZ, 0.0)
 def MotionAddWheels(builder, wheels): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(wheels), 0)
 def MotionStartWheelsVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def MotionAddWorldVelocityX(builder, worldVelocityX): builder.PrependFloat32Slot(14, worldVelocityX, 0.0)
+def MotionAddWorldVelocityY(builder, worldVelocityY): builder.PrependFloat32Slot(15, worldVelocityY, 0.0)
+def MotionAddWorldVelocityZ(builder, worldVelocityZ): builder.PrependFloat32Slot(16, worldVelocityZ, 0.0)
 def MotionEnd(builder): return builder.EndObject()

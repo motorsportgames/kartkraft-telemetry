@@ -28,6 +28,7 @@ public final class Dashboard extends Table {
   public float currentLap() { int o = __offset(20); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float lastLap() { int o = __offset(22); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public int lapCount() { int o = __offset(24); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  public int sectorCount() { int o = __offset(26); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
 
   public static int createDashboard(FlatBufferBuilder builder,
       float speed,
@@ -40,8 +41,9 @@ public final class Dashboard extends Table {
       float bestLap,
       float currentLap,
       float lastLap,
-      int lapCount) {
-    builder.startObject(11);
+      int lapCount,
+      int sectorCount) {
+    builder.startObject(12);
     Dashboard.addLastLap(builder, lastLap);
     Dashboard.addCurrentLap(builder, currentLap);
     Dashboard.addBestLap(builder, bestLap);
@@ -50,13 +52,14 @@ public final class Dashboard extends Table {
     Dashboard.addSteer(builder, steer);
     Dashboard.addRpm(builder, rpm);
     Dashboard.addSpeed(builder, speed);
+    Dashboard.addSectorCount(builder, sectorCount);
     Dashboard.addLapCount(builder, lapCount);
     Dashboard.addPos(builder, pos);
     Dashboard.addGear(builder, gear);
     return Dashboard.endDashboard(builder);
   }
 
-  public static void startDashboard(FlatBufferBuilder builder) { builder.startObject(11); }
+  public static void startDashboard(FlatBufferBuilder builder) { builder.startObject(12); }
   public static void addSpeed(FlatBufferBuilder builder, float speed) { builder.addFloat(0, speed, 0.0f); }
   public static void addRpm(FlatBufferBuilder builder, float rpm) { builder.addFloat(1, rpm, 0.0f); }
   public static void addSteer(FlatBufferBuilder builder, float steer) { builder.addFloat(2, steer, 0.0f); }
@@ -68,6 +71,7 @@ public final class Dashboard extends Table {
   public static void addCurrentLap(FlatBufferBuilder builder, float currentLap) { builder.addFloat(8, currentLap, 0.0f); }
   public static void addLastLap(FlatBufferBuilder builder, float lastLap) { builder.addFloat(9, lastLap, 0.0f); }
   public static void addLapCount(FlatBufferBuilder builder, int lapCount) { builder.addShort(10, (short)lapCount, (short)0); }
+  public static void addSectorCount(FlatBufferBuilder builder, int sectorCount) { builder.addShort(11, (short)sectorCount, (short)0); }
   public static int endDashboard(FlatBufferBuilder builder) {
     int o = builder.endObject();
     return o;

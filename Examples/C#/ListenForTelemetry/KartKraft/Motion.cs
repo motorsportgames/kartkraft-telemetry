@@ -33,6 +33,9 @@ public struct Motion : IFlatbufferObject
   public float AngularVelocityZ { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public Wheel? Wheels(int j) { int o = __p.__offset(30); return o != 0 ? (Wheel?)(new Wheel()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int WheelsLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public float WorldVelocityX { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float WorldVelocityY { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float WorldVelocityZ { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
 
   public static Offset<Motion> CreateMotion(FlatBufferBuilder builder,
       float pitch = 0.0f,
@@ -48,8 +51,14 @@ public struct Motion : IFlatbufferObject
       float angularVelocityX = 0.0f,
       float angularVelocityY = 0.0f,
       float angularVelocityZ = 0.0f,
-      VectorOffset wheelsOffset = default(VectorOffset)) {
-    builder.StartObject(14);
+      VectorOffset wheelsOffset = default(VectorOffset),
+      float worldVelocityX = 0.0f,
+      float worldVelocityY = 0.0f,
+      float worldVelocityZ = 0.0f) {
+    builder.StartObject(17);
+    Motion.AddWorldVelocityZ(builder, worldVelocityZ);
+    Motion.AddWorldVelocityY(builder, worldVelocityY);
+    Motion.AddWorldVelocityX(builder, worldVelocityX);
     Motion.AddWheels(builder, wheelsOffset);
     Motion.AddAngularVelocityZ(builder, angularVelocityZ);
     Motion.AddAngularVelocityY(builder, angularVelocityY);
@@ -67,7 +76,7 @@ public struct Motion : IFlatbufferObject
     return Motion.EndMotion(builder);
   }
 
-  public static void StartMotion(FlatBufferBuilder builder) { builder.StartObject(14); }
+  public static void StartMotion(FlatBufferBuilder builder) { builder.StartObject(17); }
   public static void AddPitch(FlatBufferBuilder builder, float pitch) { builder.AddFloat(0, pitch, 0.0f); }
   public static void AddRoll(FlatBufferBuilder builder, float roll) { builder.AddFloat(1, roll, 0.0f); }
   public static void AddYaw(FlatBufferBuilder builder, float yaw) { builder.AddFloat(2, yaw, 0.0f); }
@@ -85,6 +94,9 @@ public struct Motion : IFlatbufferObject
   public static VectorOffset CreateWheelsVector(FlatBufferBuilder builder, Offset<Wheel>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateWheelsVectorBlock(FlatBufferBuilder builder, Offset<Wheel>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static void StartWheelsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddWorldVelocityX(FlatBufferBuilder builder, float worldVelocityX) { builder.AddFloat(14, worldVelocityX, 0.0f); }
+  public static void AddWorldVelocityY(FlatBufferBuilder builder, float worldVelocityY) { builder.AddFloat(15, worldVelocityY, 0.0f); }
+  public static void AddWorldVelocityZ(FlatBufferBuilder builder, float worldVelocityZ) { builder.AddFloat(16, worldVelocityZ, 0.0f); }
   public static Offset<Motion> EndMotion(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<Motion>(o);

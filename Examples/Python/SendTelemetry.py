@@ -51,6 +51,9 @@ kartkraft.Motion.MotionAddAccelerationX(b, -0.2)
 kartkraft.Motion.MotionAddAccelerationX(b, 5.3)
 kartkraft.Motion.MotionAddTractionLoss(b, -4.3)
 kartkraft.Motion.MotionAddWheels(b, wheels)
+kartkraft.Motion.MotionAddWorldVelocityX(b, 10.0)
+kartkraft.Motion.MotionAddWorldVelocityY(b, 0.1)
+kartkraft.Motion.MotionAddWorldVelocityZ(b, 0.2)
 motion = kartkraft.Motion.MotionEnd(b)
 
 # Create some test dashboard data
@@ -66,6 +69,7 @@ kartkraft.Dashboard.DashboardAddCurrentLap(b, 13.922)
 kartkraft.Dashboard.DashboardAddLapCount(b, 5)
 kartkraft.Dashboard.DashboardAddSteer(b, 2.3)
 kartkraft.Dashboard.DashboardAddPos(b, 3)
+kartkraft.Dashboard.DashboardAddSectorCount(b, 1)
 dashboard = kartkraft.Dashboard.DashboardEnd(b)
 
 # Create some test vehicle config data

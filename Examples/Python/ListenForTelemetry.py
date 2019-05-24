@@ -41,6 +41,8 @@ while True:
                   motion.VelocityY(), motion.VelocityZ())
             print("    accel ", motion.AccelerationX(),
                   motion.AccelerationY(), motion.AccelerationZ())
+            print("    worldVel ", motion.WorldVelocityX(),
+                  motion.WorldVelocityY(), motion.WorldVelocityZ())
             print("    tractionLoss ", motion.TractionLoss())
             for i in range(motion.WheelsLength()):
                 print("    wheel ", i, ": surface ", SURFACE_NAMES[motion.Wheels(
@@ -59,6 +61,7 @@ while True:
             print("    current lap ", dash.CurrentLap())
             print("    last lap ", dash.LastLap())
             print("    lap count ", dash.LapCount())
+            print("    sector count ", dash.SectorCount())
 
         if (session):
             print("  session data ",

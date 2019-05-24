@@ -344,10 +344,34 @@ KartKraft.Motion.prototype.wheelsLength = function() {
 };
 
 /**
+ * @returns {number}
+ */
+KartKraft.Motion.prototype.worldVelocityX = function() {
+  var offset = this.bb.__offset(this.bb_pos, 32);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Motion.prototype.worldVelocityY = function() {
+  var offset = this.bb.__offset(this.bb_pos, 34);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.Motion.prototype.worldVelocityZ = function() {
+  var offset = this.bb.__offset(this.bb_pos, 36);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Motion.startMotion = function(builder) {
-  builder.startObject(14);
+  builder.startObject(17);
 };
 
 /**
@@ -485,6 +509,30 @@ KartKraft.Motion.startWheelsVector = function(builder, numElems) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {number} worldVelocityX
+ */
+KartKraft.Motion.addWorldVelocityX = function(builder, worldVelocityX) {
+  builder.addFieldFloat32(14, worldVelocityX, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} worldVelocityY
+ */
+KartKraft.Motion.addWorldVelocityY = function(builder, worldVelocityY) {
+  builder.addFieldFloat32(15, worldVelocityY, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} worldVelocityZ
+ */
+KartKraft.Motion.addWorldVelocityZ = function(builder, worldVelocityZ) {
+  builder.addFieldFloat32(16, worldVelocityZ, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
 KartKraft.Motion.endMotion = function(builder) {
@@ -618,10 +666,18 @@ KartKraft.Dashboard.prototype.lapCount = function() {
 };
 
 /**
+ * @returns {number}
+ */
+KartKraft.Dashboard.prototype.sectorCount = function() {
+  var offset = this.bb.__offset(this.bb_pos, 26);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Dashboard.startDashboard = function(builder) {
-  builder.startObject(11);
+  builder.startObject(12);
 };
 
 /**
@@ -710,6 +766,14 @@ KartKraft.Dashboard.addLastLap = function(builder, lastLap) {
  */
 KartKraft.Dashboard.addLapCount = function(builder, lapCount) {
   builder.addFieldInt16(10, lapCount, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} sectorCount
+ */
+KartKraft.Dashboard.addSectorCount = function(builder, sectorCount) {
+  builder.addFieldInt16(11, sectorCount, 0);
 };
 
 /**
@@ -1153,6 +1217,90 @@ KartKraft.VehicleConfig.endVehicleConfig = function(builder) {
 };
 
 /**
+ * @constructor
+ */
+KartKraft.TrackConfig = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {KartKraft.TrackConfig}
+ */
+KartKraft.TrackConfig.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {KartKraft.TrackConfig=} obj
+ * @returns {KartKraft.TrackConfig}
+ */
+KartKraft.TrackConfig.getRootAsTrackConfig = function(bb, obj) {
+  return (obj || new KartKraft.TrackConfig).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+KartKraft.TrackConfig.prototype.name = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @returns {number}
+ */
+KartKraft.TrackConfig.prototype.numSectors = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+KartKraft.TrackConfig.startTrackConfig = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} nameOffset
+ */
+KartKraft.TrackConfig.addName = function(builder, nameOffset) {
+  builder.addFieldOffset(0, nameOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numSectors
+ */
+KartKraft.TrackConfig.addNumSectors = function(builder, numSectors) {
+  builder.addFieldInt8(1, numSectors, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+KartKraft.TrackConfig.endTrackConfig = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
  * Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
  *
  * @constructor
@@ -1242,10 +1390,19 @@ KartKraft.Frame.prototype.vehicleConfig = function(obj) {
 };
 
 /**
+ * @param {KartKraft.TrackConfig=} obj
+ * @returns {KartKraft.TrackConfig|null}
+ */
+KartKraft.Frame.prototype.trackConfig = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 14);
+  return offset ? (obj || new KartKraft.TrackConfig).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 KartKraft.Frame.startFrame = function(builder) {
-  builder.startObject(5);
+  builder.startObject(6);
 };
 
 /**
@@ -1286,6 +1443,14 @@ KartKraft.Frame.addSession = function(builder, sessionOffset) {
  */
 KartKraft.Frame.addVehicleConfig = function(builder, vehicleConfigOffset) {
   builder.addFieldOffset(4, vehicleConfigOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} trackConfigOffset
+ */
+KartKraft.Frame.addTrackConfig = function(builder, trackConfigOffset) {
+  builder.addFieldOffset(5, trackConfigOffset, 0);
 };
 
 /**

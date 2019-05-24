@@ -24,14 +24,17 @@ public struct Frame : IFlatbufferObject
   public Dashboard? Dash { get { int o = __p.__offset(8); return o != 0 ? (Dashboard?)(new Dashboard()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public Session? Session { get { int o = __p.__offset(10); return o != 0 ? (Session?)(new Session()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public VehicleConfig? VehicleConfig { get { int o = __p.__offset(12); return o != 0 ? (VehicleConfig?)(new VehicleConfig()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public TrackConfig? TrackConfig { get { int o = __p.__offset(14); return o != 0 ? (TrackConfig?)(new TrackConfig()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<Frame> CreateFrame(FlatBufferBuilder builder,
       float timestamp = 0.0f,
       Offset<Motion> motionOffset = default(Offset<Motion>),
       Offset<Dashboard> dashOffset = default(Offset<Dashboard>),
       Offset<Session> sessionOffset = default(Offset<Session>),
-      Offset<VehicleConfig> vehicleConfigOffset = default(Offset<VehicleConfig>)) {
-    builder.StartObject(5);
+      Offset<VehicleConfig> vehicleConfigOffset = default(Offset<VehicleConfig>),
+      Offset<TrackConfig> trackConfigOffset = default(Offset<TrackConfig>)) {
+    builder.StartObject(6);
+    Frame.AddTrackConfig(builder, trackConfigOffset);
     Frame.AddVehicleConfig(builder, vehicleConfigOffset);
     Frame.AddSession(builder, sessionOffset);
     Frame.AddDash(builder, dashOffset);
@@ -40,12 +43,13 @@ public struct Frame : IFlatbufferObject
     return Frame.EndFrame(builder);
   }
 
-  public static void StartFrame(FlatBufferBuilder builder) { builder.StartObject(5); }
+  public static void StartFrame(FlatBufferBuilder builder) { builder.StartObject(6); }
   public static void AddTimestamp(FlatBufferBuilder builder, float timestamp) { builder.AddFloat(0, timestamp, 0.0f); }
   public static void AddMotion(FlatBufferBuilder builder, Offset<Motion> motionOffset) { builder.AddOffset(1, motionOffset.Value, 0); }
   public static void AddDash(FlatBufferBuilder builder, Offset<Dashboard> dashOffset) { builder.AddOffset(2, dashOffset.Value, 0); }
   public static void AddSession(FlatBufferBuilder builder, Offset<Session> sessionOffset) { builder.AddOffset(3, sessionOffset.Value, 0); }
   public static void AddVehicleConfig(FlatBufferBuilder builder, Offset<VehicleConfig> vehicleConfigOffset) { builder.AddOffset(4, vehicleConfigOffset.Value, 0); }
+  public static void AddTrackConfig(FlatBufferBuilder builder, Offset<TrackConfig> trackConfigOffset) { builder.AddOffset(5, trackConfigOffset.Value, 0); }
   public static Offset<Frame> EndFrame(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<Frame>(o);

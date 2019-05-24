@@ -66,7 +66,10 @@ table Motion {
     angularVelocityX:float; //Roll speed, i.e rotation around local forward direction (deg/sec)
     angularVelocityY:float; //Pitch speed, i.e rotation around local right direction (deg/sec)
     angularVelocityZ:float; //Yaw speed, i.e rotation around local up direction (deg/sec)
-    wheels:[Wheel];
+    wheels:[Wheel];         //Array of wheels. Arranged in clockwise order from rear left. Usually 4 wheels, but may be less or more in future.
+    worldVelocityX:float;   //World-space velocity X (meters/sec)
+    worldVelocityY:float;   //World-space velocity Y (meters/sec)
+    worldVelocityZ:float;   //World-space velocity Z/vertical (meters/sec)
 }
 
 /// Dash data for displaying state of current local/followed player
@@ -82,6 +85,7 @@ table Dashboard {
     currentLap:float;               //Current lap time (seconds)
     lastLap:float;                  //Most recently completed lap time
     lapCount:ushort;                //Current lap number. 0 = pre-first-lap, 1 = on first lap, 2 = second lap etc
+    sectorCount:ushort;             //Current sector number. 0 = not in any sector, 1 = vehicle is in first sector, 2 = second sector etc
 }
 
 /// Basic vehicle data for live timing. e.g. trackmap
@@ -112,6 +116,11 @@ table VehicleConfig {
     //#todo: chassis manufacturer, engine type, tyre manufacturer, driver name etc
 }
 
+table TrackConfig {
+    name:string;
+    numSectors:ubyte;
+}
+
 /// Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
 table Frame {
     timestamp:float;
@@ -119,6 +128,7 @@ table Frame {
     dash:Dashboard;                 //Dyanmic dashboard data for followed vehicle
     session:Session;                //Data for current session
     vehicleConfig:VehicleConfig;    //Config for followed vehicle
+    trackConfig:TrackConfig;
 }
 
 root_type Frame;

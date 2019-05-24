@@ -29,6 +29,7 @@ public struct Dashboard : IFlatbufferObject
   public float CurrentLap { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float LastLap { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public ushort LapCount { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public ushort SectorCount { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
 
   public static Offset<Dashboard> CreateDashboard(FlatBufferBuilder builder,
       float speed = 0.0f,
@@ -41,8 +42,9 @@ public struct Dashboard : IFlatbufferObject
       float bestLap = 0.0f,
       float currentLap = 0.0f,
       float lastLap = 0.0f,
-      ushort lapCount = 0) {
-    builder.StartObject(11);
+      ushort lapCount = 0,
+      ushort sectorCount = 0) {
+    builder.StartObject(12);
     Dashboard.AddLastLap(builder, lastLap);
     Dashboard.AddCurrentLap(builder, currentLap);
     Dashboard.AddBestLap(builder, bestLap);
@@ -51,13 +53,14 @@ public struct Dashboard : IFlatbufferObject
     Dashboard.AddSteer(builder, steer);
     Dashboard.AddRpm(builder, rpm);
     Dashboard.AddSpeed(builder, speed);
+    Dashboard.AddSectorCount(builder, sectorCount);
     Dashboard.AddLapCount(builder, lapCount);
     Dashboard.AddPos(builder, pos);
     Dashboard.AddGear(builder, gear);
     return Dashboard.EndDashboard(builder);
   }
 
-  public static void StartDashboard(FlatBufferBuilder builder) { builder.StartObject(11); }
+  public static void StartDashboard(FlatBufferBuilder builder) { builder.StartObject(12); }
   public static void AddSpeed(FlatBufferBuilder builder, float speed) { builder.AddFloat(0, speed, 0.0f); }
   public static void AddRpm(FlatBufferBuilder builder, float rpm) { builder.AddFloat(1, rpm, 0.0f); }
   public static void AddSteer(FlatBufferBuilder builder, float steer) { builder.AddFloat(2, steer, 0.0f); }
@@ -69,6 +72,7 @@ public struct Dashboard : IFlatbufferObject
   public static void AddCurrentLap(FlatBufferBuilder builder, float currentLap) { builder.AddFloat(8, currentLap, 0.0f); }
   public static void AddLastLap(FlatBufferBuilder builder, float lastLap) { builder.AddFloat(9, lastLap, 0.0f); }
   public static void AddLapCount(FlatBufferBuilder builder, ushort lapCount) { builder.AddUshort(10, lapCount, 0); }
+  public static void AddSectorCount(FlatBufferBuilder builder, ushort sectorCount) { builder.AddUshort(11, sectorCount, 0); }
   public static Offset<Dashboard> EndDashboard(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<Dashboard>(o);

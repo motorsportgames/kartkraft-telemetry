@@ -22,6 +22,8 @@ struct Session;
 
 struct VehicleConfig;
 
+struct TrackConfig;
+
 struct Frame;
 
 /// State of vehicle
@@ -216,7 +218,10 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_ANGULARVELOCITYX = 24,
     VT_ANGULARVELOCITYY = 26,
     VT_ANGULARVELOCITYZ = 28,
-    VT_WHEELS = 30
+    VT_WHEELS = 30,
+    VT_WORLDVELOCITYX = 32,
+    VT_WORLDVELOCITYY = 34,
+    VT_WORLDVELOCITYZ = 36
   };
   float pitch() const {
     return GetField<float>(VT_PITCH, 0.0f);
@@ -260,6 +265,15 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const flatbuffers::Vector<flatbuffers::Offset<Wheel>> *wheels() const {
     return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<Wheel>> *>(VT_WHEELS);
   }
+  float worldVelocityX() const {
+    return GetField<float>(VT_WORLDVELOCITYX, 0.0f);
+  }
+  float worldVelocityY() const {
+    return GetField<float>(VT_WORLDVELOCITYY, 0.0f);
+  }
+  float worldVelocityZ() const {
+    return GetField<float>(VT_WORLDVELOCITYZ, 0.0f);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<float>(verifier, VT_PITCH) &&
@@ -278,6 +292,9 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyOffset(verifier, VT_WHEELS) &&
            verifier.VerifyVector(wheels()) &&
            verifier.VerifyVectorOfTables(wheels()) &&
+           VerifyField<float>(verifier, VT_WORLDVELOCITYX) &&
+           VerifyField<float>(verifier, VT_WORLDVELOCITYY) &&
+           VerifyField<float>(verifier, VT_WORLDVELOCITYZ) &&
            verifier.EndTable();
   }
 };
@@ -327,6 +344,15 @@ struct MotionBuilder {
   void add_wheels(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Wheel>>> wheels) {
     fbb_.AddOffset(Motion::VT_WHEELS, wheels);
   }
+  void add_worldVelocityX(float worldVelocityX) {
+    fbb_.AddElement<float>(Motion::VT_WORLDVELOCITYX, worldVelocityX, 0.0f);
+  }
+  void add_worldVelocityY(float worldVelocityY) {
+    fbb_.AddElement<float>(Motion::VT_WORLDVELOCITYY, worldVelocityY, 0.0f);
+  }
+  void add_worldVelocityZ(float worldVelocityZ) {
+    fbb_.AddElement<float>(Motion::VT_WORLDVELOCITYZ, worldVelocityZ, 0.0f);
+  }
   explicit MotionBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -354,8 +380,14 @@ inline flatbuffers::Offset<Motion> CreateMotion(
     float angularVelocityX = 0.0f,
     float angularVelocityY = 0.0f,
     float angularVelocityZ = 0.0f,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Wheel>>> wheels = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Wheel>>> wheels = 0,
+    float worldVelocityX = 0.0f,
+    float worldVelocityY = 0.0f,
+    float worldVelocityZ = 0.0f) {
   MotionBuilder builder_(_fbb);
+  builder_.add_worldVelocityZ(worldVelocityZ);
+  builder_.add_worldVelocityY(worldVelocityY);
+  builder_.add_worldVelocityX(worldVelocityX);
   builder_.add_wheels(wheels);
   builder_.add_angularVelocityZ(angularVelocityZ);
   builder_.add_angularVelocityY(angularVelocityY);
@@ -388,7 +420,10 @@ inline flatbuffers::Offset<Motion> CreateMotionDirect(
     float angularVelocityX = 0.0f,
     float angularVelocityY = 0.0f,
     float angularVelocityZ = 0.0f,
-    const std::vector<flatbuffers::Offset<Wheel>> *wheels = nullptr) {
+    const std::vector<flatbuffers::Offset<Wheel>> *wheels = nullptr,
+    float worldVelocityX = 0.0f,
+    float worldVelocityY = 0.0f,
+    float worldVelocityZ = 0.0f) {
   return KartKraft::CreateMotion(
       _fbb,
       pitch,
@@ -404,7 +439,10 @@ inline flatbuffers::Offset<Motion> CreateMotionDirect(
       angularVelocityX,
       angularVelocityY,
       angularVelocityZ,
-      wheels ? _fbb.CreateVector<flatbuffers::Offset<Wheel>>(*wheels) : 0);
+      wheels ? _fbb.CreateVector<flatbuffers::Offset<Wheel>>(*wheels) : 0,
+      worldVelocityX,
+      worldVelocityY,
+      worldVelocityZ);
 }
 
 /// Dash data for displaying state of current local/followed player
@@ -420,7 +458,8 @@ struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_BESTLAP = 18,
     VT_CURRENTLAP = 20,
     VT_LASTLAP = 22,
-    VT_LAPCOUNT = 24
+    VT_LAPCOUNT = 24,
+    VT_SECTORCOUNT = 26
   };
   float speed() const {
     return GetField<float>(VT_SPEED, 0.0f);
@@ -455,6 +494,9 @@ struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   uint16_t lapCount() const {
     return GetField<uint16_t>(VT_LAPCOUNT, 0);
   }
+  uint16_t sectorCount() const {
+    return GetField<uint16_t>(VT_SECTORCOUNT, 0);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<float>(verifier, VT_SPEED) &&
@@ -468,6 +510,7 @@ struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<float>(verifier, VT_CURRENTLAP) &&
            VerifyField<float>(verifier, VT_LASTLAP) &&
            VerifyField<uint16_t>(verifier, VT_LAPCOUNT) &&
+           VerifyField<uint16_t>(verifier, VT_SECTORCOUNT) &&
            verifier.EndTable();
   }
 };
@@ -508,6 +551,9 @@ struct DashboardBuilder {
   void add_lapCount(uint16_t lapCount) {
     fbb_.AddElement<uint16_t>(Dashboard::VT_LAPCOUNT, lapCount, 0);
   }
+  void add_sectorCount(uint16_t sectorCount) {
+    fbb_.AddElement<uint16_t>(Dashboard::VT_SECTORCOUNT, sectorCount, 0);
+  }
   explicit DashboardBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -532,7 +578,8 @@ inline flatbuffers::Offset<Dashboard> CreateDashboard(
     float bestLap = 0.0f,
     float currentLap = 0.0f,
     float lastLap = 0.0f,
-    uint16_t lapCount = 0) {
+    uint16_t lapCount = 0,
+    uint16_t sectorCount = 0) {
   DashboardBuilder builder_(_fbb);
   builder_.add_lastLap(lastLap);
   builder_.add_currentLap(currentLap);
@@ -542,6 +589,7 @@ inline flatbuffers::Offset<Dashboard> CreateDashboard(
   builder_.add_steer(steer);
   builder_.add_rpm(rpm);
   builder_.add_speed(speed);
+  builder_.add_sectorCount(sectorCount);
   builder_.add_lapCount(lapCount);
   builder_.add_pos(pos);
   builder_.add_gear(gear);
@@ -807,6 +855,67 @@ inline flatbuffers::Offset<VehicleConfig> CreateVehicleConfig(
   return builder_.Finish();
 }
 
+struct TrackConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_NAME = 4,
+    VT_NUMSECTORS = 6
+  };
+  const flatbuffers::String *name() const {
+    return GetPointer<const flatbuffers::String *>(VT_NAME);
+  }
+  uint8_t numSectors() const {
+    return GetField<uint8_t>(VT_NUMSECTORS, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(name()) &&
+           VerifyField<uint8_t>(verifier, VT_NUMSECTORS) &&
+           verifier.EndTable();
+  }
+};
+
+struct TrackConfigBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_name(flatbuffers::Offset<flatbuffers::String> name) {
+    fbb_.AddOffset(TrackConfig::VT_NAME, name);
+  }
+  void add_numSectors(uint8_t numSectors) {
+    fbb_.AddElement<uint8_t>(TrackConfig::VT_NUMSECTORS, numSectors, 0);
+  }
+  explicit TrackConfigBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  TrackConfigBuilder &operator=(const TrackConfigBuilder &);
+  flatbuffers::Offset<TrackConfig> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<TrackConfig>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<TrackConfig> CreateTrackConfig(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> name = 0,
+    uint8_t numSectors = 0) {
+  TrackConfigBuilder builder_(_fbb);
+  builder_.add_name(name);
+  builder_.add_numSectors(numSectors);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<TrackConfig> CreateTrackConfigDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *name = nullptr,
+    uint8_t numSectors = 0) {
+  return KartKraft::CreateTrackConfig(
+      _fbb,
+      name ? _fbb.CreateString(name) : 0,
+      numSectors);
+}
+
 /// Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
 struct Frame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
@@ -814,7 +923,8 @@ struct Frame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_MOTION = 6,
     VT_DASH = 8,
     VT_SESSION = 10,
-    VT_VEHICLECONFIG = 12
+    VT_VEHICLECONFIG = 12,
+    VT_TRACKCONFIG = 14
   };
   float timestamp() const {
     return GetField<float>(VT_TIMESTAMP, 0.0f);
@@ -831,6 +941,9 @@ struct Frame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const VehicleConfig *vehicleConfig() const {
     return GetPointer<const VehicleConfig *>(VT_VEHICLECONFIG);
   }
+  const TrackConfig *trackConfig() const {
+    return GetPointer<const TrackConfig *>(VT_TRACKCONFIG);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<float>(verifier, VT_TIMESTAMP) &&
@@ -842,6 +955,8 @@ struct Frame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.VerifyTable(session()) &&
            VerifyOffset(verifier, VT_VEHICLECONFIG) &&
            verifier.VerifyTable(vehicleConfig()) &&
+           VerifyOffset(verifier, VT_TRACKCONFIG) &&
+           verifier.VerifyTable(trackConfig()) &&
            verifier.EndTable();
   }
 };
@@ -864,6 +979,9 @@ struct FrameBuilder {
   void add_vehicleConfig(flatbuffers::Offset<VehicleConfig> vehicleConfig) {
     fbb_.AddOffset(Frame::VT_VEHICLECONFIG, vehicleConfig);
   }
+  void add_trackConfig(flatbuffers::Offset<TrackConfig> trackConfig) {
+    fbb_.AddOffset(Frame::VT_TRACKCONFIG, trackConfig);
+  }
   explicit FrameBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -882,8 +1000,10 @@ inline flatbuffers::Offset<Frame> CreateFrame(
     flatbuffers::Offset<Motion> motion = 0,
     flatbuffers::Offset<Dashboard> dash = 0,
     flatbuffers::Offset<Session> session = 0,
-    flatbuffers::Offset<VehicleConfig> vehicleConfig = 0) {
+    flatbuffers::Offset<VehicleConfig> vehicleConfig = 0,
+    flatbuffers::Offset<TrackConfig> trackConfig = 0) {
   FrameBuilder builder_(_fbb);
+  builder_.add_trackConfig(trackConfig);
   builder_.add_vehicleConfig(vehicleConfig);
   builder_.add_session(session);
   builder_.add_dash(dash);
