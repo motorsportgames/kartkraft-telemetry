@@ -4,6 +4,7 @@ import kartkraft.Dashboard
 import kartkraft.Frame
 import kartkraft.Motion
 import kartkraft.Surface
+import kartkraft.TrackConfig
 import kartkraft.VehicleConfig
 import kartkraft.Wheel
 
@@ -79,11 +80,20 @@ kartkraft.VehicleConfig.VehicleConfigAddRpmLimit(b, 15500)
 kartkraft.VehicleConfig.VehicleConfigAddRpmMax(b, 16000)
 vehicleConfig = kartkraft.VehicleConfig.VehicleConfigEnd(b)
 
+# Create some test track config data
+trackName = b.CreateString('Nordschleife')
+kartkraft.TrackConfig.TrackConfigStart(b)
+kartkraft.TrackConfig.TrackConfigAddName(b, trackName)
+kartkraft.TrackConfig.TrackConfigAddNumSectors(b, 3)
+trackConfig = kartkraft.TrackConfig.TrackConfigEnd(b)
+
+
 # Create frame and add the test motion and test dashboard data
 kartkraft.Frame.FrameStart(b)
 kartkraft.Frame.FrameAddMotion(b, motion)
 kartkraft.Frame.FrameAddDash(b, dashboard)
 kartkraft.Frame.FrameAddVehicleConfig(b, vehicleConfig)
+kartkraft.Frame.FrameAddTrackConfig(b, trackConfig)
 frame = kartkraft.Frame.FrameEnd(b)
 
 # Finish writing the flatbuffer and get thte data as raw bytes

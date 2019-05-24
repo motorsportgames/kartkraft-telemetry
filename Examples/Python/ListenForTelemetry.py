@@ -2,6 +2,9 @@ import socket
 import flatbuffers
 import kartkraft.Frame
 import kartkraft.Motion
+import kartkraft.Surface
+import kartkraft.VehicleConfig
+import kartkraft.TrackConfig
 
 UDP_IP = "127.0.0.1"
 UDP_PORT = 5000
@@ -28,6 +31,7 @@ while True:
         dash = frame.Dash()
         session = frame.Session()
         vehicleConfig = frame.VehicleConfig()
+        trackConfig = frame.TrackConfig()
 
         print("time ", time)
 
@@ -69,6 +73,12 @@ while True:
 
         if (vehicleConfig):
             print("  vehicleConfig data:")
-            print("    rpm limit", vehicleConfig.RpmLimit())
-            print("    rpm max", vehicleConfig.RpmMax())
-            print("    gear max", vehicleConfig.GearMax())
+            print("    rpm limit ", vehicleConfig.RpmLimit())
+            print("    rpm max ", vehicleConfig.RpmMax())
+            print("    gear max ", vehicleConfig.GearMax())
+
+        if (trackConfig):
+            print("  trackConfig data:")
+            if (trackConfig.Name()):
+                print("    name ", str(trackConfig.Name(), "utf-8"))
+            print("    numSectors ", trackConfig.NumSectors())
