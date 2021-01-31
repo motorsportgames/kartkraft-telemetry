@@ -52,46 +52,50 @@ int main()
 		int receivedLength = recvfrom(receiver, buffer, BUFFER_SIZE, 0, (struct sockaddr *)&senderAddress, &senderAddressLength);
 		if (receivedLength > 0) 
 		{		
-			const KartKraft::Frame * frame = KartKraft::GetFrame(buffer);
-			if (frame)
-			{
-				printf("Received frame of length %d\n", receivedLength);
-
-				const KartKraft::Motion * motion = frame->motion();
-				const KartKraft::Dashboard * dash = frame->dash();
-				const KartKraft::Session * session = frame->session();
-
-				//Handle motion data
-				if (motion)
+			//Test for frame identifier, a small string added to each packet by the game to make sure this is indeed a valid frame and not some other data sent on the same port
+			if (KartKraft::FrameBufferHasIdentifier(buffer))	
+			{		
+				const KartKraft::Frame * frame = KartKraft::GetFrame(buffer);
+				if (frame)
 				{
-					printf("    motion: %f %f %f %f %f %f %f\n", 
-						motion->pitch(), 
-						motion->roll(), 
-						motion->yaw(), 
-						motion->accelerationX(), 
-						motion->accelerationY(), 
-						motion->accelerationZ(), 
-						motion->tractionLoss());
-				}
+					printf("Received frame of length %d\n", receivedLength);
 
-				//Handle dashboard data
-				if (dash)
-				{
-					printf("    dash: %f %f %f %f %f %d %d %f\n", 
-						dash->speed(), 
-						dash->rpm(), 
-						dash->steer(), 
-						dash->throttle(), 
-						dash->brake(), 
-						dash->gear(), 
-						dash->pos(), 
-						dash->bestLap());
-				}
+					const KartKraft::Motion * motion = frame->motion();
+					const KartKraft::Dashboard * dash = frame->dash();
+					const KartKraft::Session * session = frame->session();
 
-				//Handle session data
-				if (session)
-				{
-					printf("    session: \n\n");
+					//Handle motion data
+					if (motion)
+					{
+						printf("    motion: %f %f %f %f %f %f %f\n", 
+							motion->pitch(), 
+							motion->roll(), 
+							motion->yaw(), 
+							motion->accelerationX(), 
+							motion->accelerationY(), 
+							motion->accelerationZ(), 
+							motion->tractionLoss());
+					}
+
+					//Handle dashboard data
+					if (dash)
+					{
+						printf("    dash: %f %f %f %f %f %d %d %f\n", 
+							dash->speed(), 
+							dash->rpm(), 
+							dash->steer(), 
+							dash->throttle(), 
+							dash->brake(), 
+							dash->gear(), 
+							dash->pos(), 
+							dash->bestLap());
+					}
+
+					//Handle session data
+					if (session)
+					{
+						printf("    session: \n\n");
+					}
 				}
 			}
 		}

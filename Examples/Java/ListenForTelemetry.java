@@ -25,33 +25,37 @@ public class ListenForTelemetry {
             // Receive the packet and try converting to kartkraft Frame
             socket.receive(packet);
             ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
-            KartKraft.Frame frame = KartKraft.Frame.getRootAsFrame(byteBuffer);
 
-            if (frame != null) {
+            if (KartKraft.Frame.FrameBufferHasIdentifier(byteBuffer)) {
 
-                System.out.println("Received frame of length " + packet.getLength());
+                KartKraft.Frame frame = KartKraft.Frame.getRootAsFrame(byteBuffer);
 
-                KartKraft.Motion motion = frame.motion();
-                KartKraft.Dashboard dash = frame.dash();
-                KartKraft.Session session = frame.session();
+                if (frame != null) {
 
-                // Handle motion data
-                if (motion != null) {
-                    System.out.println("    motion: " + motion.pitch() + " " + motion.roll() + " " + motion.yaw() + " "
-                            + motion.accelerationX() + " " + motion.accelerationY() + " " + motion.accelerationZ() + " "
-                            + motion.tractionLoss());
-                }
+                    System.out.println("Received frame of length " + packet.getLength());
 
-                // Handle dashboard data
-                if (dash != null) {
-                    System.out.println(
-                            "    dash: " + dash.speed() + " " + dash.rpm() + " " + dash.steer() + " " + dash.throttle()
-                                    + " " + dash.brake() + " " + dash.gear() + " " + dash.pos() + " " + dash.bestLap());
-                }
+                    KartKraft.Motion motion = frame.motion();
+                    KartKraft.Dashboard dash = frame.dash();
+                    KartKraft.Session session = frame.session();
 
-                // Handle session data
-                if (session != null) {
-                    System.out.println("    session: ");
+                    // Handle motion data
+                    if (motion != null) {
+                        System.out.println("    motion: " + motion.pitch() + " " + motion.roll() + " " + motion.yaw() + " "
+                                + motion.accelerationX() + " " + motion.accelerationY() + " " + motion.accelerationZ() + " "
+                                + motion.tractionLoss());
+                    }
+
+                    // Handle dashboard data
+                    if (dash != null) {
+                        System.out.println(
+                                "    dash: " + dash.speed() + " " + dash.rpm() + " " + dash.steer() + " " + dash.throttle()
+                                        + " " + dash.brake() + " " + dash.gear() + " " + dash.pos() + " " + dash.bestLap());
+                    }
+
+                    // Handle session data
+                    if (session != null) {
+                        System.out.println("    session: ");
+                    }
                 }
             }
         }
