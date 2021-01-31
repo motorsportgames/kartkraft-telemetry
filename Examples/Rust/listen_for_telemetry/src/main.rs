@@ -8,7 +8,7 @@ pub use Frame_generated::kart_kraft::{*};
 
 fn main() -> std::io::Result<()> {
 
-    let host_address = "127.0.0.1:2468";
+    let host_address = "127.0.0.1:5000";
 
     //Create a socket
     let socket = UdpSocket::bind(host_address)?;
