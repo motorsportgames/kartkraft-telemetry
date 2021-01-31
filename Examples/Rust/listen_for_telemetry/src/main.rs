@@ -1,10 +1,8 @@
-extern crate flatbuffers;
-
 use std::net::UdpSocket;
 
 #[allow(dead_code, unused_imports)]
 #[allow(non_snake_case)]
-#[path = "./Frame_generated.rs"]
+#[path = "../../kartkraft/Frame_generated.rs"]
 mod Frame_generated;
 pub use Frame_generated::kart_kraft::{*};
 
