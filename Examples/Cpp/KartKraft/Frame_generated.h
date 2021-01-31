@@ -26,6 +26,24 @@ struct TrackConfig;
 
 struct Frame;
 
+inline const flatbuffers::TypeTable *ColorTypeTable();
+
+inline const flatbuffers::TypeTable *WheelTypeTable();
+
+inline const flatbuffers::TypeTable *MotionTypeTable();
+
+inline const flatbuffers::TypeTable *DashboardTypeTable();
+
+inline const flatbuffers::TypeTable *VehicleTypeTable();
+
+inline const flatbuffers::TypeTable *SessionTypeTable();
+
+inline const flatbuffers::TypeTable *VehicleConfigTypeTable();
+
+inline const flatbuffers::TypeTable *TrackConfigTypeTable();
+
+inline const flatbuffers::TypeTable *FrameTypeTable();
+
 /// State of vehicle
 enum VehicleState {
   VehicleState_Idle = 0,
@@ -153,6 +171,9 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(1) Color FLATBUFFERS_FINAL_CLASS {
 FLATBUFFERS_STRUCT_END(Color, 3);
 
 struct Wheel FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return WheelTypeTable();
+  }
   enum {
     VT_SURFACE = 4,
     VT_SLIPANGLE = 6
@@ -204,6 +225,9 @@ inline flatbuffers::Offset<Wheel> CreateWheel(
 
 /// Motion data of local player for driving hardware motion simulators
 struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return MotionTypeTable();
+  }
   enum {
     VT_PITCH = 4,
     VT_ROLL = 6,
@@ -447,6 +471,9 @@ inline flatbuffers::Offset<Motion> CreateMotionDirect(
 
 /// Dash data for displaying state of current local/followed player
 struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return DashboardTypeTable();
+  }
   enum {
     VT_SPEED = 4,
     VT_RPM = 6,
@@ -598,6 +625,9 @@ inline flatbuffers::Offset<Dashboard> CreateDashboard(
 
 /// Basic vehicle data for live timing. e.g. trackmap
 struct Vehicle FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return VehicleTypeTable();
+  }
   enum {
     VT_STATE = 4,
     VT_POSX = 6,
@@ -709,6 +739,9 @@ inline flatbuffers::Offset<Vehicle> CreateVehicle(
 
 /// Session data
 struct Session FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return SessionTypeTable();
+  }
   enum {
     VT_TOTALTIME = 4,
     VT_TIMELEFT = 6,
@@ -796,6 +829,9 @@ inline flatbuffers::Offset<Session> CreateSessionDirect(
 
 /// Data associated with a vehicle which doesn't change dynamically during a race. e.g. class, num gears, driver name etc
 struct VehicleConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return VehicleConfigTypeTable();
+  }
   enum {
     VT_RPMLIMIT = 4,
     VT_RPMMAX = 6,
@@ -856,6 +892,9 @@ inline flatbuffers::Offset<VehicleConfig> CreateVehicleConfig(
 }
 
 struct TrackConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return TrackConfigTypeTable();
+  }
   enum {
     VT_NAME = 4,
     VT_NUMSECTORS = 6
@@ -918,6 +957,9 @@ inline flatbuffers::Offset<TrackConfig> CreateTrackConfigDirect(
 
 /// Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
 struct Frame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return FrameTypeTable();
+  }
   enum {
     VT_TIMESTAMP = 4,
     VT_MOTION = 6,
@@ -1010,6 +1052,302 @@ inline flatbuffers::Offset<Frame> CreateFrame(
   builder_.add_motion(motion);
   builder_.add_timestamp(timestamp);
   return builder_.Finish();
+}
+
+inline const flatbuffers::TypeTable *VehicleStateTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 }
+  };
+  static const flatbuffers::TypeFunction type_refs[] = {
+    VehicleStateTypeTable
+  };
+  static const char * const names[] = {
+    "Idle",
+    "Pits",
+    "PitGrid",
+    "Outlap",
+    "RollingStart",
+    "FlyingStart",
+    "StartGrid",
+    "Racing",
+    "Retired",
+    "Finished"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_ENUM, 10, type_codes, type_refs, nullptr, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *SurfaceTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_UCHAR, 0, 0 }
+  };
+  static const flatbuffers::TypeFunction type_refs[] = {
+    SurfaceTypeTable
+  };
+  static const char * const names[] = {
+    "None",
+    "Asphalt",
+    "Grass",
+    "Gravel",
+    "Kerb",
+    "Sand",
+    "Tyre"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_ENUM, 7, type_codes, type_refs, nullptr, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *ColorTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_CHAR, 0, -1 },
+    { flatbuffers::ET_CHAR, 0, -1 },
+    { flatbuffers::ET_CHAR, 0, -1 }
+  };
+  static const int32_t values[] = { 0, 1, 2, 3 };
+  static const char * const names[] = {
+    "r",
+    "g",
+    "b"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_STRUCT, 3, type_codes, nullptr, values, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *WheelTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_FLOAT, 0, -1 }
+  };
+  static const flatbuffers::TypeFunction type_refs[] = {
+    SurfaceTypeTable
+  };
+  static const char * const names[] = {
+    "surface",
+    "slipAngle"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_TABLE, 2, type_codes, type_refs, nullptr, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *MotionTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_SEQUENCE, 1, 0 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 }
+  };
+  static const flatbuffers::TypeFunction type_refs[] = {
+    WheelTypeTable
+  };
+  static const char * const names[] = {
+    "pitch",
+    "roll",
+    "yaw",
+    "accelerationX",
+    "accelerationY",
+    "accelerationZ",
+    "tractionLoss",
+    "velocityX",
+    "velocityY",
+    "velocityZ",
+    "angularVelocityX",
+    "angularVelocityY",
+    "angularVelocityZ",
+    "wheels",
+    "worldVelocityX",
+    "worldVelocityY",
+    "worldVelocityZ"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_TABLE, 17, type_codes, type_refs, nullptr, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *DashboardTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_CHAR, 0, -1 },
+    { flatbuffers::ET_CHAR, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_USHORT, 0, -1 },
+    { flatbuffers::ET_USHORT, 0, -1 }
+  };
+  static const char * const names[] = {
+    "speed",
+    "rpm",
+    "steer",
+    "throttle",
+    "brake",
+    "gear",
+    "pos",
+    "bestLap",
+    "currentLap",
+    "lastLap",
+    "lapCount",
+    "sectorCount"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_TABLE, 12, type_codes, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *VehicleTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_UCHAR, 0, 0 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_INT, 0, -1 },
+    { flatbuffers::ET_SEQUENCE, 0, 1 },
+    { flatbuffers::ET_FLOAT, 0, -1 }
+  };
+  static const flatbuffers::TypeFunction type_refs[] = {
+    VehicleStateTypeTable,
+    ColorTypeTable
+  };
+  static const char * const names[] = {
+    "state",
+    "posX",
+    "posY",
+    "posZ",
+    "yaw",
+    "sessionPos",
+    "color",
+    "normalisedTrackPos"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_TABLE, 8, type_codes, type_refs, nullptr, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *SessionTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_INT, 0, -1 },
+    { flatbuffers::ET_INT, 0, -1 },
+    { flatbuffers::ET_INT, 0, -1 },
+    { flatbuffers::ET_SEQUENCE, 1, 0 }
+  };
+  static const flatbuffers::TypeFunction type_refs[] = {
+    VehicleTypeTable
+  };
+  static const char * const names[] = {
+    "totalTime",
+    "timeLeft",
+    "totalLaps",
+    "vehicles"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_TABLE, 4, type_codes, type_refs, nullptr, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *VehicleConfigTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_CHAR, 0, -1 }
+  };
+  static const char * const names[] = {
+    "rpmLimit",
+    "rpmMax",
+    "gearMax"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_TABLE, 3, type_codes, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *TrackConfigTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_STRING, 0, -1 },
+    { flatbuffers::ET_UCHAR, 0, -1 }
+  };
+  static const char * const names[] = {
+    "name",
+    "numSectors"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_TABLE, 2, type_codes, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *FrameTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_SEQUENCE, 0, 0 },
+    { flatbuffers::ET_SEQUENCE, 0, 1 },
+    { flatbuffers::ET_SEQUENCE, 0, 2 },
+    { flatbuffers::ET_SEQUENCE, 0, 3 },
+    { flatbuffers::ET_SEQUENCE, 0, 4 }
+  };
+  static const flatbuffers::TypeFunction type_refs[] = {
+    MotionTypeTable,
+    DashboardTypeTable,
+    SessionTypeTable,
+    VehicleConfigTypeTable,
+    TrackConfigTypeTable
+  };
+  static const char * const names[] = {
+    "timestamp",
+    "motion",
+    "dash",
+    "session",
+    "vehicleConfig",
+    "trackConfig"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_TABLE, 6, type_codes, type_refs, nullptr, names
+  };
+  return &tt;
 }
 
 inline const KartKraft::Frame *GetFrame(const void *buf) {
