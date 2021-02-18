@@ -21,45 +21,49 @@ server.on("listening", function() {
 //
 server.on("message", function(message, remote) {
   var buf = new flatbuffers.ByteBuffer(message);
-  var frame = KartKraft.Frame.getRootAsFrame(buf);
-  if (frame) {
-    console.log("Received frame of length " + buf.capacity());
 
-    //Get motion/data/session objects from the frame
-    motion = frame.motion();
-    dash = frame.dash();
-    session = frame.session();
+  if (KartKraft.Frame.bufferHasIdentifier(buf)) {
 
-    //Check for presence of motion data and write to log if it exists
-    if (motion) {
-      console.log(
-        "    motion data: " + motion.pitch(),
-        motion.roll(),
-        motion.yaw(),
-        motion.accelerationX(),
-        motion.accelerationY(),
-        motion.accelerationZ(),
-        motion.tractionLoss()
-      );
-    }
+    var frame = KartKraft.Frame.getRootAsFrame(buf);
+    if (frame) {
+      console.log("Received frame of length " + buf.capacity());
 
-    //Check for presence of dash data and write to log if it exists
-    if (dash) {
-      console.log(
-        "    dash data: " + dash.speed(),
-        dash.rpm(),
-        dash.steer(),
-        dash.throttle(),
-        dash.brake(),
-        dash.gear(),
-        dash.pos(),
-        dash.bestLap()
-      );
-    }
+      //Get motion/data/session objects from the frame
+      motion = frame.motion();
+      dash = frame.dash();
+      session = frame.session();
 
-    //Check for presence of session data and write to log if it exists
-    if (session) {
-      console.log("    session data: ");
+      //Check for presence of motion data and write to log if it exists
+      if (motion) {
+        console.log(
+          "    motion data: " + motion.pitch(),
+          motion.roll(),
+          motion.yaw(),
+          motion.accelerationX(),
+          motion.accelerationY(),
+          motion.accelerationZ(),
+          motion.tractionLoss()
+        );
+      }
+
+      //Check for presence of dash data and write to log if it exists
+      if (dash) {
+        console.log(
+          "    dash data: " + dash.speed(),
+          dash.rpm(),
+          dash.steer(),
+          dash.throttle(),
+          dash.brake(),
+          dash.gear(),
+          dash.pos(),
+          dash.bestLap()
+        );
+      }
+
+      //Check for presence of session data and write to log if it exists
+      if (session) {
+        console.log("    session data: ");
+      }
     }
   }
 });
