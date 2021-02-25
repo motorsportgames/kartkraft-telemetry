@@ -2,13 +2,6 @@ namespace KartKraft;
 
 file_identifier "KKFB";
 
-/// Useful generic color struct 
-struct Color {
-  r:byte;
-  g:byte;
-  b:byte;
-}
-
 /// State of vehicle
 enum VehicleState:ubyte {
     Idle = 0,
@@ -59,7 +52,7 @@ table Motion {
     accelerationX:float;    //Forwards/Surge in vehicle's local space   (meters/sec/sec)
     accelerationY:float;    //Right/Sway in vehicle's local space (meters/sec/sec)
     accelerationZ:float;    //Up/Heave in vehicle's local space (meters/sec/sec)
-    tractionLoss:float;     //Nothing here yet 
+    tractionLoss:float;     //This is usually the average slip angle of rear tyres
     velocityX:float;        //Forward speed in vehicle's local space (meters/sec)
     velocityY:float;        //Rightward speed in vehicle's local space (meters/sec)
     velocityZ:float;        //Upward speed in vehicle's local space (meters/sec)
@@ -70,6 +63,9 @@ table Motion {
     worldVelocityX:float;   //World-space velocity X (meters/sec)
     worldVelocityY:float;   //World-space velocity Y (meters/sec)
     worldVelocityZ:float;   //World-space velocity Z/vertical (meters/sec)
+    worldPositionX:float;   //World position x. (cm)
+    worldPositionY:float;   //World position y. (cm)
+    worldPositionZ:float;   //World position z (height). (cm)
 }
 
 /// Dash data for displaying state of current local/followed player
@@ -91,21 +87,18 @@ table Dashboard {
 /// Basic vehicle data for live timing. e.g. trackmap
 table Vehicle {
     state:VehicleState;
-    posX:float;
-    posY:float;
-    posZ:float;
-    yaw:float;
     sessionPos:int;
-    color:Color;
-    normalisedTrackPos:float;
+    colorR:byte;
+    colorG:byte;
+    colorB:byte;
+    //normalisedTrackPos:float;
 }
 
 /// Session data
 table Session {
-    totalTime:int;
-    timeLeft:int;
-    totalLaps:int;
-    vehicles:[Vehicle];
+    timeElapsed:float;          //Time elapsed in seconds
+    //lapsComplete:int;           //Number of laps completed this session so far. 
+    //vehicles:[Vehicle];
 }
 
 /// Data associated with a vehicle which doesn't change dynamically during a race. e.g. class, num gears, driver name etc
@@ -119,6 +112,15 @@ table VehicleConfig {
 table TrackConfig {
     name:string;
     numSectors:ubyte;
+    trackLengthMetres:float;
+    address:string;             // Can be multiline. First line usually town, second line area/region.
+    countryCode:string;         // Country code as defined by ISO 3166-1 See here: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+}
+
+table SessionConfig {
+    name:string;                //Session name (if it has one). Will usually denote the game mode, such as time trial, practice, race etc.
+    timeLimit:uint;              //Time limit in minutes. If equal to 0 then there is no time limit.
+    lapLimit:uint;               //Lap limit. If equal to 0 then there is no lap limit.
 }
 
 /// Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
@@ -126,9 +128,10 @@ table Frame {
     timestamp:float;
     motion:Motion;                  //Motion data for followed vehicle
     dash:Dashboard;                 //Dyanmic dashboard data for followed vehicle
-    session:Session;                //Data for current session
+    session:Session;                //Data for current session. e.g. time elapsed, vehicle states.
     vehicleConfig:VehicleConfig;    //Config for followed vehicle
-    trackConfig:TrackConfig;
+    trackConfig:TrackConfig;        //Config for current track. Name, location, length etc.
+    sessionConfig:SessionConfig;    //Config for current session. Name, time limit, lap limit etc.
 }
 
 root_type Frame;
