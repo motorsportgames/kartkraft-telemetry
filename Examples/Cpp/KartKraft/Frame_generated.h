@@ -11,20 +11,31 @@ namespace KartKraft {
 struct Color;
 
 struct Wheel;
+struct WheelBuilder;
 
 struct Motion;
+struct MotionBuilder;
 
 struct Dashboard;
+struct DashboardBuilder;
 
 struct Vehicle;
+struct VehicleBuilder;
 
 struct Session;
+struct SessionBuilder;
 
 struct VehicleConfig;
+struct VehicleConfigBuilder;
 
 struct TrackConfig;
+struct TrackConfigBuilder;
+
+struct SessionConfig;
+struct SessionConfigBuilder;
 
 struct Frame;
+struct FrameBuilder;
 
 inline const flatbuffers::TypeTable *ColorTypeTable();
 
@@ -41,6 +52,8 @@ inline const flatbuffers::TypeTable *SessionTypeTable();
 inline const flatbuffers::TypeTable *VehicleConfigTypeTable();
 
 inline const flatbuffers::TypeTable *TrackConfigTypeTable();
+
+inline const flatbuffers::TypeTable *SessionConfigTypeTable();
 
 inline const flatbuffers::TypeTable *FrameTypeTable();
 
@@ -77,7 +90,7 @@ inline const VehicleState (&EnumValuesVehicleState())[10] {
 }
 
 inline const char * const *EnumNamesVehicleState() {
-  static const char * const names[] = {
+  static const char * const names[11] = {
     "Idle",
     "Pits",
     "PitGrid",
@@ -94,7 +107,8 @@ inline const char * const *EnumNamesVehicleState() {
 }
 
 inline const char *EnumNameVehicleState(VehicleState e) {
-  const size_t index = static_cast<int>(e);
+  if (flatbuffers::IsOutRange(e, VehicleState_Idle, VehicleState_Finished)) return "";
+  const size_t index = static_cast<size_t>(e);
   return EnumNamesVehicleState()[index];
 }
 
@@ -124,7 +138,7 @@ inline const Surface (&EnumValuesSurface())[7] {
 }
 
 inline const char * const *EnumNamesSurface() {
-  static const char * const names[] = {
+  static const char * const names[8] = {
     "None",
     "Asphalt",
     "Grass",
@@ -138,7 +152,8 @@ inline const char * const *EnumNamesSurface() {
 }
 
 inline const char *EnumNameSurface(Surface e) {
-  const size_t index = static_cast<int>(e);
+  if (flatbuffers::IsOutRange(e, Surface_None, Surface_Tyre)) return "";
+  const size_t index = static_cast<size_t>(e);
   return EnumNamesSurface()[index];
 }
 
@@ -150,8 +165,11 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(1) Color FLATBUFFERS_FINAL_CLASS {
   int8_t b_;
 
  public:
+  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return ColorTypeTable();
+  }
   Color() {
-    memset(this, 0, sizeof(Color));
+    memset(static_cast<void *>(this), 0, sizeof(Color));
   }
   Color(int8_t _r, int8_t _g, int8_t _b)
       : r_(flatbuffers::EndianScalar(_r)),
@@ -171,15 +189,16 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(1) Color FLATBUFFERS_FINAL_CLASS {
 FLATBUFFERS_STRUCT_END(Color, 3);
 
 struct Wheel FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef WheelBuilder Builder;
   static const flatbuffers::TypeTable *MiniReflectTypeTable() {
     return WheelTypeTable();
   }
-  enum {
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_SURFACE = 4,
     VT_SLIPANGLE = 6
   };
-  Surface surface() const {
-    return static_cast<Surface>(GetField<uint8_t>(VT_SURFACE, 0));
+  KartKraft::Surface surface() const {
+    return static_cast<KartKraft::Surface>(GetField<uint8_t>(VT_SURFACE, 0));
   }
   float slipAngle() const {
     return GetField<float>(VT_SLIPANGLE, 0.0f);
@@ -193,9 +212,10 @@ struct Wheel FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 };
 
 struct WheelBuilder {
+  typedef Wheel Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_surface(Surface surface) {
+  void add_surface(KartKraft::Surface surface) {
     fbb_.AddElement<uint8_t>(Wheel::VT_SURFACE, static_cast<uint8_t>(surface), 0);
   }
   void add_slipAngle(float slipAngle) {
@@ -215,7 +235,7 @@ struct WheelBuilder {
 
 inline flatbuffers::Offset<Wheel> CreateWheel(
     flatbuffers::FlatBufferBuilder &_fbb,
-    Surface surface = Surface_None,
+    KartKraft::Surface surface = KartKraft::Surface_None,
     float slipAngle = 0.0f) {
   WheelBuilder builder_(_fbb);
   builder_.add_slipAngle(slipAngle);
@@ -225,10 +245,11 @@ inline flatbuffers::Offset<Wheel> CreateWheel(
 
 /// Motion data of local player for driving hardware motion simulators
 struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef MotionBuilder Builder;
   static const flatbuffers::TypeTable *MiniReflectTypeTable() {
     return MotionTypeTable();
   }
-  enum {
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PITCH = 4,
     VT_ROLL = 6,
     VT_YAW = 8,
@@ -245,7 +266,10 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_WHEELS = 30,
     VT_WORLDVELOCITYX = 32,
     VT_WORLDVELOCITYY = 34,
-    VT_WORLDVELOCITYZ = 36
+    VT_WORLDVELOCITYZ = 36,
+    VT_WORLDPOSITIONX = 38,
+    VT_WORLDPOSITIONY = 40,
+    VT_WORLDPOSITIONZ = 42
   };
   float pitch() const {
     return GetField<float>(VT_PITCH, 0.0f);
@@ -286,8 +310,8 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   float angularVelocityZ() const {
     return GetField<float>(VT_ANGULARVELOCITYZ, 0.0f);
   }
-  const flatbuffers::Vector<flatbuffers::Offset<Wheel>> *wheels() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<Wheel>> *>(VT_WHEELS);
+  const flatbuffers::Vector<flatbuffers::Offset<KartKraft::Wheel>> *wheels() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<KartKraft::Wheel>> *>(VT_WHEELS);
   }
   float worldVelocityX() const {
     return GetField<float>(VT_WORLDVELOCITYX, 0.0f);
@@ -297,6 +321,15 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   float worldVelocityZ() const {
     return GetField<float>(VT_WORLDVELOCITYZ, 0.0f);
+  }
+  float worldPositionX() const {
+    return GetField<float>(VT_WORLDPOSITIONX, 0.0f);
+  }
+  float worldPositionY() const {
+    return GetField<float>(VT_WORLDPOSITIONY, 0.0f);
+  }
+  float worldPositionZ() const {
+    return GetField<float>(VT_WORLDPOSITIONZ, 0.0f);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -319,11 +352,15 @@ struct Motion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<float>(verifier, VT_WORLDVELOCITYX) &&
            VerifyField<float>(verifier, VT_WORLDVELOCITYY) &&
            VerifyField<float>(verifier, VT_WORLDVELOCITYZ) &&
+           VerifyField<float>(verifier, VT_WORLDPOSITIONX) &&
+           VerifyField<float>(verifier, VT_WORLDPOSITIONY) &&
+           VerifyField<float>(verifier, VT_WORLDPOSITIONZ) &&
            verifier.EndTable();
   }
 };
 
 struct MotionBuilder {
+  typedef Motion Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_pitch(float pitch) {
@@ -365,7 +402,7 @@ struct MotionBuilder {
   void add_angularVelocityZ(float angularVelocityZ) {
     fbb_.AddElement<float>(Motion::VT_ANGULARVELOCITYZ, angularVelocityZ, 0.0f);
   }
-  void add_wheels(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Wheel>>> wheels) {
+  void add_wheels(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<KartKraft::Wheel>>> wheels) {
     fbb_.AddOffset(Motion::VT_WHEELS, wheels);
   }
   void add_worldVelocityX(float worldVelocityX) {
@@ -376,6 +413,15 @@ struct MotionBuilder {
   }
   void add_worldVelocityZ(float worldVelocityZ) {
     fbb_.AddElement<float>(Motion::VT_WORLDVELOCITYZ, worldVelocityZ, 0.0f);
+  }
+  void add_worldPositionX(float worldPositionX) {
+    fbb_.AddElement<float>(Motion::VT_WORLDPOSITIONX, worldPositionX, 0.0f);
+  }
+  void add_worldPositionY(float worldPositionY) {
+    fbb_.AddElement<float>(Motion::VT_WORLDPOSITIONY, worldPositionY, 0.0f);
+  }
+  void add_worldPositionZ(float worldPositionZ) {
+    fbb_.AddElement<float>(Motion::VT_WORLDPOSITIONZ, worldPositionZ, 0.0f);
   }
   explicit MotionBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -404,11 +450,17 @@ inline flatbuffers::Offset<Motion> CreateMotion(
     float angularVelocityX = 0.0f,
     float angularVelocityY = 0.0f,
     float angularVelocityZ = 0.0f,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Wheel>>> wheels = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<KartKraft::Wheel>>> wheels = 0,
     float worldVelocityX = 0.0f,
     float worldVelocityY = 0.0f,
-    float worldVelocityZ = 0.0f) {
+    float worldVelocityZ = 0.0f,
+    float worldPositionX = 0.0f,
+    float worldPositionY = 0.0f,
+    float worldPositionZ = 0.0f) {
   MotionBuilder builder_(_fbb);
+  builder_.add_worldPositionZ(worldPositionZ);
+  builder_.add_worldPositionY(worldPositionY);
+  builder_.add_worldPositionX(worldPositionX);
   builder_.add_worldVelocityZ(worldVelocityZ);
   builder_.add_worldVelocityY(worldVelocityY);
   builder_.add_worldVelocityX(worldVelocityX);
@@ -444,10 +496,14 @@ inline flatbuffers::Offset<Motion> CreateMotionDirect(
     float angularVelocityX = 0.0f,
     float angularVelocityY = 0.0f,
     float angularVelocityZ = 0.0f,
-    const std::vector<flatbuffers::Offset<Wheel>> *wheels = nullptr,
+    const std::vector<flatbuffers::Offset<KartKraft::Wheel>> *wheels = nullptr,
     float worldVelocityX = 0.0f,
     float worldVelocityY = 0.0f,
-    float worldVelocityZ = 0.0f) {
+    float worldVelocityZ = 0.0f,
+    float worldPositionX = 0.0f,
+    float worldPositionY = 0.0f,
+    float worldPositionZ = 0.0f) {
+  auto wheels__ = wheels ? _fbb.CreateVector<flatbuffers::Offset<KartKraft::Wheel>>(*wheels) : 0;
   return KartKraft::CreateMotion(
       _fbb,
       pitch,
@@ -463,18 +519,22 @@ inline flatbuffers::Offset<Motion> CreateMotionDirect(
       angularVelocityX,
       angularVelocityY,
       angularVelocityZ,
-      wheels ? _fbb.CreateVector<flatbuffers::Offset<Wheel>>(*wheels) : 0,
+      wheels__,
       worldVelocityX,
       worldVelocityY,
-      worldVelocityZ);
+      worldVelocityZ,
+      worldPositionX,
+      worldPositionY,
+      worldPositionZ);
 }
 
 /// Dash data for displaying state of current local/followed player
 struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef DashboardBuilder Builder;
   static const flatbuffers::TypeTable *MiniReflectTypeTable() {
     return DashboardTypeTable();
   }
-  enum {
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_SPEED = 4,
     VT_RPM = 6,
     VT_STEER = 8,
@@ -543,6 +603,7 @@ struct Dashboard FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 };
 
 struct DashboardBuilder {
+  typedef Dashboard Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_speed(float speed) {
@@ -625,10 +686,11 @@ inline flatbuffers::Offset<Dashboard> CreateDashboard(
 
 /// Basic vehicle data for live timing. e.g. trackmap
 struct Vehicle FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef VehicleBuilder Builder;
   static const flatbuffers::TypeTable *MiniReflectTypeTable() {
     return VehicleTypeTable();
   }
-  enum {
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_STATE = 4,
     VT_POSX = 6,
     VT_POSY = 8,
@@ -638,8 +700,8 @@ struct Vehicle FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_COLOR = 16,
     VT_NORMALISEDTRACKPOS = 18
   };
-  VehicleState state() const {
-    return static_cast<VehicleState>(GetField<uint8_t>(VT_STATE, 0));
+  KartKraft::VehicleState state() const {
+    return static_cast<KartKraft::VehicleState>(GetField<uint8_t>(VT_STATE, 0));
   }
   float posX() const {
     return GetField<float>(VT_POSX, 0.0f);
@@ -656,8 +718,8 @@ struct Vehicle FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   int32_t sessionPos() const {
     return GetField<int32_t>(VT_SESSIONPOS, 0);
   }
-  const Color *color() const {
-    return GetStruct<const Color *>(VT_COLOR);
+  const KartKraft::Color *color() const {
+    return GetStruct<const KartKraft::Color *>(VT_COLOR);
   }
   float normalisedTrackPos() const {
     return GetField<float>(VT_NORMALISEDTRACKPOS, 0.0f);
@@ -670,16 +732,17 @@ struct Vehicle FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<float>(verifier, VT_POSZ) &&
            VerifyField<float>(verifier, VT_YAW) &&
            VerifyField<int32_t>(verifier, VT_SESSIONPOS) &&
-           VerifyField<Color>(verifier, VT_COLOR) &&
+           VerifyField<KartKraft::Color>(verifier, VT_COLOR) &&
            VerifyField<float>(verifier, VT_NORMALISEDTRACKPOS) &&
            verifier.EndTable();
   }
 };
 
 struct VehicleBuilder {
+  typedef Vehicle Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_state(VehicleState state) {
+  void add_state(KartKraft::VehicleState state) {
     fbb_.AddElement<uint8_t>(Vehicle::VT_STATE, static_cast<uint8_t>(state), 0);
   }
   void add_posX(float posX) {
@@ -697,7 +760,7 @@ struct VehicleBuilder {
   void add_sessionPos(int32_t sessionPos) {
     fbb_.AddElement<int32_t>(Vehicle::VT_SESSIONPOS, sessionPos, 0);
   }
-  void add_color(const Color *color) {
+  void add_color(const KartKraft::Color *color) {
     fbb_.AddStruct(Vehicle::VT_COLOR, color);
   }
   void add_normalisedTrackPos(float normalisedTrackPos) {
@@ -717,13 +780,13 @@ struct VehicleBuilder {
 
 inline flatbuffers::Offset<Vehicle> CreateVehicle(
     flatbuffers::FlatBufferBuilder &_fbb,
-    VehicleState state = VehicleState_Idle,
+    KartKraft::VehicleState state = KartKraft::VehicleState_Idle,
     float posX = 0.0f,
     float posY = 0.0f,
     float posZ = 0.0f,
     float yaw = 0.0f,
     int32_t sessionPos = 0,
-    const Color *color = 0,
+    const KartKraft::Color *color = 0,
     float normalisedTrackPos = 0.0f) {
   VehicleBuilder builder_(_fbb);
   builder_.add_normalisedTrackPos(normalisedTrackPos);
@@ -739,53 +802,39 @@ inline flatbuffers::Offset<Vehicle> CreateVehicle(
 
 /// Session data
 struct Session FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef SessionBuilder Builder;
   static const flatbuffers::TypeTable *MiniReflectTypeTable() {
     return SessionTypeTable();
   }
-  enum {
-    VT_TOTALTIME = 4,
-    VT_TIMELEFT = 6,
-    VT_TOTALLAPS = 8,
-    VT_VEHICLES = 10
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_VEHICLES = 10,
+    VT_TIMEELAPSED = 12
   };
-  int32_t totalTime() const {
-    return GetField<int32_t>(VT_TOTALTIME, 0);
+  const flatbuffers::Vector<flatbuffers::Offset<KartKraft::Vehicle>> *vehicles() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<KartKraft::Vehicle>> *>(VT_VEHICLES);
   }
-  int32_t timeLeft() const {
-    return GetField<int32_t>(VT_TIMELEFT, 0);
-  }
-  int32_t totalLaps() const {
-    return GetField<int32_t>(VT_TOTALLAPS, 0);
-  }
-  const flatbuffers::Vector<flatbuffers::Offset<Vehicle>> *vehicles() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<Vehicle>> *>(VT_VEHICLES);
+  float timeElapsed() const {
+    return GetField<float>(VT_TIMEELAPSED, 0.0f);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int32_t>(verifier, VT_TOTALTIME) &&
-           VerifyField<int32_t>(verifier, VT_TIMELEFT) &&
-           VerifyField<int32_t>(verifier, VT_TOTALLAPS) &&
            VerifyOffset(verifier, VT_VEHICLES) &&
            verifier.VerifyVector(vehicles()) &&
            verifier.VerifyVectorOfTables(vehicles()) &&
+           VerifyField<float>(verifier, VT_TIMEELAPSED) &&
            verifier.EndTable();
   }
 };
 
 struct SessionBuilder {
+  typedef Session Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_totalTime(int32_t totalTime) {
-    fbb_.AddElement<int32_t>(Session::VT_TOTALTIME, totalTime, 0);
-  }
-  void add_timeLeft(int32_t timeLeft) {
-    fbb_.AddElement<int32_t>(Session::VT_TIMELEFT, timeLeft, 0);
-  }
-  void add_totalLaps(int32_t totalLaps) {
-    fbb_.AddElement<int32_t>(Session::VT_TOTALLAPS, totalLaps, 0);
-  }
-  void add_vehicles(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Vehicle>>> vehicles) {
+  void add_vehicles(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<KartKraft::Vehicle>>> vehicles) {
     fbb_.AddOffset(Session::VT_VEHICLES, vehicles);
+  }
+  void add_timeElapsed(float timeElapsed) {
+    fbb_.AddElement<float>(Session::VT_TIMEELAPSED, timeElapsed, 0.0f);
   }
   explicit SessionBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -801,38 +850,32 @@ struct SessionBuilder {
 
 inline flatbuffers::Offset<Session> CreateSession(
     flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t totalTime = 0,
-    int32_t timeLeft = 0,
-    int32_t totalLaps = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Vehicle>>> vehicles = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<KartKraft::Vehicle>>> vehicles = 0,
+    float timeElapsed = 0.0f) {
   SessionBuilder builder_(_fbb);
+  builder_.add_timeElapsed(timeElapsed);
   builder_.add_vehicles(vehicles);
-  builder_.add_totalLaps(totalLaps);
-  builder_.add_timeLeft(timeLeft);
-  builder_.add_totalTime(totalTime);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<Session> CreateSessionDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t totalTime = 0,
-    int32_t timeLeft = 0,
-    int32_t totalLaps = 0,
-    const std::vector<flatbuffers::Offset<Vehicle>> *vehicles = nullptr) {
+    const std::vector<flatbuffers::Offset<KartKraft::Vehicle>> *vehicles = nullptr,
+    float timeElapsed = 0.0f) {
+  auto vehicles__ = vehicles ? _fbb.CreateVector<flatbuffers::Offset<KartKraft::Vehicle>>(*vehicles) : 0;
   return KartKraft::CreateSession(
       _fbb,
-      totalTime,
-      timeLeft,
-      totalLaps,
-      vehicles ? _fbb.CreateVector<flatbuffers::Offset<Vehicle>>(*vehicles) : 0);
+      vehicles__,
+      timeElapsed);
 }
 
 /// Data associated with a vehicle which doesn't change dynamically during a race. e.g. class, num gears, driver name etc
 struct VehicleConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef VehicleConfigBuilder Builder;
   static const flatbuffers::TypeTable *MiniReflectTypeTable() {
     return VehicleConfigTypeTable();
   }
-  enum {
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RPMLIMIT = 4,
     VT_RPMMAX = 6,
     VT_GEARMAX = 8
@@ -856,6 +899,7 @@ struct VehicleConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 };
 
 struct VehicleConfigBuilder {
+  typedef VehicleConfig Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_rpmLimit(float rpmLimit) {
@@ -892,12 +936,16 @@ inline flatbuffers::Offset<VehicleConfig> CreateVehicleConfig(
 }
 
 struct TrackConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef TrackConfigBuilder Builder;
   static const flatbuffers::TypeTable *MiniReflectTypeTable() {
     return TrackConfigTypeTable();
   }
-  enum {
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_NAME = 4,
-    VT_NUMSECTORS = 6
+    VT_NUMSECTORS = 6,
+    VT_TRACKLENGTHMETRES = 8,
+    VT_ADDRESS = 10,
+    VT_COUNTRYCODE = 12
   };
   const flatbuffers::String *name() const {
     return GetPointer<const flatbuffers::String *>(VT_NAME);
@@ -905,16 +953,31 @@ struct TrackConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   uint8_t numSectors() const {
     return GetField<uint8_t>(VT_NUMSECTORS, 0);
   }
+  float trackLengthMetres() const {
+    return GetField<float>(VT_TRACKLENGTHMETRES, 0.0f);
+  }
+  const flatbuffers::String *address() const {
+    return GetPointer<const flatbuffers::String *>(VT_ADDRESS);
+  }
+  const flatbuffers::String *countryCode() const {
+    return GetPointer<const flatbuffers::String *>(VT_COUNTRYCODE);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
            VerifyField<uint8_t>(verifier, VT_NUMSECTORS) &&
+           VerifyField<float>(verifier, VT_TRACKLENGTHMETRES) &&
+           VerifyOffset(verifier, VT_ADDRESS) &&
+           verifier.VerifyString(address()) &&
+           VerifyOffset(verifier, VT_COUNTRYCODE) &&
+           verifier.VerifyString(countryCode()) &&
            verifier.EndTable();
   }
 };
 
 struct TrackConfigBuilder {
+  typedef TrackConfig Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_name(flatbuffers::Offset<flatbuffers::String> name) {
@@ -922,6 +985,15 @@ struct TrackConfigBuilder {
   }
   void add_numSectors(uint8_t numSectors) {
     fbb_.AddElement<uint8_t>(TrackConfig::VT_NUMSECTORS, numSectors, 0);
+  }
+  void add_trackLengthMetres(float trackLengthMetres) {
+    fbb_.AddElement<float>(TrackConfig::VT_TRACKLENGTHMETRES, trackLengthMetres, 0.0f);
+  }
+  void add_address(flatbuffers::Offset<flatbuffers::String> address) {
+    fbb_.AddOffset(TrackConfig::VT_ADDRESS, address);
+  }
+  void add_countryCode(flatbuffers::Offset<flatbuffers::String> countryCode) {
+    fbb_.AddOffset(TrackConfig::VT_COUNTRYCODE, countryCode);
   }
   explicit TrackConfigBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -938,8 +1010,14 @@ struct TrackConfigBuilder {
 inline flatbuffers::Offset<TrackConfig> CreateTrackConfig(
     flatbuffers::FlatBufferBuilder &_fbb,
     flatbuffers::Offset<flatbuffers::String> name = 0,
-    uint8_t numSectors = 0) {
+    uint8_t numSectors = 0,
+    float trackLengthMetres = 0.0f,
+    flatbuffers::Offset<flatbuffers::String> address = 0,
+    flatbuffers::Offset<flatbuffers::String> countryCode = 0) {
   TrackConfigBuilder builder_(_fbb);
+  builder_.add_countryCode(countryCode);
+  builder_.add_address(address);
+  builder_.add_trackLengthMetres(trackLengthMetres);
   builder_.add_name(name);
   builder_.add_numSectors(numSectors);
   return builder_.Finish();
@@ -948,43 +1026,136 @@ inline flatbuffers::Offset<TrackConfig> CreateTrackConfig(
 inline flatbuffers::Offset<TrackConfig> CreateTrackConfigDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     const char *name = nullptr,
-    uint8_t numSectors = 0) {
+    uint8_t numSectors = 0,
+    float trackLengthMetres = 0.0f,
+    const char *address = nullptr,
+    const char *countryCode = nullptr) {
+  auto name__ = name ? _fbb.CreateString(name) : 0;
+  auto address__ = address ? _fbb.CreateString(address) : 0;
+  auto countryCode__ = countryCode ? _fbb.CreateString(countryCode) : 0;
   return KartKraft::CreateTrackConfig(
       _fbb,
-      name ? _fbb.CreateString(name) : 0,
-      numSectors);
+      name__,
+      numSectors,
+      trackLengthMetres,
+      address__,
+      countryCode__);
+}
+
+struct SessionConfig FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef SessionConfigBuilder Builder;
+  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return SessionConfigTypeTable();
+  }
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_TIMELIMIT = 6,
+    VT_LAPLIMIT = 8
+  };
+  const flatbuffers::String *name() const {
+    return GetPointer<const flatbuffers::String *>(VT_NAME);
+  }
+  uint32_t timeLimit() const {
+    return GetField<uint32_t>(VT_TIMELIMIT, 0);
+  }
+  uint32_t lapLimit() const {
+    return GetField<uint32_t>(VT_LAPLIMIT, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(name()) &&
+           VerifyField<uint32_t>(verifier, VT_TIMELIMIT) &&
+           VerifyField<uint32_t>(verifier, VT_LAPLIMIT) &&
+           verifier.EndTable();
+  }
+};
+
+struct SessionConfigBuilder {
+  typedef SessionConfig Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_name(flatbuffers::Offset<flatbuffers::String> name) {
+    fbb_.AddOffset(SessionConfig::VT_NAME, name);
+  }
+  void add_timeLimit(uint32_t timeLimit) {
+    fbb_.AddElement<uint32_t>(SessionConfig::VT_TIMELIMIT, timeLimit, 0);
+  }
+  void add_lapLimit(uint32_t lapLimit) {
+    fbb_.AddElement<uint32_t>(SessionConfig::VT_LAPLIMIT, lapLimit, 0);
+  }
+  explicit SessionConfigBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  SessionConfigBuilder &operator=(const SessionConfigBuilder &);
+  flatbuffers::Offset<SessionConfig> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<SessionConfig>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<SessionConfig> CreateSessionConfig(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> name = 0,
+    uint32_t timeLimit = 0,
+    uint32_t lapLimit = 0) {
+  SessionConfigBuilder builder_(_fbb);
+  builder_.add_lapLimit(lapLimit);
+  builder_.add_timeLimit(timeLimit);
+  builder_.add_name(name);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<SessionConfig> CreateSessionConfigDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *name = nullptr,
+    uint32_t timeLimit = 0,
+    uint32_t lapLimit = 0) {
+  auto name__ = name ? _fbb.CreateString(name) : 0;
+  return KartKraft::CreateSessionConfig(
+      _fbb,
+      name__,
+      timeLimit,
+      lapLimit);
 }
 
 /// Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
 struct Frame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef FrameBuilder Builder;
   static const flatbuffers::TypeTable *MiniReflectTypeTable() {
     return FrameTypeTable();
   }
-  enum {
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_TIMESTAMP = 4,
     VT_MOTION = 6,
     VT_DASH = 8,
     VT_SESSION = 10,
     VT_VEHICLECONFIG = 12,
-    VT_TRACKCONFIG = 14
+    VT_TRACKCONFIG = 14,
+    VT_SESSIONCONFIG = 16
   };
   float timestamp() const {
     return GetField<float>(VT_TIMESTAMP, 0.0f);
   }
-  const Motion *motion() const {
-    return GetPointer<const Motion *>(VT_MOTION);
+  const KartKraft::Motion *motion() const {
+    return GetPointer<const KartKraft::Motion *>(VT_MOTION);
   }
-  const Dashboard *dash() const {
-    return GetPointer<const Dashboard *>(VT_DASH);
+  const KartKraft::Dashboard *dash() const {
+    return GetPointer<const KartKraft::Dashboard *>(VT_DASH);
   }
-  const Session *session() const {
-    return GetPointer<const Session *>(VT_SESSION);
+  const KartKraft::Session *session() const {
+    return GetPointer<const KartKraft::Session *>(VT_SESSION);
   }
-  const VehicleConfig *vehicleConfig() const {
-    return GetPointer<const VehicleConfig *>(VT_VEHICLECONFIG);
+  const KartKraft::VehicleConfig *vehicleConfig() const {
+    return GetPointer<const KartKraft::VehicleConfig *>(VT_VEHICLECONFIG);
   }
-  const TrackConfig *trackConfig() const {
-    return GetPointer<const TrackConfig *>(VT_TRACKCONFIG);
+  const KartKraft::TrackConfig *trackConfig() const {
+    return GetPointer<const KartKraft::TrackConfig *>(VT_TRACKCONFIG);
+  }
+  const KartKraft::SessionConfig *sessionConfig() const {
+    return GetPointer<const KartKraft::SessionConfig *>(VT_SESSIONCONFIG);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -999,30 +1170,36 @@ struct Frame FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.VerifyTable(vehicleConfig()) &&
            VerifyOffset(verifier, VT_TRACKCONFIG) &&
            verifier.VerifyTable(trackConfig()) &&
+           VerifyOffset(verifier, VT_SESSIONCONFIG) &&
+           verifier.VerifyTable(sessionConfig()) &&
            verifier.EndTable();
   }
 };
 
 struct FrameBuilder {
+  typedef Frame Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_timestamp(float timestamp) {
     fbb_.AddElement<float>(Frame::VT_TIMESTAMP, timestamp, 0.0f);
   }
-  void add_motion(flatbuffers::Offset<Motion> motion) {
+  void add_motion(flatbuffers::Offset<KartKraft::Motion> motion) {
     fbb_.AddOffset(Frame::VT_MOTION, motion);
   }
-  void add_dash(flatbuffers::Offset<Dashboard> dash) {
+  void add_dash(flatbuffers::Offset<KartKraft::Dashboard> dash) {
     fbb_.AddOffset(Frame::VT_DASH, dash);
   }
-  void add_session(flatbuffers::Offset<Session> session) {
+  void add_session(flatbuffers::Offset<KartKraft::Session> session) {
     fbb_.AddOffset(Frame::VT_SESSION, session);
   }
-  void add_vehicleConfig(flatbuffers::Offset<VehicleConfig> vehicleConfig) {
+  void add_vehicleConfig(flatbuffers::Offset<KartKraft::VehicleConfig> vehicleConfig) {
     fbb_.AddOffset(Frame::VT_VEHICLECONFIG, vehicleConfig);
   }
-  void add_trackConfig(flatbuffers::Offset<TrackConfig> trackConfig) {
+  void add_trackConfig(flatbuffers::Offset<KartKraft::TrackConfig> trackConfig) {
     fbb_.AddOffset(Frame::VT_TRACKCONFIG, trackConfig);
+  }
+  void add_sessionConfig(flatbuffers::Offset<KartKraft::SessionConfig> sessionConfig) {
+    fbb_.AddOffset(Frame::VT_SESSIONCONFIG, sessionConfig);
   }
   explicit FrameBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1039,12 +1216,14 @@ struct FrameBuilder {
 inline flatbuffers::Offset<Frame> CreateFrame(
     flatbuffers::FlatBufferBuilder &_fbb,
     float timestamp = 0.0f,
-    flatbuffers::Offset<Motion> motion = 0,
-    flatbuffers::Offset<Dashboard> dash = 0,
-    flatbuffers::Offset<Session> session = 0,
-    flatbuffers::Offset<VehicleConfig> vehicleConfig = 0,
-    flatbuffers::Offset<TrackConfig> trackConfig = 0) {
+    flatbuffers::Offset<KartKraft::Motion> motion = 0,
+    flatbuffers::Offset<KartKraft::Dashboard> dash = 0,
+    flatbuffers::Offset<KartKraft::Session> session = 0,
+    flatbuffers::Offset<KartKraft::VehicleConfig> vehicleConfig = 0,
+    flatbuffers::Offset<KartKraft::TrackConfig> trackConfig = 0,
+    flatbuffers::Offset<KartKraft::SessionConfig> sessionConfig = 0) {
   FrameBuilder builder_(_fbb);
+  builder_.add_sessionConfig(sessionConfig);
   builder_.add_trackConfig(trackConfig);
   builder_.add_vehicleConfig(vehicleConfig);
   builder_.add_session(session);
@@ -1068,7 +1247,7 @@ inline const flatbuffers::TypeTable *VehicleStateTypeTable() {
     { flatbuffers::ET_UCHAR, 0, 0 }
   };
   static const flatbuffers::TypeFunction type_refs[] = {
-    VehicleStateTypeTable
+    KartKraft::VehicleStateTypeTable
   };
   static const char * const names[] = {
     "Idle",
@@ -1099,7 +1278,7 @@ inline const flatbuffers::TypeTable *SurfaceTypeTable() {
     { flatbuffers::ET_UCHAR, 0, 0 }
   };
   static const flatbuffers::TypeFunction type_refs[] = {
-    SurfaceTypeTable
+    KartKraft::SurfaceTypeTable
   };
   static const char * const names[] = {
     "None",
@@ -1122,7 +1301,7 @@ inline const flatbuffers::TypeTable *ColorTypeTable() {
     { flatbuffers::ET_CHAR, 0, -1 },
     { flatbuffers::ET_CHAR, 0, -1 }
   };
-  static const int32_t values[] = { 0, 1, 2, 3 };
+  static const int64_t values[] = { 0, 1, 2, 3 };
   static const char * const names[] = {
     "r",
     "g",
@@ -1140,7 +1319,7 @@ inline const flatbuffers::TypeTable *WheelTypeTable() {
     { flatbuffers::ET_FLOAT, 0, -1 }
   };
   static const flatbuffers::TypeFunction type_refs[] = {
-    SurfaceTypeTable
+    KartKraft::SurfaceTypeTable
   };
   static const char * const names[] = {
     "surface",
@@ -1170,10 +1349,13 @@ inline const flatbuffers::TypeTable *MotionTypeTable() {
     { flatbuffers::ET_SEQUENCE, 1, 0 },
     { flatbuffers::ET_FLOAT, 0, -1 },
     { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
     { flatbuffers::ET_FLOAT, 0, -1 }
   };
   static const flatbuffers::TypeFunction type_refs[] = {
-    WheelTypeTable
+    KartKraft::WheelTypeTable
   };
   static const char * const names[] = {
     "pitch",
@@ -1192,10 +1374,13 @@ inline const flatbuffers::TypeTable *MotionTypeTable() {
     "wheels",
     "worldVelocityX",
     "worldVelocityY",
-    "worldVelocityZ"
+    "worldVelocityZ",
+    "worldPositionX",
+    "worldPositionY",
+    "worldPositionZ"
   };
   static const flatbuffers::TypeTable tt = {
-    flatbuffers::ST_TABLE, 17, type_codes, type_refs, nullptr, names
+    flatbuffers::ST_TABLE, 20, type_codes, type_refs, nullptr, names
   };
   return &tt;
 }
@@ -1247,8 +1432,8 @@ inline const flatbuffers::TypeTable *VehicleTypeTable() {
     { flatbuffers::ET_FLOAT, 0, -1 }
   };
   static const flatbuffers::TypeFunction type_refs[] = {
-    VehicleStateTypeTable,
-    ColorTypeTable
+    KartKraft::VehicleStateTypeTable,
+    KartKraft::ColorTypeTable
   };
   static const char * const names[] = {
     "state",
@@ -1271,19 +1456,21 @@ inline const flatbuffers::TypeTable *SessionTypeTable() {
     { flatbuffers::ET_INT, 0, -1 },
     { flatbuffers::ET_INT, 0, -1 },
     { flatbuffers::ET_INT, 0, -1 },
-    { flatbuffers::ET_SEQUENCE, 1, 0 }
+    { flatbuffers::ET_SEQUENCE, 1, 0 },
+    { flatbuffers::ET_FLOAT, 0, -1 }
   };
   static const flatbuffers::TypeFunction type_refs[] = {
-    VehicleTypeTable
+    KartKraft::VehicleTypeTable
   };
   static const char * const names[] = {
     "totalTime",
     "timeLeft",
     "totalLaps",
-    "vehicles"
+    "vehicles",
+    "timeElapsed"
   };
   static const flatbuffers::TypeTable tt = {
-    flatbuffers::ST_TABLE, 4, type_codes, type_refs, nullptr, names
+    flatbuffers::ST_TABLE, 5, type_codes, type_refs, nullptr, names
   };
   return &tt;
 }
@@ -1308,14 +1495,37 @@ inline const flatbuffers::TypeTable *VehicleConfigTypeTable() {
 inline const flatbuffers::TypeTable *TrackConfigTypeTable() {
   static const flatbuffers::TypeCode type_codes[] = {
     { flatbuffers::ET_STRING, 0, -1 },
-    { flatbuffers::ET_UCHAR, 0, -1 }
+    { flatbuffers::ET_UCHAR, 0, -1 },
+    { flatbuffers::ET_FLOAT, 0, -1 },
+    { flatbuffers::ET_STRING, 0, -1 },
+    { flatbuffers::ET_STRING, 0, -1 }
   };
   static const char * const names[] = {
     "name",
-    "numSectors"
+    "numSectors",
+    "trackLengthMetres",
+    "address",
+    "countryCode"
   };
   static const flatbuffers::TypeTable tt = {
-    flatbuffers::ST_TABLE, 2, type_codes, nullptr, nullptr, names
+    flatbuffers::ST_TABLE, 5, type_codes, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const flatbuffers::TypeTable *SessionConfigTypeTable() {
+  static const flatbuffers::TypeCode type_codes[] = {
+    { flatbuffers::ET_STRING, 0, -1 },
+    { flatbuffers::ET_UINT, 0, -1 },
+    { flatbuffers::ET_UINT, 0, -1 }
+  };
+  static const char * const names[] = {
+    "name",
+    "timeLimit",
+    "lapLimit"
+  };
+  static const flatbuffers::TypeTable tt = {
+    flatbuffers::ST_TABLE, 3, type_codes, nullptr, nullptr, names
   };
   return &tt;
 }
@@ -1327,14 +1537,16 @@ inline const flatbuffers::TypeTable *FrameTypeTable() {
     { flatbuffers::ET_SEQUENCE, 0, 1 },
     { flatbuffers::ET_SEQUENCE, 0, 2 },
     { flatbuffers::ET_SEQUENCE, 0, 3 },
-    { flatbuffers::ET_SEQUENCE, 0, 4 }
+    { flatbuffers::ET_SEQUENCE, 0, 4 },
+    { flatbuffers::ET_SEQUENCE, 0, 5 }
   };
   static const flatbuffers::TypeFunction type_refs[] = {
-    MotionTypeTable,
-    DashboardTypeTable,
-    SessionTypeTable,
-    VehicleConfigTypeTable,
-    TrackConfigTypeTable
+    KartKraft::MotionTypeTable,
+    KartKraft::DashboardTypeTable,
+    KartKraft::SessionTypeTable,
+    KartKraft::VehicleConfigTypeTable,
+    KartKraft::TrackConfigTypeTable,
+    KartKraft::SessionConfigTypeTable
   };
   static const char * const names[] = {
     "timestamp",
@@ -1342,10 +1554,11 @@ inline const flatbuffers::TypeTable *FrameTypeTable() {
     "dash",
     "session",
     "vehicleConfig",
-    "trackConfig"
+    "trackConfig",
+    "sessionConfig"
   };
   static const flatbuffers::TypeTable tt = {
-    flatbuffers::ST_TABLE, 6, type_codes, type_refs, nullptr, names
+    flatbuffers::ST_TABLE, 7, type_codes, type_refs, nullptr, names
   };
   return &tt;
 }

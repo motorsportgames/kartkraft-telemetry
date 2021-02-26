@@ -12,9 +12,10 @@ import com.google.flatbuffers.*;
  * Dash data for displaying state of current local/followed player
  */
 public final class Dashboard extends Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_1_12_0(); }
   public static Dashboard getRootAsDashboard(ByteBuffer _bb) { return getRootAsDashboard(_bb, new Dashboard()); }
   public static Dashboard getRootAsDashboard(ByteBuffer _bb, Dashboard obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Dashboard __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public float speed() { int o = __offset(4); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
@@ -43,7 +44,7 @@ public final class Dashboard extends Table {
       float lastLap,
       int lapCount,
       int sectorCount) {
-    builder.startObject(12);
+    builder.startTable(12);
     Dashboard.addLastLap(builder, lastLap);
     Dashboard.addCurrentLap(builder, currentLap);
     Dashboard.addBestLap(builder, bestLap);
@@ -59,7 +60,7 @@ public final class Dashboard extends Table {
     return Dashboard.endDashboard(builder);
   }
 
-  public static void startDashboard(FlatBufferBuilder builder) { builder.startObject(12); }
+  public static void startDashboard(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addSpeed(FlatBufferBuilder builder, float speed) { builder.addFloat(0, speed, 0.0f); }
   public static void addRpm(FlatBufferBuilder builder, float rpm) { builder.addFloat(1, rpm, 0.0f); }
   public static void addSteer(FlatBufferBuilder builder, float steer) { builder.addFloat(2, steer, 0.0f); }
@@ -73,8 +74,15 @@ public final class Dashboard extends Table {
   public static void addLapCount(FlatBufferBuilder builder, int lapCount) { builder.addShort(10, (short)lapCount, (short)0); }
   public static void addSectorCount(FlatBufferBuilder builder, int sectorCount) { builder.addShort(11, (short)sectorCount, (short)0); }
   public static int endDashboard(FlatBufferBuilder builder) {
-    int o = builder.endObject();
+    int o = builder.endTable();
     return o;
+  }
+
+  public static final class Vector extends BaseVector {
+    public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
+
+    public Dashboard get(int j) { return get(new Dashboard(), j); }
+    public Dashboard get(Dashboard obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
 

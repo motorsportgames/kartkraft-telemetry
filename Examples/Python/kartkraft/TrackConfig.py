@@ -3,6 +3,8 @@
 # namespace: KartKraft
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 class TrackConfig(object):
     __slots__ = ['_tab']
@@ -13,6 +15,10 @@ class TrackConfig(object):
         x = TrackConfig()
         x.Init(buf, n + offset)
         return x
+
+    @classmethod
+    def TrackConfigBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x4B\x4B\x46\x42", size_prefixed=size_prefixed)
 
     # TrackConfig
     def Init(self, buf, pos):
@@ -32,7 +38,31 @@ class TrackConfig(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
-def TrackConfigStart(builder): builder.StartObject(2)
+    # TrackConfig
+    def TrackLengthMetres(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # TrackConfig
+    def Address(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TrackConfig
+    def CountryCode(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def TrackConfigStart(builder): builder.StartObject(5)
 def TrackConfigAddName(builder, name): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(name), 0)
 def TrackConfigAddNumSectors(builder, numSectors): builder.PrependUint8Slot(1, numSectors, 0)
+def TrackConfigAddTrackLengthMetres(builder, trackLengthMetres): builder.PrependFloat32Slot(2, trackLengthMetres, 0.0)
+def TrackConfigAddAddress(builder, address): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(address), 0)
+def TrackConfigAddCountryCode(builder, countryCode): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(countryCode), 0)
 def TrackConfigEnd(builder): return builder.EndObject()

@@ -6,6 +6,7 @@ namespace KartKraft
 {
 
 using global::System;
+using global::System.Collections.Generic;
 using global::FlatBuffers;
 
 /// Motion data of local player for driving hardware motion simulators
@@ -13,9 +14,10 @@ public struct Motion : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static Motion GetRootAsMotion(ByteBuffer _bb) { return GetRootAsMotion(_bb, new Motion()); }
   public static Motion GetRootAsMotion(ByteBuffer _bb, Motion obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public Motion __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public float Pitch { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
@@ -31,13 +33,16 @@ public struct Motion : IFlatbufferObject
   public float AngularVelocityX { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float AngularVelocityY { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float AngularVelocityZ { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public Wheel? Wheels(int j) { int o = __p.__offset(30); return o != 0 ? (Wheel?)(new Wheel()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public KartKraft.Wheel? Wheels(int j) { int o = __p.__offset(30); return o != 0 ? (KartKraft.Wheel?)(new KartKraft.Wheel()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int WheelsLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
   public float WorldVelocityX { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float WorldVelocityY { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public float WorldVelocityZ { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float WorldPositionX { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float WorldPositionY { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float WorldPositionZ { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
 
-  public static Offset<Motion> CreateMotion(FlatBufferBuilder builder,
+  public static Offset<KartKraft.Motion> CreateMotion(FlatBufferBuilder builder,
       float pitch = 0.0f,
       float roll = 0.0f,
       float yaw = 0.0f,
@@ -54,8 +59,14 @@ public struct Motion : IFlatbufferObject
       VectorOffset wheelsOffset = default(VectorOffset),
       float worldVelocityX = 0.0f,
       float worldVelocityY = 0.0f,
-      float worldVelocityZ = 0.0f) {
-    builder.StartObject(17);
+      float worldVelocityZ = 0.0f,
+      float worldPositionX = 0.0f,
+      float worldPositionY = 0.0f,
+      float worldPositionZ = 0.0f) {
+    builder.StartTable(20);
+    Motion.AddWorldPositionZ(builder, worldPositionZ);
+    Motion.AddWorldPositionY(builder, worldPositionY);
+    Motion.AddWorldPositionX(builder, worldPositionX);
     Motion.AddWorldVelocityZ(builder, worldVelocityZ);
     Motion.AddWorldVelocityY(builder, worldVelocityY);
     Motion.AddWorldVelocityX(builder, worldVelocityX);
@@ -76,7 +87,7 @@ public struct Motion : IFlatbufferObject
     return Motion.EndMotion(builder);
   }
 
-  public static void StartMotion(FlatBufferBuilder builder) { builder.StartObject(17); }
+  public static void StartMotion(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddPitch(FlatBufferBuilder builder, float pitch) { builder.AddFloat(0, pitch, 0.0f); }
   public static void AddRoll(FlatBufferBuilder builder, float roll) { builder.AddFloat(1, roll, 0.0f); }
   public static void AddYaw(FlatBufferBuilder builder, float yaw) { builder.AddFloat(2, yaw, 0.0f); }
@@ -91,15 +102,18 @@ public struct Motion : IFlatbufferObject
   public static void AddAngularVelocityY(FlatBufferBuilder builder, float angularVelocityY) { builder.AddFloat(11, angularVelocityY, 0.0f); }
   public static void AddAngularVelocityZ(FlatBufferBuilder builder, float angularVelocityZ) { builder.AddFloat(12, angularVelocityZ, 0.0f); }
   public static void AddWheels(FlatBufferBuilder builder, VectorOffset wheelsOffset) { builder.AddOffset(13, wheelsOffset.Value, 0); }
-  public static VectorOffset CreateWheelsVector(FlatBufferBuilder builder, Offset<Wheel>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateWheelsVectorBlock(FlatBufferBuilder builder, Offset<Wheel>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWheelsVector(FlatBufferBuilder builder, Offset<KartKraft.Wheel>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateWheelsVectorBlock(FlatBufferBuilder builder, Offset<KartKraft.Wheel>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static void StartWheelsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddWorldVelocityX(FlatBufferBuilder builder, float worldVelocityX) { builder.AddFloat(14, worldVelocityX, 0.0f); }
   public static void AddWorldVelocityY(FlatBufferBuilder builder, float worldVelocityY) { builder.AddFloat(15, worldVelocityY, 0.0f); }
   public static void AddWorldVelocityZ(FlatBufferBuilder builder, float worldVelocityZ) { builder.AddFloat(16, worldVelocityZ, 0.0f); }
-  public static Offset<Motion> EndMotion(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<Motion>(o);
+  public static void AddWorldPositionX(FlatBufferBuilder builder, float worldPositionX) { builder.AddFloat(17, worldPositionX, 0.0f); }
+  public static void AddWorldPositionY(FlatBufferBuilder builder, float worldPositionY) { builder.AddFloat(18, worldPositionY, 0.0f); }
+  public static void AddWorldPositionZ(FlatBufferBuilder builder, float worldPositionZ) { builder.AddFloat(19, worldPositionZ, 0.0f); }
+  public static Offset<KartKraft.Motion> EndMotion(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<KartKraft.Motion>(o);
   }
 };
 

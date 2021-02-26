@@ -22,9 +22,14 @@ while True:
     data, addr = sock.recvfrom(MAX_PACKET_SIZE)
     bytes = bytearray(data)
 
+    hasIdentifier = kartkraft.Frame.Frame.FrameBufferHasIdentifier(bytes, 0)
+
+    if hasIdentifier == False:
+        continue
+
     frame = kartkraft.Frame.Frame.GetRootAsFrame(bytes, 0)
 
-    if (frame):
+    if frame:
         print("\nreceived telemetry frame of size ", len(bytes), " from ", addr)
         time = frame.Timestamp()
         motion = frame.Motion()
@@ -35,7 +40,7 @@ while True:
 
         print("time ", time)
 
-        if (motion):
+        if motion:
             print("  motion data:")
             print("    angles ", motion.Pitch(),
                   motion.Roll(), motion.Yaw())
@@ -52,7 +57,7 @@ while True:
                 print("    wheel ", i, ": surface ", SURFACE_NAMES[motion.Wheels(
                     i).Surface()], " slipAngle ", motion.Wheels(i).SlipAngle())
 
-        if (dash):
+        if dash:
             print("  dash data:")
             print("    rpm ", dash.Rpm())
             print("    speed ", dash.Speed())
@@ -67,17 +72,17 @@ while True:
             print("    lap count ", dash.LapCount())
             print("    sector count ", dash.SectorCount())
 
-        if (session):
+        if session:
             print("  session data ",
                   session.TotalTime(), session.TotalTime())
 
-        if (vehicleConfig):
+        if vehicleConfig:
             print("  vehicleConfig data:")
             print("    rpm limit ", vehicleConfig.RpmLimit())
             print("    rpm max ", vehicleConfig.RpmMax())
             print("    gear max ", vehicleConfig.GearMax())
 
-        if (trackConfig):
+        if trackConfig:
             print("  trackConfig data:")
             if (trackConfig.Name()):
                 print("    name ", str(trackConfig.Name(), "utf-8"))

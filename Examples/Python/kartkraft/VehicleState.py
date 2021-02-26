@@ -2,7 +2,7 @@
 
 # namespace: KartKraft
 
-# /// State of vehicle
+# State of vehicle
 class VehicleState(object):
     Idle = 0
     Pits = 1

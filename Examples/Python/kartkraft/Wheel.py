@@ -3,6 +3,8 @@
 # namespace: KartKraft
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 class Wheel(object):
     __slots__ = ['_tab']
@@ -13,6 +15,10 @@ class Wheel(object):
         x = Wheel()
         x.Init(buf, n + offset)
         return x
+
+    @classmethod
+    def WheelBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x4B\x4B\x46\x42", size_prefixed=size_prefixed)
 
     # Wheel
     def Init(self, buf, pos):

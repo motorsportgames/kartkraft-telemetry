@@ -9,9 +9,10 @@ import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class Wheel extends Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_1_12_0(); }
   public static Wheel getRootAsWheel(ByteBuffer _bb) { return getRootAsWheel(_bb, new Wheel()); }
   public static Wheel getRootAsWheel(ByteBuffer _bb, Wheel obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Wheel __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public int surface() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
@@ -20,18 +21,25 @@ public final class Wheel extends Table {
   public static int createWheel(FlatBufferBuilder builder,
       int surface,
       float slipAngle) {
-    builder.startObject(2);
+    builder.startTable(2);
     Wheel.addSlipAngle(builder, slipAngle);
     Wheel.addSurface(builder, surface);
     return Wheel.endWheel(builder);
   }
 
-  public static void startWheel(FlatBufferBuilder builder) { builder.startObject(2); }
+  public static void startWheel(FlatBufferBuilder builder) { builder.startTable(2); }
   public static void addSurface(FlatBufferBuilder builder, int surface) { builder.addByte(0, (byte)surface, (byte)0); }
   public static void addSlipAngle(FlatBufferBuilder builder, float slipAngle) { builder.addFloat(1, slipAngle, 0.0f); }
   public static int endWheel(FlatBufferBuilder builder) {
-    int o = builder.endObject();
+    int o = builder.endTable();
     return o;
+  }
+
+  public static final class Vector extends BaseVector {
+    public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
+
+    public Wheel get(int j) { return get(new Wheel(), j); }
+    public Wheel get(Wheel obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
 

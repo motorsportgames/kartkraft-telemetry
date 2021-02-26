@@ -49,7 +49,7 @@ Benefits of using Flatbuffers include:
 - The format of UDP packets is specified in a formalized, testable way. (See Frame.fbs)
 
 For reference, we are currently using this release of Flatbuffers to generate the code in this repository.
-https://github.com/google/flatbuffers/releases/tag/v1.10.0
+https://github.com/google/flatbuffers/releases/tag/v1.12.0
 
 ## Auto-patching KartKraft
 

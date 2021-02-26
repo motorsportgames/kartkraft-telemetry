@@ -3,8 +3,10 @@
 # namespace: KartKraft
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
-# /// Data associated with a vehicle which doesn't change dynamically during a race. e.g. class, num gears, driver name etc
+# Data associated with a vehicle which doesn't change dynamically during a race. e.g. class, num gears, driver name etc
 class VehicleConfig(object):
     __slots__ = ['_tab']
 
@@ -14,6 +16,10 @@ class VehicleConfig(object):
         x = VehicleConfig()
         x.Init(buf, n + offset)
         return x
+
+    @classmethod
+    def VehicleConfigBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x4B\x4B\x46\x42", size_prefixed=size_prefixed)
 
     # VehicleConfig
     def Init(self, buf, pos):

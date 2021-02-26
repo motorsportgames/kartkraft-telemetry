@@ -6,6 +6,7 @@ namespace KartKraft
 {
 
 using global::System;
+using global::System.Collections.Generic;
 using global::FlatBuffers;
 
 /// Dash data for displaying state of current local/followed player
@@ -13,9 +14,10 @@ public struct Dashboard : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static Dashboard GetRootAsDashboard(ByteBuffer _bb) { return GetRootAsDashboard(_bb, new Dashboard()); }
   public static Dashboard GetRootAsDashboard(ByteBuffer _bb, Dashboard obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public Dashboard __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public float Speed { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
@@ -31,7 +33,7 @@ public struct Dashboard : IFlatbufferObject
   public ushort LapCount { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   public ushort SectorCount { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
 
-  public static Offset<Dashboard> CreateDashboard(FlatBufferBuilder builder,
+  public static Offset<KartKraft.Dashboard> CreateDashboard(FlatBufferBuilder builder,
       float speed = 0.0f,
       float rpm = 0.0f,
       float steer = 0.0f,
@@ -44,7 +46,7 @@ public struct Dashboard : IFlatbufferObject
       float lastLap = 0.0f,
       ushort lapCount = 0,
       ushort sectorCount = 0) {
-    builder.StartObject(12);
+    builder.StartTable(12);
     Dashboard.AddLastLap(builder, lastLap);
     Dashboard.AddCurrentLap(builder, currentLap);
     Dashboard.AddBestLap(builder, bestLap);
@@ -60,7 +62,7 @@ public struct Dashboard : IFlatbufferObject
     return Dashboard.EndDashboard(builder);
   }
 
-  public static void StartDashboard(FlatBufferBuilder builder) { builder.StartObject(12); }
+  public static void StartDashboard(FlatBufferBuilder builder) { builder.StartTable(12); }
   public static void AddSpeed(FlatBufferBuilder builder, float speed) { builder.AddFloat(0, speed, 0.0f); }
   public static void AddRpm(FlatBufferBuilder builder, float rpm) { builder.AddFloat(1, rpm, 0.0f); }
   public static void AddSteer(FlatBufferBuilder builder, float steer) { builder.AddFloat(2, steer, 0.0f); }
@@ -73,9 +75,9 @@ public struct Dashboard : IFlatbufferObject
   public static void AddLastLap(FlatBufferBuilder builder, float lastLap) { builder.AddFloat(9, lastLap, 0.0f); }
   public static void AddLapCount(FlatBufferBuilder builder, ushort lapCount) { builder.AddUshort(10, lapCount, 0); }
   public static void AddSectorCount(FlatBufferBuilder builder, ushort sectorCount) { builder.AddUshort(11, sectorCount, 0); }
-  public static Offset<Dashboard> EndDashboard(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<Dashboard>(o);
+  public static Offset<KartKraft.Dashboard> EndDashboard(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<KartKraft.Dashboard>(o);
   }
 };
 

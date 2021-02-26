@@ -3,8 +3,10 @@
 # namespace: KartKraft
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
-# /// Motion data of local player for driving hardware motion simulators
+# Motion data of local player for driving hardware motion simulators
 class Motion(object):
     __slots__ = ['_tab']
 
@@ -14,6 +16,10 @@ class Motion(object):
         x = Motion()
         x.Init(buf, n + offset)
         return x
+
+    @classmethod
+    def MotionBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x4B\x4B\x46\x42", size_prefixed=size_prefixed)
 
     # Motion
     def Init(self, buf, pos):
@@ -117,7 +123,6 @@ class Motion(object):
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from .Wheel import Wheel
             obj = Wheel()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -129,6 +134,11 @@ class Motion(object):
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
+
+    # Motion
+    def WheelsIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        return o == 0
 
     # Motion
     def WorldVelocityX(self):
@@ -151,7 +161,28 @@ class Motion(object):
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-def MotionStart(builder): builder.StartObject(17)
+    # Motion
+    def WorldPositionX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Motion
+    def WorldPositionY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Motion
+    def WorldPositionZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+def MotionStart(builder): builder.StartObject(20)
 def MotionAddPitch(builder, pitch): builder.PrependFloat32Slot(0, pitch, 0.0)
 def MotionAddRoll(builder, roll): builder.PrependFloat32Slot(1, roll, 0.0)
 def MotionAddYaw(builder, yaw): builder.PrependFloat32Slot(2, yaw, 0.0)
@@ -170,4 +201,7 @@ def MotionStartWheelsVector(builder, numElems): return builder.StartVector(4, nu
 def MotionAddWorldVelocityX(builder, worldVelocityX): builder.PrependFloat32Slot(14, worldVelocityX, 0.0)
 def MotionAddWorldVelocityY(builder, worldVelocityY): builder.PrependFloat32Slot(15, worldVelocityY, 0.0)
 def MotionAddWorldVelocityZ(builder, worldVelocityZ): builder.PrependFloat32Slot(16, worldVelocityZ, 0.0)
+def MotionAddWorldPositionX(builder, worldPositionX): builder.PrependFloat32Slot(17, worldPositionX, 0.0)
+def MotionAddWorldPositionY(builder, worldPositionY): builder.PrependFloat32Slot(18, worldPositionY, 0.0)
+def MotionAddWorldPositionZ(builder, worldPositionZ): builder.PrependFloat32Slot(19, worldPositionZ, 0.0)
 def MotionEnd(builder): return builder.EndObject()

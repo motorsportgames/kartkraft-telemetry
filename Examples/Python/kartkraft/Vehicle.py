@@ -3,8 +3,10 @@
 # namespace: KartKraft
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
-# /// Basic vehicle data for live timing. e.g. trackmap
+# Basic vehicle data for live timing. e.g. trackmap
 class Vehicle(object):
     __slots__ = ['_tab']
 
@@ -14,6 +16,10 @@ class Vehicle(object):
         x = Vehicle()
         x.Init(buf, n + offset)
         return x
+
+    @classmethod
+    def VehicleBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x4B\x4B\x46\x42", size_prefixed=size_prefixed)
 
     # Vehicle
     def Init(self, buf, pos):
@@ -66,7 +72,6 @@ class Vehicle(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             x = o + self._tab.Pos
-            from .Color import Color
             obj = Color()
             obj.Init(self._tab.Bytes, x)
             return obj

@@ -8,16 +8,16 @@ namespace KartKraft
 /// State of vehicle
 public enum VehicleState : byte
 {
- Idle = 0,
- Pits = 1,
- PitGrid = 2,
- Outlap = 3,
- RollingStart = 4,
- FlyingStart = 5,
- StartGrid = 6,
- Racing = 7,
- Retired = 8,
- Finished = 9,
+  Idle = 0,
+  Pits = 1,
+  PitGrid = 2,
+  Outlap = 3,
+  RollingStart = 4,
+  FlyingStart = 5,
+  StartGrid = 6,
+  Racing = 7,
+  Retired = 8,
+  Finished = 9,
 };
 
 

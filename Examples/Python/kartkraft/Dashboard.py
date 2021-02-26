@@ -3,8 +3,10 @@
 # namespace: KartKraft
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
-# /// Dash data for displaying state of current local/followed player
+# Dash data for displaying state of current local/followed player
 class Dashboard(object):
     __slots__ = ['_tab']
 
@@ -14,6 +16,10 @@ class Dashboard(object):
         x = Dashboard()
         x.Init(buf, n + offset)
         return x
+
+    @classmethod
+    def DashboardBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x4B\x4B\x46\x42", size_prefixed=size_prefixed)
 
     # Dashboard
     def Init(self, buf, pos):

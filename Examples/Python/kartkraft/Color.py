@@ -3,8 +3,10 @@
 # namespace: KartKraft
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
-# /// Useful generic color struct 
+# Useful generic color struct 
 class Color(object):
     __slots__ = ['_tab']
 

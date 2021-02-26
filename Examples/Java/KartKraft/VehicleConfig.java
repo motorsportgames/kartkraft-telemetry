@@ -12,9 +12,10 @@ import com.google.flatbuffers.*;
  * Data associated with a vehicle which doesn't change dynamically during a race. e.g. class, num gears, driver name etc
  */
 public final class VehicleConfig extends Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_1_12_0(); }
   public static VehicleConfig getRootAsVehicleConfig(ByteBuffer _bb) { return getRootAsVehicleConfig(_bb, new VehicleConfig()); }
   public static VehicleConfig getRootAsVehicleConfig(ByteBuffer _bb, VehicleConfig obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public VehicleConfig __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public float rpmLimit() { int o = __offset(4); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
@@ -25,20 +26,27 @@ public final class VehicleConfig extends Table {
       float rpmLimit,
       float rpmMax,
       byte gearMax) {
-    builder.startObject(3);
+    builder.startTable(3);
     VehicleConfig.addRpmMax(builder, rpmMax);
     VehicleConfig.addRpmLimit(builder, rpmLimit);
     VehicleConfig.addGearMax(builder, gearMax);
     return VehicleConfig.endVehicleConfig(builder);
   }
 
-  public static void startVehicleConfig(FlatBufferBuilder builder) { builder.startObject(3); }
+  public static void startVehicleConfig(FlatBufferBuilder builder) { builder.startTable(3); }
   public static void addRpmLimit(FlatBufferBuilder builder, float rpmLimit) { builder.addFloat(0, rpmLimit, 0.0f); }
   public static void addRpmMax(FlatBufferBuilder builder, float rpmMax) { builder.addFloat(1, rpmMax, 0.0f); }
   public static void addGearMax(FlatBufferBuilder builder, byte gearMax) { builder.addByte(2, gearMax, 0); }
   public static int endVehicleConfig(FlatBufferBuilder builder) {
-    int o = builder.endObject();
+    int o = builder.endTable();
     return o;
+  }
+
+  public static final class Vector extends BaseVector {
+    public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
+
+    public VehicleConfig get(int j) { return get(new VehicleConfig(), j); }
+    public VehicleConfig get(VehicleConfig obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
 

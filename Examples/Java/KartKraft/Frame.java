@@ -12,23 +12,26 @@ import com.google.flatbuffers.*;
  * Root object from which all data can be extracted. You must check if motion, dash etc exist before using as not every packet will include all data.
  */
 public final class Frame extends Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_1_12_0(); }
   public static Frame getRootAsFrame(ByteBuffer _bb) { return getRootAsFrame(_bb, new Frame()); }
   public static Frame getRootAsFrame(ByteBuffer _bb, Frame obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean FrameBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "KKFB"); }
-  public void __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Frame __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public float timestamp() { int o = __offset(4); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public Motion motion() { return motion(new Motion()); }
-  public Motion motion(Motion obj) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public Dashboard dash() { return dash(new Dashboard()); }
-  public Dashboard dash(Dashboard obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public Session session() { return session(new Session()); }
-  public Session session(Session obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public VehicleConfig vehicleConfig() { return vehicleConfig(new VehicleConfig()); }
-  public VehicleConfig vehicleConfig(VehicleConfig obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public TrackConfig trackConfig() { return trackConfig(new TrackConfig()); }
-  public TrackConfig trackConfig(TrackConfig obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KartKraft.Motion motion() { return motion(new KartKraft.Motion()); }
+  public KartKraft.Motion motion(KartKraft.Motion obj) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KartKraft.Dashboard dash() { return dash(new KartKraft.Dashboard()); }
+  public KartKraft.Dashboard dash(KartKraft.Dashboard obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KartKraft.Session session() { return session(new KartKraft.Session()); }
+  public KartKraft.Session session(KartKraft.Session obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KartKraft.VehicleConfig vehicleConfig() { return vehicleConfig(new KartKraft.VehicleConfig()); }
+  public KartKraft.VehicleConfig vehicleConfig(KartKraft.VehicleConfig obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KartKraft.TrackConfig trackConfig() { return trackConfig(new KartKraft.TrackConfig()); }
+  public KartKraft.TrackConfig trackConfig(KartKraft.TrackConfig obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KartKraft.SessionConfig sessionConfig() { return sessionConfig(new KartKraft.SessionConfig()); }
+  public KartKraft.SessionConfig sessionConfig(KartKraft.SessionConfig obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createFrame(FlatBufferBuilder builder,
       float timestamp,
@@ -36,8 +39,10 @@ public final class Frame extends Table {
       int dashOffset,
       int sessionOffset,
       int vehicleConfigOffset,
-      int trackConfigOffset) {
-    builder.startObject(6);
+      int trackConfigOffset,
+      int sessionConfigOffset) {
+    builder.startTable(7);
+    Frame.addSessionConfig(builder, sessionConfigOffset);
     Frame.addTrackConfig(builder, trackConfigOffset);
     Frame.addVehicleConfig(builder, vehicleConfigOffset);
     Frame.addSession(builder, sessionOffset);
@@ -47,18 +52,26 @@ public final class Frame extends Table {
     return Frame.endFrame(builder);
   }
 
-  public static void startFrame(FlatBufferBuilder builder) { builder.startObject(6); }
+  public static void startFrame(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addTimestamp(FlatBufferBuilder builder, float timestamp) { builder.addFloat(0, timestamp, 0.0f); }
   public static void addMotion(FlatBufferBuilder builder, int motionOffset) { builder.addOffset(1, motionOffset, 0); }
   public static void addDash(FlatBufferBuilder builder, int dashOffset) { builder.addOffset(2, dashOffset, 0); }
   public static void addSession(FlatBufferBuilder builder, int sessionOffset) { builder.addOffset(3, sessionOffset, 0); }
   public static void addVehicleConfig(FlatBufferBuilder builder, int vehicleConfigOffset) { builder.addOffset(4, vehicleConfigOffset, 0); }
   public static void addTrackConfig(FlatBufferBuilder builder, int trackConfigOffset) { builder.addOffset(5, trackConfigOffset, 0); }
+  public static void addSessionConfig(FlatBufferBuilder builder, int sessionConfigOffset) { builder.addOffset(6, sessionConfigOffset, 0); }
   public static int endFrame(FlatBufferBuilder builder) {
-    int o = builder.endObject();
+    int o = builder.endTable();
     return o;
   }
   public static void finishFrameBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "KKFB"); }
   public static void finishSizePrefixedFrameBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset, "KKFB"); }
+
+  public static final class Vector extends BaseVector {
+    public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
+
+    public Frame get(int j) { return get(new Frame(), j); }
+    public Frame get(Frame obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
+  }
 }
 

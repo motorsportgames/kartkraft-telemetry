@@ -2,6 +2,13 @@ namespace KartKraft;
 
 file_identifier "KKFB";
 
+/// Useful generic color struct 
+struct Color {
+  r:byte;
+  g:byte;
+  b:byte;
+}
+
 /// State of vehicle
 enum VehicleState:ubyte {
     Idle = 0,
@@ -87,18 +94,22 @@ table Dashboard {
 /// Basic vehicle data for live timing. e.g. trackmap
 table Vehicle {
     state:VehicleState;
+    posX:float;
+    posY:float;
+    posZ:float;
+    yaw:float;
     sessionPos:int;
-    colorR:byte;
-    colorG:byte;
-    colorB:byte;
-    //normalisedTrackPos:float;
+    color:Color;
+    normalisedTrackPos:float;
 }
 
 /// Session data
 table Session {
+    totalTime:int (deprecated); //Moved to SessionConfig
+    timeLeft:int (deprecated);  //Removed
+    totalLaps:int (deprecated); //Moved to SessionConfig
+    vehicles:[Vehicle];
     timeElapsed:float;          //Time elapsed in seconds
-    //lapsComplete:int;           //Number of laps completed this session so far. 
-    //vehicles:[Vehicle];
 }
 
 /// Data associated with a vehicle which doesn't change dynamically during a race. e.g. class, num gears, driver name etc

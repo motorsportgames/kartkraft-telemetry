@@ -9,31 +9,55 @@ import com.google.flatbuffers.*;
 
 @SuppressWarnings("unused")
 public final class TrackConfig extends Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_1_12_0(); }
   public static TrackConfig getRootAsTrackConfig(ByteBuffer _bb) { return getRootAsTrackConfig(_bb, new TrackConfig()); }
   public static TrackConfig getRootAsTrackConfig(ByteBuffer _bb, TrackConfig obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public TrackConfig __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public String name() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer nameAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer nameInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   public int numSectors() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public float trackLengthMetres() { int o = __offset(8); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public String address() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer addressAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer addressInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  public String countryCode() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer countryCodeAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer countryCodeInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
 
   public static int createTrackConfig(FlatBufferBuilder builder,
       int nameOffset,
-      int numSectors) {
-    builder.startObject(2);
+      int numSectors,
+      float trackLengthMetres,
+      int addressOffset,
+      int countryCodeOffset) {
+    builder.startTable(5);
+    TrackConfig.addCountryCode(builder, countryCodeOffset);
+    TrackConfig.addAddress(builder, addressOffset);
+    TrackConfig.addTrackLengthMetres(builder, trackLengthMetres);
     TrackConfig.addName(builder, nameOffset);
     TrackConfig.addNumSectors(builder, numSectors);
     return TrackConfig.endTrackConfig(builder);
   }
 
-  public static void startTrackConfig(FlatBufferBuilder builder) { builder.startObject(2); }
+  public static void startTrackConfig(FlatBufferBuilder builder) { builder.startTable(5); }
   public static void addName(FlatBufferBuilder builder, int nameOffset) { builder.addOffset(0, nameOffset, 0); }
   public static void addNumSectors(FlatBufferBuilder builder, int numSectors) { builder.addByte(1, (byte)numSectors, (byte)0); }
+  public static void addTrackLengthMetres(FlatBufferBuilder builder, float trackLengthMetres) { builder.addFloat(2, trackLengthMetres, 0.0f); }
+  public static void addAddress(FlatBufferBuilder builder, int addressOffset) { builder.addOffset(3, addressOffset, 0); }
+  public static void addCountryCode(FlatBufferBuilder builder, int countryCodeOffset) { builder.addOffset(4, countryCodeOffset, 0); }
   public static int endTrackConfig(FlatBufferBuilder builder) {
-    int o = builder.endObject();
+    int o = builder.endTable();
     return o;
+  }
+
+  public static final class Vector extends BaseVector {
+    public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
+
+    public TrackConfig get(int j) { return get(new TrackConfig(), j); }
+    public TrackConfig get(TrackConfig obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
 

@@ -12,9 +12,10 @@ import com.google.flatbuffers.*;
  * Motion data of local player for driving hardware motion simulators
  */
 public final class Motion extends Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_1_12_0(); }
   public static Motion getRootAsMotion(ByteBuffer _bb) { return getRootAsMotion(_bb, new Motion()); }
   public static Motion getRootAsMotion(ByteBuffer _bb, Motion obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Motion __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public float pitch() { int o = __offset(4); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
@@ -30,12 +31,17 @@ public final class Motion extends Table {
   public float angularVelocityX() { int o = __offset(24); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float angularVelocityY() { int o = __offset(26); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float angularVelocityZ() { int o = __offset(28); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public Wheel wheels(int j) { return wheels(new Wheel(), j); }
-  public Wheel wheels(Wheel obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public KartKraft.Wheel wheels(int j) { return wheels(new KartKraft.Wheel(), j); }
+  public KartKraft.Wheel wheels(KartKraft.Wheel obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int wheelsLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public KartKraft.Wheel.Vector wheelsVector() { return wheelsVector(new KartKraft.Wheel.Vector()); }
+  public KartKraft.Wheel.Vector wheelsVector(KartKraft.Wheel.Vector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   public float worldVelocityX() { int o = __offset(32); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float worldVelocityY() { int o = __offset(34); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   public float worldVelocityZ() { int o = __offset(36); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float worldPositionX() { int o = __offset(38); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float worldPositionY() { int o = __offset(40); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float worldPositionZ() { int o = __offset(42); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
 
   public static int createMotion(FlatBufferBuilder builder,
       float pitch,
@@ -54,8 +60,14 @@ public final class Motion extends Table {
       int wheelsOffset,
       float worldVelocityX,
       float worldVelocityY,
-      float worldVelocityZ) {
-    builder.startObject(17);
+      float worldVelocityZ,
+      float worldPositionX,
+      float worldPositionY,
+      float worldPositionZ) {
+    builder.startTable(20);
+    Motion.addWorldPositionZ(builder, worldPositionZ);
+    Motion.addWorldPositionY(builder, worldPositionY);
+    Motion.addWorldPositionX(builder, worldPositionX);
     Motion.addWorldVelocityZ(builder, worldVelocityZ);
     Motion.addWorldVelocityY(builder, worldVelocityY);
     Motion.addWorldVelocityX(builder, worldVelocityX);
@@ -76,7 +88,7 @@ public final class Motion extends Table {
     return Motion.endMotion(builder);
   }
 
-  public static void startMotion(FlatBufferBuilder builder) { builder.startObject(17); }
+  public static void startMotion(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addPitch(FlatBufferBuilder builder, float pitch) { builder.addFloat(0, pitch, 0.0f); }
   public static void addRoll(FlatBufferBuilder builder, float roll) { builder.addFloat(1, roll, 0.0f); }
   public static void addYaw(FlatBufferBuilder builder, float yaw) { builder.addFloat(2, yaw, 0.0f); }
@@ -96,9 +108,19 @@ public final class Motion extends Table {
   public static void addWorldVelocityX(FlatBufferBuilder builder, float worldVelocityX) { builder.addFloat(14, worldVelocityX, 0.0f); }
   public static void addWorldVelocityY(FlatBufferBuilder builder, float worldVelocityY) { builder.addFloat(15, worldVelocityY, 0.0f); }
   public static void addWorldVelocityZ(FlatBufferBuilder builder, float worldVelocityZ) { builder.addFloat(16, worldVelocityZ, 0.0f); }
+  public static void addWorldPositionX(FlatBufferBuilder builder, float worldPositionX) { builder.addFloat(17, worldPositionX, 0.0f); }
+  public static void addWorldPositionY(FlatBufferBuilder builder, float worldPositionY) { builder.addFloat(18, worldPositionY, 0.0f); }
+  public static void addWorldPositionZ(FlatBufferBuilder builder, float worldPositionZ) { builder.addFloat(19, worldPositionZ, 0.0f); }
   public static int endMotion(FlatBufferBuilder builder) {
-    int o = builder.endObject();
+    int o = builder.endTable();
     return o;
+  }
+
+  public static final class Vector extends BaseVector {
+    public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
+
+    public Motion get(int j) { return get(new Motion(), j); }
+    public Motion get(Motion obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
 
