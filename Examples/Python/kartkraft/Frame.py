@@ -37,6 +37,7 @@ class Frame(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
+            from KartKraft.Motion import Motion
             obj = Motion()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -47,6 +48,7 @@ class Frame(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
+            from KartKraft.Dashboard import Dashboard
             obj = Dashboard()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -57,6 +59,7 @@ class Frame(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
+            from KartKraft.Session import Session
             obj = Session()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -67,6 +70,7 @@ class Frame(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
+            from KartKraft.VehicleConfig import VehicleConfig
             obj = VehicleConfig()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -77,6 +81,7 @@ class Frame(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
+            from KartKraft.TrackConfig import TrackConfig
             obj = TrackConfig()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -87,6 +92,7 @@ class Frame(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
+            from KartKraft.SessionConfig import SessionConfig
             obj = SessionConfig()
             obj.Init(self._tab.Bytes, x)
             return obj
