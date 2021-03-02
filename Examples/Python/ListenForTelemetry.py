@@ -1,10 +1,10 @@
 import socket
 import flatbuffers
-import kartkraft.Frame
-import kartkraft.Motion
-import kartkraft.Surface
-import kartkraft.VehicleConfig
-import kartkraft.TrackConfig
+import KartKraft.Frame
+import KartKraft.Motion
+import KartKraft.Surface
+import KartKraft.VehicleConfig
+import KartKraft.TrackConfig
 
 UDP_IP = "127.0.0.1"
 UDP_PORT = 5000
@@ -22,12 +22,12 @@ while True:
     data, addr = sock.recvfrom(MAX_PACKET_SIZE)
     bytes = bytearray(data)
 
-    hasIdentifier = kartkraft.Frame.Frame.FrameBufferHasIdentifier(bytes, 0)
+    hasIdentifier = KartKraft.Frame.Frame.FrameBufferHasIdentifier(bytes, 0)
 
     if hasIdentifier == False:
         continue
 
-    frame = kartkraft.Frame.Frame.GetRootAsFrame(bytes, 0)
+    frame = KartKraft.Frame.Frame.GetRootAsFrame(bytes, 0)
 
     if frame:
         print("\nreceived telemetry frame of size ", len(bytes), " from ", addr)
@@ -73,8 +73,7 @@ while True:
             print("    sector count ", dash.SectorCount())
 
         if session:
-            print("  session data ",
-                  session.TotalTime(), session.TotalTime())
+            print("  session data ", session.TimeElapsed())
 
         if vehicleConfig:
             print("  vehicleConfig data:")
