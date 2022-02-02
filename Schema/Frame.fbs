@@ -30,7 +30,11 @@ enum Surface:ubyte {
     Gravel = 3,
     Kerb = 4,
     Sand = 5,
-    Tyre = 6
+    Tyre = 6,
+    WireFence = 7,
+    Concrete = 8,
+    Plastic = 9,
+    PolishedConcrete = 10
 }
 
 // enum VehicleControl:ubyte {
